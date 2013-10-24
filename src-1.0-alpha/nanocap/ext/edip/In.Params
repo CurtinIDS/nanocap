@@ -1,0 +1,10 @@
+
+gamma=1.35419222406125
+xlam=66.5
+xmu=0.30 ; zrep=0.06 ; zrep2=0.06
+flow=1.48  ; fhigh=2.000 ; falpha=1.544
+zlow=1.547 ; zhigh=2.270 ; zalpha=1.544
+bondcutoff=1.85
+
+norings
+
