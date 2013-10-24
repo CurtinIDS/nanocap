@@ -1,0 +1,77 @@
+NanoCap 
+Copyright (c) 2013 M. Robinson
+
+Source
+======
+
+The NanoCap source is a combination of Python and C extensions. The C extensions are
+built and installed automatically when the setup script is ran (see below). The only
+required modifications to the setup.py file relate to extension libraries located in the
+nanocap/ext directory. The make files and names of the compiled .so need to be entered 
+into the setup.py file in the following places:
+
+NON_C_EXTS = []
+EXTENSION_MAKEFILES = []
+
+NanoCap is bundled with the EDIP extension and thus, the setup.py file looks like this:
+
+NON_C_EXTS = [os.path.join(PACKAGE,'ext','edip','edip.so'),]
+EXTENSION_MAKEFILES = [os.path.join(PACKAGE,'ext','edip','Makefile.pythonlib'),]
+
+
+Once the extensions libraries makefiles and resultant .so libs are entered into the setup.py
+script, the NanoCap source can be installed in typical Python fashion:
+
+python setup.py build
+python setup.py install
+
+
+Requirements
+============
+
+NanoCap requires the following libraries
+
+NumPY 
+SciPY
+
+The GUI enabled version requires:
+
+Qt + PySide
+VTK
+
+
+
+OSX
+---
+Numpy and Scipy can be installed using the python package manager PyPi or easy_install:
+
+pip install numpy
+pip install scipy
+
+The easiest way to use PyCan from source on OSX is to install the above libs using Homebrew:
+
+http://www.brew.sh/
+
+The following formula are avaibable:
+
+brew install python --universal
+brew install qt --developer -v
+brew install pyside
+brew install --python --qt vtk
+
+Linux
+-----
+Numpy and Scipy can be installed using the python package manager PyPi or easy_install:
+
+pip install numpy
+pip install scipy
+
+The following apt-get packages are available on Unbuntu:
+
+
+Windows
+-------
+
+Using PythonXY, https://code.google.com/p/pythonxy/. NanoCap can be used from source on most
+windows machines.
+
