@@ -1,0 +1,69 @@
+
+OBJ = checkinput.o\
+constants.o\
+coordination.o\
+cutoff.o\
+defaults.o\
+density.o\
+dihedral.o\
+dihedral2.o\
+dihedral4.o\
+distance.o\
+distnab.o\
+distribution.o\
+edgetherm.o\
+energy.o\
+force.o\
+init.o\
+linear.o\
+main.o\
+makespecial.o\
+nabor.o\
+pair.o\
+pair2.o\
+parse.o\
+printav.o\
+printfinish.o\
+printinput.o\
+printrings.o\
+printstatus.o\
+printtime.o\
+properties.o\
+readcoords.o\
+readinput.o\
+remspace.o\
+repulsion.o\
+resetmsd.o\
+runspecial.o\
+stress.o\
+sw3.o\
+testdih.o\
+therm.o\
+triple.o\
+triplepi.o\
+verlet.o\
+writecoords.o\
+writegr.o\
+writestress.o\
+writetheta.o\
+writexbs.o
+
+GOAL = edip
+INCL = common.f
+FFLAGS = -O4
+
+$(GOAL): $(OBJ) ; \
+	$(FC) $(OBJ) $(FFLAGS) -o $(GOAL)
+
+$(OBJ): $(INCL)
+
+.f.o:; $(FC) $(FFLAGS) -c $<
+
+clean:; rm *.o
+
+square: square.o ; $(FC) $(FFLAGS) -o square square.f
+
+cubic: cubic.o ; $(FC) $(FFLAGS) -o cubic cubic.f
+
+diamond: diamond.o ; $(FC) $(FFLAGS) -o diamond diamond.f
+
