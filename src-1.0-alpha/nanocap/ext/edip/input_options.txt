@@ -1,0 +1,67 @@
+therm  (see therm.f)
+--------------------------------------------------------------------
+* thermostat settings
+0  thermostat off
+1  thermostat on, constant temperature  (set by temp)
+2  thermostat on, linear ramp
+3  thermostat on, power law
+4  special thermostat for edge atoms only
+
+temp
+--------------------------------------------------------------------
+temperature (in K) for thermostat
+
+ntakof  (see readcoords.f)
+--------------------------------------------------------------------
+* this determines what data is read from the START file at the beginning of 
+* the simulation (also see msd below)
+0  use atom postions only, set velocities to zero, set MSD to zero
+1  use atom positions and velocities from file, set MSD to zero
+2  use atom postions, velocities and MSD data from file
+
+calcstress
+--------------------------------------------------------------------
+0  do not calculate or print stress
+1  calculate and print stress tensor and hydrostatic/biaxial values
+
+nprint  *must be >= 1*
+--------------------------------------------------------------------
+number of steps between outputs to:
+- out
+- gr
+- theta
+
+nsnap  *must be >= 1*
+--------------------------------------------------------------------
+number of steps between outputs to:
+- in.bs / in.mv
+
+msd
+--------------------------------------------------------------------
+* this is different to ntakof - ntakof applies to the start of the simulation 
+* and whether or not the msd data from the START file will be used
+* msd is used to determine behaviour for each 'run' within this input file
+0  reset msd
+1  use msd from previous run
+
+gr
+--------------------------------------------------------------------
+0  do not accumulate statistics for g(r) and P(theta) files 
+    (these files will be written every nprint steps, but will contain zeros)
+1  accumulate statistics for g(r) and P(theta) files
+
+h 
+--------------------------------------------------------------------
+timestep in reduced time units
+real time step (in fs) = h * TIME  
+TIME = 35.3 fs
+
+TIME is the reduced time unit, it is output at the start of the out file
+TIME=timetau=1e12*1e-10*sqrt(AMASS/1.6e-19)
+AMASS = carbon mass in kg =12.01*1.66e-27 = 1.99e-26
+1.6e-19 = electronic charge in C
+
+nstep
+--------------------------------------------------------------------
+total number of timesteps per run
+real total length of run (in fs) = nstep * h * TIME
