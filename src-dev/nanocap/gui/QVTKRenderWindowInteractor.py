@@ -29,8 +29,11 @@ Changes by Phil Thompson, Mar. 2008
 Changes by Stou Sandalski, July. 2009
  Fixed cursor typo, subclassed QGLWidget not GLWidget to allow for embedding
 """
+import sys
+
 from nanocap.core.globals import QT
 QtGui, QtCore, QtOpenGL = QT.QtGui, QT.QtCore, QT.QtOpenGL
+
 
 from vtk import vtkRenderWindow,vtkGenericRenderWindowInteractor,\
                 vtkRenderer,vtkConeSource,vtkPolyDataMapper,vtkActor
@@ -125,7 +128,7 @@ class QVTKRenderWindowInteractor(QtOpenGL.QGLWidget):
         10: QtCore.Qt.CrossCursor,          # VTK_CURSOR_CROSSHAIR
     }
 
-    def __init__(self, parent=None, **kw):
+    def __init__(self, parent=None, wflags=QtCore.Qt.WindowFlags(), **kw):
         # the current button
         self._ActiveButton = QtCore.Qt.NoButton
         print "LOCAL QVTKRenderwindowinteractor"
@@ -152,15 +155,28 @@ class QVTKRenderWindowInteractor(QtOpenGL.QGLWidget):
             rw = kw['rw']
 
         # create qt-level widget
-        QtOpenGL.QGLWidget.__init__(self, parent)
+        #QtOpenGL.QGLWidget.__init__(self, parent)
+        #QtGui.QWidget.__init__(self, parent, wflags|QtCore.Qt.MSWindowsOwnDC)
+        
+        super(QVTKRenderWindowInteractor, self).__init__(parent)
 
         if rw: # user-supplied render window
             self._RenderWindow = rw
         else:
             self._RenderWindow = vtkRenderWindow()
 
-        self._RenderWindow.SetWindowInfo(str(int(self.winId())))
+        WId = self.winId()
 
+        if type(WId).__name__ == 'PyCObject':
+            from ctypes import pythonapi, c_void_p, py_object
+        
+            pythonapi.PyCObject_AsVoidPtr.restype  = c_void_p
+            pythonapi.PyCObject_AsVoidPtr.argtypes = [py_object]
+        
+            WId = pythonapi.PyCObject_AsVoidPtr(WId)
+        
+        self._RenderWindow.SetWindowInfo(str(int(WId)))       
+        
         if stereo: # stereo mode
             self._RenderWindow.StereoCapableWindowOn()
             self._RenderWindow.SetStereoTypeToCrystalEyes()
@@ -171,6 +187,7 @@ class QVTKRenderWindowInteractor(QtOpenGL.QGLWidget):
         # do all the necessary qt setup
         self.setAttribute(QtCore.Qt.WA_OpaquePaintEvent)
         self.setAttribute(QtCore.Qt.WA_PaintOnScreen)
+        
         self.setMouseTracking(True) # get all mouse events
         self.setFocusPolicy(QtCore.Qt.WheelFocus)
         self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding))
@@ -183,6 +200,8 @@ class QVTKRenderWindowInteractor(QtOpenGL.QGLWidget):
         self._Iren.GetRenderWindow().AddObserver('CursorChangedEvent',
                                                  self.CursorChangedEvent)
                                                
+                                               
+           
         print "End INIT QVTK"
     def __getattr__(self, attr):
         """Makes the object behave like a vtkGenericRenderWindowInteractor"""
@@ -237,6 +256,7 @@ class QVTKRenderWindowInteractor(QtOpenGL.QGLWidget):
         w = self.width()
         h = self.height()
 
+        
         self._RenderWindow.SetSize(w, h)
         self._Iren.SetSize(w, h)
 

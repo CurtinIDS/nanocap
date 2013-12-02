@@ -15,16 +15,18 @@ EXTENSION_MAKEFILES = []
 
 NanoCap is bundled with the EDIP extension and thus, the setup.py file looks like this:
 
-NON_C_EXTS = [os.path.join(PACKAGE,'ext','edip','edip.so'),]
-EXTENSION_MAKEFILES = [os.path.join(PACKAGE,'ext','edip','Makefile.pythonlib'),]
+NON_C_EXTS = ['ext/edip/edip',]
+EXTENSION_MAKEFILES = ['ext/edip/Makefile.pythonlib',]
 
-
-Once the extensions libraries makefiles and resultant .so libs are entered into the setup.py
+Once the extensions libraries makefiles and libs are entered into the setup.py
 script, the NanoCap source can be installed in typical Python fashion:
 
 python setup.py build
 python setup.py install
 
+The build will run the makefiles defined in EXTENSION_MAKEFILES and copy the resultant libs 
+in NON_C_EXTS to the temporary build directory before python installs nanocap into the 
+site-packages directory.
 
 Requirements
 ============
@@ -59,6 +61,8 @@ brew install qt --developer -v
 brew install pyside
 brew install --python --qt vtk
 
+Gfortran is also needed to compile the EDIP extension.
+
 Linux
 -----
 Numpy and Scipy can be installed using the python package manager PyPi or easy_install:
@@ -66,12 +70,38 @@ Numpy and Scipy can be installed using the python package manager PyPi or easy_i
 pip install numpy
 pip install scipy
 
-The following apt-get packages are available on Unbuntu:
+Using packages managers bundled with most linux distributions, the additional libs 
+required for the use of the GUI enable NanoCap should be easy to install.
 
 
 Windows
 -------
 
 Using PythonXY, https://code.google.com/p/pythonxy/. NanoCap can be used from source on most
-windows machines.
+windows machines. The default package set in PythonXY is sufficient for running NanoCap with 
+the exception of the below.
+
+PythonXY installs MinGW which includes C and Fortran compilers (GCC and GFortran). These are
+used to compile the C and Fortran extensions. To allow the routines to run in parrallel, openmp
+is required:
+
+mingw-get install libgopenmp
+
+After python setup.py install, nanocap will be installed somewhere like this:
+
+C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap
+
+and can be ran using:
+
+python C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap\main.py.
+
+Alternatively, the user_scripts can be ran from any location:
+
+python user_scripts/bulk_capped_nanotubes.py
+
+
+
+
+
+
 

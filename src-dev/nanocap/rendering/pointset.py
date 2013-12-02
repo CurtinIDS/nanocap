@@ -27,6 +27,7 @@ class PointSet(object):
         self.col = col
         self.LabelActors = [] 
         self.LabelText = []
+        self.pos = None
         
         #self.PointSetLabel = points.PointSetLabel
         self.showLabels = False
@@ -205,7 +206,8 @@ class PointSet(object):
     
      
     def addToRenderer(self,ren,col):
-        printl("adding to renderer",col)
+        #printl("adding to renderer",col)
+        if self.pos == None: return
         self.col = col
         self.LookupTable.SetTableValue(0,self.col[0],
                                            self.col[1],

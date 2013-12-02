@@ -43,9 +43,9 @@ class toolbarAdvanced(toolbar):
     def draw(self):
         printl("drawing")
         self.MainList = QtGui.QListWidget()
-        self.MainList.setStyleSheet("font: 12pt")
+        self.MainList.setStyleSheet("font: "+str(font_size+2)+"pt")
         
-        self.MainList.setFixedHeight(80)
+        self.MainList.setFixedHeight(100)
         
         self.GenerateItem = QtGui.QListWidgetItem("Initialisation")
         self.CalcRenderItem = QtGui.QListWidgetItem("Calculations/Rendering")

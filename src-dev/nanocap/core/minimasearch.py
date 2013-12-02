@@ -375,7 +375,7 @@ class MinimaSearch(object):
                 if(self.config.opts["CarbonMinimise"]):
                     self.minimiser.update_output(pointSet,renderUpdate=False)
                 else:
-                    self.minimiser.update_output(pointSet)
+                    self.minimiser.update_output(pointSet,renderUpdate=False)
                 
                 #raw_input("Press Enter to continue...")
                 self.uniqueMinima.append(copy.deepcopy(pointSet))
@@ -444,7 +444,9 @@ class MinimaSearch(object):
         if(self.uniqueMinimaCount>0):    
             self.select_minima_structure(self.uniqueMinimaCount-1)
             self.print_minima_results()
-            
+        
+        self.processor.renderUpdate()
+        
         printl("End minima search, found ",self.NUnique,"structures in",time.time()-steptime)
  
                 

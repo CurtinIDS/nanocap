@@ -9,6 +9,7 @@ imports
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
 
+from nanocap.core.globals import *
 import ctypes,os,sys
 
 def my_path(path_from_exe=""):
@@ -17,6 +18,6 @@ def my_path(path_from_exe=""):
         return os.path.abspath(exe+path_from_exe)
     return os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
 
-#DIR = os.path.dirname(__file__)
-clib = ctypes.cdll.LoadLibrary(my_path(path_from_exe="/../Resources/clib")+"/clib.so") 
-print clib
+if(PLATFORM=="win"):lib="clib.dll"
+else:  lib="clib.so"
+clib = ctypes.cdll.LoadLibrary(my_path(path_from_exe="/../Resources/clib")+"/"+lib) 

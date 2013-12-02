@@ -59,17 +59,17 @@
       call flush(6)
 
  200  format(/)
- 210  format($,'step  time(ps)  PE(eV)   Etot(eV)')
+ 210  format('step  time(ps)  PE(eV)   Etot(eV)',/)
  220  format('   Temp(K) MSD(Ang) Zav  %sp %sp2 %sp3  MVtot P(GPa)',/)
 !  1P statements make first digit in exponential notation non-zero
- 300  format($,I8.8,1X,1P,E9.3)
- 310  format($,1X,F14.3,1X,F14.3)
- 320  format($,1X,F8.2)
- 330  format($,1X,1P,E9.3)
+ 300  format(I8.8,1X,1P,E9.3,/)
+ 310  format(1X,F14.3,1X,F14.3)
+ 320  format(1X,F8.2)
+ 330  format(1X,1P,E9.3)
 !340  format($,1X,1P,E9.3)
- 340  format($,1X,F5.2)
- 350  format($,1X,F5.1)
- 360  format($,1X,F8.3)
+ 340  format(1X,F5.2)
+ 350  format(1X,F5.1)
+ 360  format(1X,F8.3)
  370  format(  1X,1P,E10.4)
 
       end

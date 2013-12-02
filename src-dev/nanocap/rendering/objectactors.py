@@ -88,13 +88,14 @@ class ObjectActors(object):
     def updateScreenInfo(self,lines):
         while(len(lines)<len(self.ScreenInfo)):
             self.ScreenInfo.pop()
-        yoffset=20
-            
+        if(PLATFORM=="win"):yoffset=65
+        else:yoffset=20
+        ystep = 20
         y = yoffset
         for i,line in enumerate(lines):
             try:self.ScreenInfo[i].change_input(line)
             except:self.ScreenInfo.append(vtkRenderWindowText(line,14,10,y,0,0,0))
-            y+=yoffset        
+            y+=ystep        
     
     def removeScreenInfo(self):
         for line in self.ScreenInfo:

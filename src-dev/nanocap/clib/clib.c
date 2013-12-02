@@ -6,6 +6,41 @@
 
 //double pi;
 
+int checkPlanarTriangles(double *ip0,double *jp0,double *kp0,
+						 double *norm0,
+						 double *ip,double *jp,double *kp);
+int getIfIntersect(double* v0, double* v1,double* v2,double* d,double* origin);
+int get_rings_of_vertex(int v0,
+						int* Verts,
+						int MaxVerts,
+						int* NebList,
+					    int* NebCount,
+					    int MaxNebs,
+					    int npoints,
+					    int* removed,
+					    int* Rings,
+					    int* VertsPerRingCount,
+					    int* nringsp);
+
+int recursive_get_rings_of_vertex(int origin,
+						int v0,
+						int* Verts,
+						int MaxVerts,
+						int* NebList,
+					    int* NebCount,
+					    int MaxNebs,
+					    int npoints,
+					    int* visited_verts,
+					    int ringlength,
+					    int* nrings,
+					    int* removed,
+					    int* Rings,
+					    int* VertsPerRingCount);
+
+int check_SP_ring(int* Verts,int ringlength,int* NebCount,int* NebList,int MaxNebs);
+
+
+
 inline int iabs(int x)
 {
     return (x > 0) ? x : -x;
@@ -291,7 +326,7 @@ int construct_neb_list(int npoints,
 						double cutoff,
 						double* pos)
 {
-	double r,r2,cutoff2;
+	double r2,cutoff2;
 	int i,j;
 
 	cutoff2 = cutoff*cutoff;
@@ -337,15 +372,13 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 
 	int count;
 	int MAXTRI;
-	int i,j,k,d,v,m,finalcount,found,dz,t;
-	char * test;
+	int i,j,k,d,m,found,dz,t;
+	//char * test;
 	//npoints = posdim/3;
     //printf(" in C , %d \n",npoints);
     //scanf("%s", &test);
     MAXTRI = npoints*5;
-	double ipx,ipy,ipz,jpx,jpy,jpz,kpx,kpy,kpz;
 	double ij,jk,ik;
-	double ij2,jk2,ik2;
 //	double centers[MAXTRI*3];
 //	double radius[MAXTRI];
 //	double norms[MAXTRI*3];
@@ -364,7 +397,7 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
     outcenters = (double*) malloc(3*MAXTRI*sizeof (double));
 
 
-	double ip[3],jp[3],kp[3],mp[3],center[3],ccenter[3];
+	double ip[3],jp[3],kp[3],mp[3],ccenter[3];
 	double ip0[3],jp0[3],kp0[3];
 	double ijv[3],ikv[3],jkv[3];
 	double jiv[3],kiv[3],kjv[3];
@@ -535,7 +568,7 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 
     //printf("**BEFORE REMOVAL %d \n",count)   ;
 
-    double orgin[] ={0,0,-10.0};
+    //double orgin[] ={0,0,-10.0};
     double n[3],o[3];
     int t0,intersectf,intersectb,i0,j0,k0;
     int intersectf_count,intersectb_count;
@@ -769,9 +802,9 @@ int getIfIntersect(double* v0, double* v1,double* v2,double* d,double* origin)
 
 void get_average_bond_length_diff(int npoints,double* pos,int npoints2,double* pos2,double* AvBondLength)
 {
-	int found,i,j,foundcount;
+	int i,j;
 	double rmin1,rmin2,rmin3,rmin4,rmin5,ij;
-	double iter,x,y,z,xdiff,ydiff,zdiff,rsq;
+	double xdiff,ydiff,zdiff;
         for(i=0;i<npoints;i++){
             rmin1 = 1000;
             rmin2 = 1001;
@@ -822,9 +855,9 @@ void get_average_bond_length_diff(int npoints,double* pos,int npoints2,double* p
 
 void get_average_bond_length_three(int npoints,double* pos,double* AvBondLength)
 {
-	int found,i,j,foundcount;
-	double rmin1,rmin2,rmin3,rmin4,rmin5,ij;
-	double iter,x,y,z,xdiff,ydiff,zdiff,rsq;
+	int i,j;
+	double rmin1,rmin2,rmin3,ij;
+	double xdiff,ydiff,zdiff;
         for(i=0;i<npoints;i++){
             rmin1 = 1000;
             rmin2 = 1001;
@@ -871,9 +904,7 @@ int calculate_rings(int npoints,
 				   int MaxVerts,
 				   double* pos)
 {
-
-	double r;
-	int i,j,nrings,nverts,v,temp;
+	int i,nrings,temp;
 	int *nringsp;
 	int Verts[MaxVerts];
 
@@ -919,7 +950,7 @@ int get_rings_of_vertex(int v0,
 					    int* VertsPerRingCount,
 					    int* nringsp)
 {
-	int neb,nrings,i,inputindex,j,ringlength,temp;
+	int neb,i,ringlength,temp;
 
 	int visited_verts[npoints];
 
@@ -1049,34 +1080,9 @@ int recursive_get_rings_of_vertex(int origin,
 	return ringlength;
 }
 
-int check_SP_ring(int* Verts,int ringlength,int* NebCount,int* NebList,int MaxNebs)
-{
-
-	int vi,vj,i,j,dR,dG;
-
-	for (i = 0; i < ringlength; i++)
-			{
-		for (j = i+1; j < ringlength; j++)
-					{
-
-					dR = get_vert_dist(Verts[i],Verts[j],Verts,ringlength);
-					//printf("getting path length v0 %d v1 %d maxlength %d\n",Verts[i],Verts[j],dR);
-					dG = get_path_length(Verts[i],Verts[j],NebCount,NebList,MaxNebs,dR);
-					//printf("v0 %d v1 %d dist %d %d\n",Verts[i],Verts[j],dR,dG);
-					if(dR!=dG){
-						return 0;
-					}
-					}
-			}
-	return 1;
-}
-
-
-
-
 void get_path_recursive(int previous,int from ,int target, int* currentLength,int* shortestLength,int* NebCount,int* NebList,int MaxNebs,int maxLength)
 {
-	int neb,i,ret,success;
+	int neb,i;
 
 	*currentLength = *currentLength+1;
 	for (i = 0; i < NebCount[from]; i++)
@@ -1107,7 +1113,7 @@ void get_path_recursive(int previous,int from ,int target, int* currentLength,in
 
 int get_path_length(int v0,int v1,int* NebCount,int* NebList,int MaxNebs, int maxLength)
 {
-	int index,length,success;
+	int length;
 	int currentLength,shortestLength;
 	int* p;
 	int* s;
@@ -1147,13 +1153,42 @@ int get_vert_dist(int v0,int v1,int* Verts,int ringlength)
 	return (d1 < d2) ? d1 : d2;
 }
 
+int check_SP_ring(int* Verts,int ringlength,int* NebCount,int* NebList,int MaxNebs)
+{
+
+	int i,j,dR,dG;
+
+	for (i = 0; i < ringlength; i++)
+			{
+		for (j = i+1; j < ringlength; j++)
+					{
+
+					dR = get_vert_dist(Verts[i],Verts[j],Verts,ringlength);
+					//printf("getting path length v0 %d v1 %d maxlength %d\n",Verts[i],Verts[j],dR);
+					dG = get_path_length(Verts[i],Verts[j],NebCount,NebList,MaxNebs,dR);
+					//printf("v0 %d v1 %d dist %d %d\n",Verts[i],Verts[j],dR,dG);
+					if(dR!=dG){
+						return 0;
+					}
+					}
+			}
+	return 1;
+}
+
+
+
+
+
+
+
+
 
 
 void get_average_bond_length(int npoints,double* pos,double* AvBondLength)
 {
-	int found,i,j,foundcount;
+	int i,j;
 	double rmin1,rmin2,rmin3,rmin4,rmin5,ij;
-	double iter,x,y,z,xdiff,ydiff,zdiff,rsq;
+	double xdiff,ydiff,zdiff;
         for(i=0;i<npoints;i++){
             rmin1 = 1000;
             rmin2 = 1001;
@@ -1206,7 +1241,7 @@ int setup_nanotube_dualgraph(int npoints,double* pos, double* bondlength, int ou
 	int i,j,k,found;
 	double dx,dy,dz,r,x,y,z;
 	double mag;
-	double temppos[outnpoints*3];
+	//double temppos[outnpoints*3];
 	int NTp = 0;
 
 	for(i=0;i<npoints;i++)
@@ -1264,7 +1299,7 @@ double get_mapping_angle(int npoints,double* pos,int npoints2,double* pos2,doubl
 {
 	int found,i,j,foundcount,points,foundme;
 
-	double pi,iter,x,y,z,xdiff,ydiff,zdiff,rsq,ci,si,rmin;
+	double pi,iter,x,y,z,xdiff,ydiff,zdiff,rsq,ci,si;
 	pi = 4.0*atan(1.0);
 	iter = deltaTheta;
     found = 0;
@@ -1326,7 +1361,7 @@ double get_mapping_angle(int npoints,double* pos,int npoints2,double* pos2,doubl
 void do_damp_force(double k,int npoints,double* force,double* pos,double* pos0,
 				   double* energy,double* vel,int* dampflags)
 {
-	int i,j;
+	int i;
 	double dx,dy,dz,r2,r,e,magf;
 	for(i=0;i<npoints;i++)
 	    {
@@ -1340,13 +1375,13 @@ void do_damp_force(double k,int npoints,double* force,double* pos,double* pos0,
 		magf = -1.0*k*r;
 		e = (0.5*k*r2);
 		energy[i] += e/2.0;
-		energy[j] += e/2.0;
+		//energy[j] += e/2.0;
 		force[i*3] += magf*(dx/r);
 		force[i*3+1] += magf*(dy/r);
 		force[i*3+2] += magf*(dz/r);
-		force[j*3] -= magf*(dx/r);
-		force[j*3+1] -= magf*(dy/r);
-		force[j*3+2] -= magf*(dz/r);
+//		force[j*3] -= magf*(dx/r);
+//		force[j*3+1] -= magf*(dy/r);
+//		force[j*3+2] -= magf*(dz/r);
 		//printf("spring force %lf %lf %lf, %lf %lf %lf energy %lf \n",force[i*3],force[i*3+1],force[i*3+2],
 		//		force[j*3],force[j*3+1],force[j*3+2],energy[i]);
 	    }
@@ -1376,10 +1411,10 @@ double get_numerical(double r,double x1,double x2,double h)
 void do_force_nanotube_cos_cuttoff(int npoints,double* force,double* pos,double* energy,
 		double* vel,double x1,double x2)
 {
-	int i,j,found,inc,fullshellcount;
-	double dx,dy,dz,r,dot,step,expo,av,bonds,rdfstep,current,dudx;
-	double dxv,dyv,dzv,v,tstep,qi,qj,u,numerical;
-	double finp,ini,shellvolume,totalenergy,arga,darga,r2,arge,darge,pairforce,pairenergy;
+	int i,j;
+	double dx,dy,dz,r,dot,expo,av,bonds,dudx;
+	double qi,qj,u;
+	double totalenergy,arga,darga,r2,arge,darge,pairforce,pairenergy;
 	expo = 1.0;
 	av = 0;
 	bonds = 0;
@@ -1387,7 +1422,6 @@ void do_force_nanotube_cos_cuttoff(int npoints,double* force,double* pos,double*
 //	for(i=0;i<energydim;i++) {
 //		energy[i]=0.0;
 //	}
-	double vartstep = 1.0;
 	//printf("C force zcutoff %lf \n",zcutoff);
 	for(i=0;i<npoints;i++)
     {
@@ -1460,7 +1494,7 @@ void do_force_nanotube_cos_cuttoff(int npoints,double* force,double* pos,double*
 
 	FILE *f = fopen("testforce.txt","w");
 
-	for(double r=0.01;r<10;r+=0.01)
+	for(r=0.01;r<10;r+=0.01)
 	    {
 		if(r<x1){
 			pairenergy = qi*qj*1.0/(pow(r,expo));
@@ -1529,10 +1563,10 @@ void do_force_nanotube_cos_cuttoff(int npoints,double* force,double* pos,double*
 void do_force_nanotube_erfc(int npoints,double* force,double* pos,double* energy,
 		double* vel,double gamma,double zcutoff)
 {
-	int i,j,found,inc,fullshellcount;
-	double dx,dy,dz,r,dot,step,expo,av,bonds,rdfstep,current;
-	double dxv,dyv,dzv,v,tstep,qi,qj;
-	double finp,ini,shellvolume,totalenergy,arga,darga,r2,arge,darge,totalforce;
+	int i,j;
+	double dx,dy,dz,r,dot,expo,av,bonds;
+	double qi,qj;
+	double totalenergy,arga,darga,r2,arge,darge,totalforce;
 	expo = 1.0;
 	av = 0;
 	bonds = 0;
@@ -1540,7 +1574,7 @@ void do_force_nanotube_erfc(int npoints,double* force,double* pos,double* energy
 //	for(i=0;i<energydim;i++) {
 //		energy[i]=0.0;
 //	}
-	double vartstep = 1.0;
+	
 	//printf("C force zcutoff %lf \n",zcutoff);
 	for(i=0;i<npoints;i++)
     {
@@ -1619,10 +1653,10 @@ void do_force_nanotube_erfc(int npoints,double* force,double* pos,double* energy
 void do_force_nanotube(int npoints,double* force,double* pos,double* energy,
 		double* vel,double cutoff,double zcutoff)
 {
-	int i,j,found,inc,fullshellcount;
-	double dx,dy,dz,r,dot,step,expo,av,bonds,rdfstep,current;
-	double dxv,dyv,dzv,v,tstep,qi,qj;
-	double finp,ini,shellvolume,totalenergy,arga,darga,r2,cutoff2;
+	int i,j;
+	double dx,dy,dz,r,dot,expo,av,bonds;
+	double qi,qj;
+	double totalenergy,arga,darga,r2,cutoff2;
 	expo = 1.0;
 	av = 0;
 	bonds = 0;
@@ -1631,7 +1665,7 @@ void do_force_nanotube(int npoints,double* force,double* pos,double* energy,
 //	for(i=0;i<energydim;i++) {
 //		energy[i]=0.0;
 //	}
-	double vartstep = 1.0;
+	
 	//printf("C force zcutoff %lf \n",zcutoff);
 	for(i=0;i<npoints;i++)
     {
@@ -1775,10 +1809,10 @@ void thomson_force_call(int npoints,double* force,double* pos,
 						double expo,double cutoff,double zcutoff)
 {
 
-	int i,j,found,inc,fullshellcount;
-	double dx,dy,dz,r,dot,step,av,bonds,rdfstep,current;
-	double dxv,dyv,dzv,v,tstep,qi,qj;
-	double finp,ini,shellvolume,totalenergy,arga,darga,r2,cutoff2;
+	int i,j;
+	double dx,dy,dz,r;
+	double qi,qj;
+	double totalenergy,arga,darga,r2,cutoff2;
 	//expo = 1.0;
 	cutoff2 = cutoff*cutoff;
 	totalenergy = 0;
@@ -1859,13 +1893,11 @@ void thomson_force_call(int npoints,double* force,double* pos,
 
 void do_force_no_rdf(int npoints,double* force,double* pos,double* energy,double* vel,double cutoff)
 {
-	int i,j,found,inc,fullshellcount;
-	double dx,dy,dz,r,dot,step,expo,av,bonds,rdfstep,current;
-	double dxv,dyv,dzv,v,tstep,qi,qj,vartstep;
-	double finp,ini,shellvolume,totalenergy,arga,darga,r2,cutoff2,maxf;
+	int i,j;
+	double dx,dy,dz,r,dot,expo;
+	double qi,qj,vartstep;
+	double totalenergy,arga,darga,r2,cutoff2,maxf;
 	expo = 1.0;
-	av = 0;
-	bonds = 0;
 	cutoff2 = cutoff*cutoff;
 	totalenergy = 0;
 //	for(i=0;i<energydim;i++) {
@@ -1886,8 +1918,6 @@ void do_force_no_rdf(int npoints,double* force,double* pos,double* energy,double
     		if(r2<cutoff2)
     		{
     			r = sqrt(r2);
-    			av += r;
-    			bonds+=1.0;
     			qi=1.0;
     			qj=1.0;
 				arga = (qi*qj*1.0)/pow(r,expo);
@@ -1936,7 +1966,7 @@ void do_force_no_rdf(int npoints,double* force,double* pos,double* energy,double
 
 void scale_rad(int npoints, double* pos,double reqrad, int isHemisphere, double length)
 {
-	double r,magxy,x,y,z,newz;
+	double r,magxy;
 	int i;
 	for(i=0;i<npoints;i++)
     {
@@ -1985,7 +2015,7 @@ void scale_rad(int npoints, double* pos,double reqrad, int isHemisphere, double 
 
 double do_gauss_force(int npoints,double* force,double* pos,double* gpos, double width, double height )
 {
-	int i,j;
+	int i;
 	double del,coeff,exponent,genergy;
 
 	coeff = 1.0/(2.0*width*width);
@@ -2015,7 +2045,7 @@ void calc_carbon_carbon_neb_list(int Nc,
 						  	   double* nebdist)
 {
 	int i,j,d;
-	double rmin0,rmin1,rmin2,xi,yi,zi;
+	double xi,yi,zi;
 	double xj,yj,zj,r2;
 	//double nebdist[Nc*3];
 
@@ -2105,7 +2135,7 @@ void calc_carbon_carbon_neb_list(int Nc,
 
 int get_carbon_bond_angles(double* angles,int Nc,double *Cpos)
 {
-	double dx,dy,dz,r,x,y,z,dp,theta,pi;
+	double dp,theta,pi;
 	int i,j,k,d,e,count;
 	int *cc_nebs;
 	double *cc_nebdists;
@@ -2161,8 +2191,7 @@ int calc_carbon_bonds(int Nc,
 					   double *bonds,
 					   double cutoff)
 {
-	double dx,dy,dz,r,x,y,z;
-	int i,j,count,NBonds,neb;
+	int i,j,NBonds,neb;
 
 	int *cc_nebs;
 	double *cc_nebdists;
@@ -2259,6 +2288,8 @@ void get_closest_pair(int Tp,
 	zt = Tpos[Tp*3+2];
 	rmin0 = 10000.0;
 	rmin1 = 10000.0;
+      neb0 = -1;
+      neb1 = -1;
 	for (j = 0; j < 3; j++)
 	{
 		CNeb = cc_nebs[Cp*3 + j];
@@ -2295,8 +2326,8 @@ int get_ring(int Tp,
 			 double* Cpos,
 			 int* ring_indexes)
 {
-	double xt,yt,zt,xc,yc,zc,r2;
-	int neb,i,j,Cp,lastneb,ringcount,currentneb,search;
+	double xt,yt,zt;
+	int i,lastneb,ringcount,currentneb,search;
 	int* out_pair;
 	out_pair = (int*) malloc(2*sizeof (int));
 
@@ -2365,10 +2396,10 @@ void calc_bonding_polygons_using_ring(int Nt,
 
 						   )
 {
-	int i,j,nebid,firstneb,cneb;
-	int neb,neb2,oldneb,cindex,nring;
+	int i,j,firstneb;
+	int cindex,nring;
 
-	double xt,yt,zt,xc,yc,zc,r2,b2;
+	double xt,yt,zt,xc,yc,zc;
 
 	//carbon-carbon nebs (assuming 3 fold)
 	int *cc_nebs;
@@ -2423,6 +2454,105 @@ void calc_bonding_polygons_using_ring(int Nt,
 }
 
 
+int find_common_neb(int inneb,double * Nebpos,int * nebs,int oldneb, int nnebs)
+{
+	double xNeb,yNeb,zNeb,r2;
+	double xj,yj,zj,rmin2;
+	int j,nebout,neb;
+
+	xNeb = Nebpos[inneb*3];
+	yNeb = Nebpos[inneb*3+1];
+	zNeb = Nebpos[inneb*3+2];
+
+      nebout = -1;
+	rmin2 = 1000000;
+	for (j = 0; j < nnebs; j++)
+		{
+		neb = nebs[j];
+		if(neb==oldneb || neb==inneb){continue;}
+
+		xj = Nebpos[neb*3];
+		yj = Nebpos[neb*3+1];
+		zj = Nebpos[neb*3+2];
+
+		r2 = (xj-xNeb)*(xj-xNeb);
+		r2 += (yj-yNeb)*(yj-yNeb);
+		r2 += (zj-zNeb)*(zj-zNeb);
+
+		if(r2 < rmin2)
+		{
+			nebout=neb;
+			rmin2 = r2;
+		}
+	}
+
+	return nebout;
+}
+
+int check_if_nebs(int neb0,int neb1,int* cc_nebs)
+{
+	//check if 0 and 1 are nebs return -1 if true or the common neb if not.
+	//if > 1 neb inbetween return true anyway
+	int c0,c1,cneb0,cneb1,common;
+	common=-1;
+
+	for (c0 = 0; c0 < 3; c0++)
+	{
+		cneb0 = cc_nebs[neb0*3+c0];
+		if(cneb0==neb1){
+			return -1;
+		}
+		for (c1 = 0; c1 < 3; c1++)
+		{
+			//printf("cneb0 %d cneb1 %d \n",cneb0,cneb1);
+			cneb1 = cc_nebs[neb1*3+c1];
+			if(cneb1==neb0){
+				return -1;
+			}
+
+			if(cneb0==cneb1){
+				common=cneb0;
+				return common;
+			}
+		}
+	}
+	return -1;
+}
+
+
+
+
+int get_extra_neb(int nebcount,int* nebs, int* cc_nebs)
+{
+	int j,k,l,neb0,neb1,ret;
+
+	for (j = 0; j < nebcount; j++)
+	{
+		neb0 = nebs[j];
+		for (k = j+1; k < nebcount; k++)
+		{
+			neb1 = nebs[k];
+			if(neb0==neb1){continue;}
+
+			ret = check_if_nebs(neb0,neb1,cc_nebs);
+			if(ret==-1){continue;}
+
+			int inlist=0;
+			for (l = 0; l < nebcount; l++)
+			{
+				if(nebs[l]==ret){
+					inlist=1;
+				}
+			}
+			if(inlist==0){
+				return ret;
+			}
+		}
+
+	}
+	return -1;
+}
+
 void calc_bonding_polygons(int Nt,
 						   int Nc,
 						   double * Tpos,
@@ -2436,8 +2566,8 @@ void calc_bonding_polygons(int Nt,
 						   int * polyCount
 						   )
 {
-	int i,j,k,l,e,nebid,firstneb,ret;
-	int neb,neb2,oldneb,neb0,neb1,extra;
+	int i,j,k,nebid,ret;
+	int neb,neb2,oldneb;
 
 	double xt,yt,zt,xc,yc,zc,r2,b2;
 	int *cc_nebs;
@@ -2567,102 +2697,7 @@ void calc_bonding_polygons(int Nt,
 }
 
 
-int get_extra_neb(int nebcount,int* nebs, int* cc_nebs)
-{
-	int i,j,k,l,m,neb0,neb1,ret;
 
-	for (j = 0; j < nebcount; j++)
-	{
-		neb0 = nebs[j];
-		for (k = j+1; k < nebcount; k++)
-		{
-			neb1 = nebs[k];
-			if(neb0==neb1){continue;}
-
-			ret = check_if_nebs(neb0,neb1,cc_nebs);
-			if(ret==-1){continue;}
-
-			int inlist=0;
-			for (l = 0; l < nebcount; l++)
-			{
-				if(nebs[l]==ret){
-					inlist=1;
-				}
-			}
-			if(inlist==0){
-				return ret;
-			}
-		}
-
-	}
-	return -1;
-}
-
-int check_if_nebs(int neb0,int neb1,int* cc_nebs)
-{
-	//check if 0 and 1 are nebs return -1 if true or the common neb if not.
-	//if > 1 neb inbetween return true anyway
-	int c0,c1,cneb0,cneb1,common;
-	common=-1;
-
-	for (c0 = 0; c0 < 3; c0++)
-	{
-		cneb0 = cc_nebs[neb0*3+c0];
-		if(cneb0==neb1){
-			return -1;
-		}
-		for (c1 = 0; c1 < 3; c1++)
-		{
-			//printf("cneb0 %d cneb1 %d \n",cneb0,cneb1);
-			cneb1 = cc_nebs[neb1*3+c1];
-			if(cneb1==neb0){
-				return -1;
-			}
-
-			if(cneb0==cneb1){
-				common=cneb0;
-				return common;
-			}
-		}
-	}
-	return -1;
-}
-
-int find_common_neb(int inneb,double * Nebpos,int * nebs,int oldneb, int nnebs)
-{
-	double xNeb,yNeb,zNeb,r2;
-	double xj,yj,zj,rmin2;
-	int j,found,nebout,neb;
-
-	xNeb = Nebpos[inneb*3];
-	yNeb = Nebpos[inneb*3+1];
-	zNeb = Nebpos[inneb*3+2];
-
-	j=0;
-	found==0;
-	rmin2 = 1000000;
-	for (j = 0; j < nnebs; j++)
-		{
-		neb = nebs[j];
-		if(neb==oldneb || neb==inneb){continue;}
-
-		xj = Nebpos[neb*3];
-		yj = Nebpos[neb*3+1];
-		zj = Nebpos[neb*3+2];
-
-		r2 = (xj-xNeb)*(xj-xNeb);
-		r2 += (yj-yNeb)*(yj-yNeb);
-		r2 += (zj-zNeb)*(zj-zNeb);
-
-		if(r2 < rmin2)
-		{
-			nebout=neb;
-			rmin2 = r2;
-		}
-	}
-
-	return nebout;
-}
 
 
 

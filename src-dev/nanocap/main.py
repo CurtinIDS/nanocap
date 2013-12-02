@@ -8,6 +8,9 @@ Main GUI window and threadManagers
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
+import sys,os
+sys.path.append(os.path.abspath(os.getcwd()+"/../"))
+print sys.path
 from nanocap.core.globals import *
 import os,sys,threading,Queue,types
 import nanocap.core.globals
@@ -194,13 +197,12 @@ class gui():
         self.vtklayout = QtGui.QHBoxLayout(self.mainwidget)
         
         self.mdiarea = MDIArea()
-        
-                
-                
+
         self.vtklayout.addWidget(self.mdiarea)
         
-        self.vtkframe = vtkqtrenderwidgets.VtkQtFrame(0, self.mainwindow,self)  
-        print     self.vtkframe  
+        self.vtkframe = vtkqtrenderwidgets.VtkQtFrame(0, self.mainwindow,self) 
+        self.vtkframe.hide()
+        print self.vtkframe  
         #self.vtklayout.addWidget(self.vtkframe)
         self.vtkWindow = self.mdiarea.addSubWindow(self.vtkframe) 
         self.vtkWindow.setWindowTitle("3D View")
@@ -212,9 +214,10 @@ class gui():
         self.schlegelWindow = self.mdiarea.addSubWindow(self.schlegelframe) 
         self.schlegelWindow.setWindowTitle("Schlegel View")
         #self.schlegelframe.VTKRenderWindow.Finalize()
-        #self.schlegelframe.hide()
+        self.schlegelframe.hide()
         self.schlegelframe.BottomMenu.hide()
         self.mdiarea.setViewMode(QtGui.QMdiArea.TabbedView)
+        
         #self.vtklayout.addWidget(self.schlegelframe)
         print "setting output widget"
         self.setOutputWidget(self.vtkframe.BottomMenu.InfoOptionsWidget.infoText)
@@ -296,6 +299,8 @@ class gui():
         
         #self.periodicCall()
         self.mainwindow.show()
+        self.vtkframe.show()
+        self.schlegelframe.show()
         
         #self.threadManager.start()
         #self.thread1 = threading.Thread(target=self.periodicCall)
@@ -392,7 +397,8 @@ class MainWindow(QtGui.QMainWindow):
 def start():
     app = QtGui.QApplication(sys.argv)
 #    app.setPalette(QtGui.QPalette())
-#    app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
+
+    #if(PLATFORM=="win"):app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
     strdir = QtGui.QApplication.applicationDirPath()
     #MainAppWindow = QtGui.QMainWindow()
     MainAppWindow = MainWindow()

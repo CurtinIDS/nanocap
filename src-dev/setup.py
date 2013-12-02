@@ -19,16 +19,30 @@ py2app archive - create dmg + tar.gz/bz2
 from setuptools import setup,Extension,find_packages
 import fileinput
 import glob 
-import os,sys,sysconfig
+import os,sys,sysconfig,shutil,platform
 from plistlib import Plist
 import PySide
 
+
 def distutils_dir_name(dname):
-    """Returns the name of a distutils build directory"""
-    f = "{dirname}.{platform}-{version[0]}.{version[1]}"
-    return f.format(dirname=dname,
-                    platform=sysconfig.get_platform(),
-                    version=sys.version_info)
+    """Returns the name of a distutils build directory
+       If no extensions then will be seen as pure python
+       module and will not have platform dependent build folder"""
+    return dname
+#    f = "{dirname}.{platform}-{version[0]}.{version[1]}"
+#    print "distutils dir", f.format(dirname=dname,
+#                    platform=sysconfig.get_platform(),
+#                    version=sys.version_info)
+#    raw_input()
+#    return f.format(dirname=dname,
+#                    platform=sysconfig.get_platform(),
+#                    version=sys.version_info)
+                
+                    
+ps = platform.system()
+if(ps=="Darwin"):PLATFORM = "osx"
+if(ps=="Windows"):PLATFORM = "win"
+if(ps=="Linux"):PLATFORM = "linux"
     
 SETUP_TOOLS_ARGS = []
 CUSTOM_ARGS = []
@@ -47,8 +61,21 @@ YEAR = 2013
 PACKAGE = 'nanocap'
 MAINSCRIPT = [os.path.join(PACKAGE,"main.py")]
 
-NON_C_EXTS = [os.path.join(PACKAGE,'ext','edip','edip.so'),]
-EXTENSION_MAKEFILES = [os.path.join(PACKAGE,'ext','edip','Makefile.pythonlib'),]
+
+NON_C_EXTS = ['ext/edip/edip',]
+C_EXTS = ['clib/clib',]
+EXTENSION_MAKEFILES = ['ext/edip/Makefile.pythonlib',]
+C_MAKEFILES = ['clib/Makefile',]
+
+if(PLATFORM == "win"):
+    LIB_EXT = "dll"
+else:
+    LIB_EXT = "so"
+
+#PACKAGE_DATA = {PACKAGE: NON_C_EXTS + C_EXTS}
+#
+#print "PACKAGE_DATA",PACKAGE_DATA
+#raw_input()
 
 PLIST = dict(CFBundleName = NAME,
              CFBundleShortVersionString = VER,
@@ -65,14 +92,16 @@ PLIST = dict(CFBundleName = NAME,
 
 if any([True for e in ['py2app','build','install'] if e in sys.argv]):
     WD = os.path.dirname(os.path.abspath(__file__))
-    for MAKEFILE in EXTENSION_MAKEFILES:
-        print "building ",MAKEFILE,os.path.dirname(os.path.abspath(MAKEFILE))
-        os.chdir(os.path.dirname(os.path.abspath(MAKEFILE)))
+    for MAKEFILE in EXTENSION_MAKEFILES+C_MAKEFILES:
+        FULL_PATH = os.path.abspath(os.path.join(PACKAGE,MAKEFILE))
+        LOC = os.path.dirname(FULL_PATH)
+        print "building ",LOC,FULL_PATH,PLATFORM
+        os.chdir(LOC)
         print os.getcwd()
-        os.system('make -f '+os.path.basename(os.path.abspath(MAKEFILE)))
+        os.system('make -f '+os.path.basename(FULL_PATH)+' '+PLATFORM)
         os.chdir(WD)
         print os.getcwd()
-           #   '../src/icons']
+
 
 PY2APP_OPTIONS =   {'argv_emulation': True,
              'iconfile': '../icons/NanoCapIcon.icns',
@@ -105,15 +134,19 @@ else:
     DATA_FILES = []
 
 if any([True for e in ['build','install'] if e in sys.argv]):    
-
-    for EXT in NON_C_EXTS:
+    for EXT in NON_C_EXTS+C_EXTS:
+        FULL_PATH = os.path.abspath(os.path.join(PACKAGE,EXT))+"."+LIB_EXT
+        BUILD_PATH = os.path.join('build', distutils_dir_name('lib'),os.path.join(PACKAGE,EXT))+"."+LIB_EXT
+        LOC = os.path.dirname(FULL_PATH)
+        BUILD_LOC= os.path.dirname(BUILD_PATH)
         try:
-            print "mkdir",os.path.dirname(os.path.join('build', distutils_dir_name('lib'),EXT))
-            os.makedirs(os.path.dirname(os.path.join('build', distutils_dir_name('lib'),EXT)))
-        except:pass    
-        BD = os.path.join('build', distutils_dir_name('lib'),EXT)
-        print ("cp %s %s") % (EXT,BD)
-        os.system(("cp %s %s") % (EXT,BD))
+            print "mkdir",BUILD_LOC
+            os.makedirs(BUILD_LOC)
+        except:pass
+        print "BUILD_PATH",BUILD_PATH
+        print "FULL_PATH",FULL_PATH
+        shutil.copyfile(FULL_PATH,BUILD_PATH)
+
 
 setup(
         version=VER,
@@ -123,10 +156,11 @@ setup(
         license='CC-NC Creative Commons Non-Commercial',
         app=MAINSCRIPT,
         name=NAME,
+        #package_data=PACKAGE_DATA,
         data_files=DATA_FILES,
         options={'py2app': PY2APP_OPTIONS},
         packages  = find_packages(exclude= ["tests","build","dist","NanoCap.egg-info","arch"]),
-        ext_modules=[Extension('nanocap.clib.clib', [os.path.join(PACKAGE,"clib/clib.c")])],
+        #ext_modules=[Extension('nanocap.clib.clib', [os.path.join(PACKAGE,"clib/clib.c")])],
         setup_requires=REQ
         )
 
@@ -176,10 +210,14 @@ if('py2app' in sys.argv):
 
 if('archive' in CUSTOM_ARGS):
     if('build' in sys.argv):
-        FOLDERS = ["docs","nanocap","INSTALL","README","setup.py","../../user_scripts"]
+        FOLDERS = ["docs","nanocap","INSTALL","README","setup.py"]#,os.path.abspath("../../user_scripts")]
         print "archiving source ..."
-        os.system("tar -zcf "+str(APPNAME)+".tar.gz "+" ".join(FOLDERS))
-        os.system("tar -jcf "+str(APPNAME)+".tar.bz2 "+" ".join(FOLDERS))
+        os.system("tar -cf "+str(APPNAME)+".tar "+" ".join(FOLDERS))
+        os.system("tar -rf "+str(APPNAME)+".tar "+" -C "+os.path.abspath("../../")+" user_scripts")
+        os.system("gzip < "+str(APPNAME)+".tar > "+str(APPNAME)+".tar.gz")
+        os.system("bzip2 "+str(APPNAME)+".tar")
+        #os.system("tar -zcf "+str(APPNAME)+".tar.gz "+" ".join(FOLDERS))
+        #os.system("tar -jcf "+str(APPNAME)+".tar.bz2 "+" ".join(FOLDERS))
     
     if('py2app' in sys.argv):
         

@@ -14,10 +14,13 @@ def my_path(path_from_exe=""):
     if hasattr(sys, "frozen"):
         exe = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
         return os.path.abspath(exe+path_from_exe)
+    #print os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
     return os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
 
-
-edip = ctypes.cdll.LoadLibrary(my_path(path_from_exe = "/../Resources/ext/edip" )+"/edip.so") 
+if(PLATFORM=="win"):lib="edip.dll"
+else:  lib="edip.so"
+    
+edip = ctypes.cdll.LoadLibrary(my_path(path_from_exe = "/../Resources/ext/edip" )+"/"+lib) 
 
 parameters={}
 parameters["gamma"] = 1.35419222406125
@@ -130,7 +133,7 @@ def test():
     '''
     quick graphene lattice
     '''
-    iunits,junits = 10,10
+    iunits,junits = 3,3
     natoms = iunits*junits*2
     pos = numpy.zeros(natoms*3,NPF)
     acc = 1.421
@@ -151,7 +154,7 @@ def test():
             c+=1
 
     error = []
-    for i in range(0,20):            
+    for i in range(0,1):            
         e = check_numerical_forces(natoms,box,pos,h=0.1)
         error.append(e)
     

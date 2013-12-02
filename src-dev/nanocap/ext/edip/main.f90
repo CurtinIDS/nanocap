@@ -23,7 +23,7 @@
       call init
       call density
 
-      if (special) call runspecial
+      !if (special) call runspecial
 
 !+-----------+
 !| Main loop |
