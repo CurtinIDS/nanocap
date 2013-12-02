@@ -1,0 +1,22 @@
+
+      subroutine force
+
+      include "common.f"
+
+c +--------------------------+
+c | Main loop over the atoms |
+c +--------------------------+
+
+      call distance
+      call cutoff
+
+c     write(*,*)'Energy Components'
+      do i=1,natom
+        call coordination(i)
+        call pair(i)
+        call triple(i)
+      end do
+
+      pe= u2 + u3 + udih
+      end
+   

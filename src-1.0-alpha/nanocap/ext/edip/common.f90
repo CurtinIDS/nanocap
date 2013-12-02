@@ -96,7 +96,6 @@
       common /ANGLE/ nbin2(NGR,4,NUMBIN2)
       common /FIXED/ ifix
       common /CONDU/ nslab,nswap
-
 ! Arrays used for reducing energies and forces in parallel sections
       common /EREDC/  u2i(MAXCPU), u3i(MAXCPU), udihi(MAXCPU)
       common /FREDC/  fxx(NMAX,3,MAXCPU)
