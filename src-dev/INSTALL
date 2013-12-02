@@ -82,6 +82,8 @@ Windows
 Using PythonXY, https://code.google.com/p/pythonxy/. NanoCap can be used from source on most
 windows machines. In addition to PythonXY, PySide is also needed:
 
+	http://qt-project.org/wiki/PySide_Binaries_Windows
+
 PythonXY installs MinGW which includes C and Fortran compilers (GCC and GFortran). These are
 used to compile the C and Fortran extensions. To allow the routines to run in parrallel, openmp
 is required:
