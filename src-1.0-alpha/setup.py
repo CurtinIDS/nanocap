@@ -176,10 +176,14 @@ if('py2app' in sys.argv):
 
 if('archive' in CUSTOM_ARGS):
     if('build' in sys.argv):
-        FOLDERS = ["docs","nanocap","INSTALL","README","setup.py","../../user_scripts"]
+        FOLDERS = ["docs","nanocap","INSTALL","README","setup.py"]#,os.path.abspath("../../user_scripts")]
         print "archiving source ..."
-        os.system("tar -zcf "+str(APPNAME)+".tar.gz "+" ".join(FOLDERS))
-        os.system("tar -jcf "+str(APPNAME)+".tar.bz2 "+" ".join(FOLDERS))
+        os.system("tar -cf "+str(APPNAME)+".tar "+" ".join(FOLDERS))
+        os.system("tar -rf "+str(APPNAME)+".tar "+" -C "+os.path.abspath("../../")+" user_scripts")
+        os.system("gzip < "+str(APPNAME)+".tar > "+str(APPNAME)+".tar.gz")
+        os.system("bzip2 "+str(APPNAME)+".tar")
+        #os.system("tar -zcf "+str(APPNAME)+".tar.gz "+" ".join(FOLDERS))
+        #os.system("tar -jcf "+str(APPNAME)+".tar.bz2 "+" ".join(FOLDERS))
     
     if('py2app' in sys.argv):
         

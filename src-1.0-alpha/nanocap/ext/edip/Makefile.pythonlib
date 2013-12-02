@@ -51,8 +51,6 @@ OBJ = checkcell.f90\
 all:
 	
 	gfortran ${OBJ} -ffree-form -g -fopenmp -fno-underscoring -fno-second-underscore -fPIC -shared -o edip.so
-	#f2py -c -m edip ${OBJ} --f90flags="-fopenmp " -lgomp
-#	 f2py -c -m edip ${OBJ}
 clean:
 	rm  -f *.o *.so 
 

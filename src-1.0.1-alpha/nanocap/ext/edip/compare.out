@@ -1,0 +1,468 @@
+++++++++++++++++++++++++++++++++++++
+Comparing /suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel ....
+++++++++++++++++++++++++++++++++++++
+Presence/absence of files
+++++++++++++++++++++++++++++++++++++
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: all_diffs.txt
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: checkinput.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: compare.out
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: constants.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: coordination.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: cubic
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: cubic.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: cutoff.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: defaults.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: density.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: diamond
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: diamond.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: dihedral2.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: dihedral4.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: dihedral.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: distance.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: distnab.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: distribution.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: edgetherm.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: edip
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: edipcode.ps
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: edip_gr
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: edip-rcpomp
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: edip-write-energies
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: energymin_notes.txt
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: energy.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: force.f_old
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: force.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: graphite
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: init.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: input_options.txt
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: LATTICE
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: linear.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: main.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: Makefile_gr
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: Makefile_original
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: Makefile_write_energies
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: makespecial.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: nabor.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: nigel-edip
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: nn.bs
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: pair2.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: pair.f_old
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: pair.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: parse.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: pre-080328-edip
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: printav.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: printfinish.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: printinput.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: printrings.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: printstatus.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: printtime.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: properties.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: random
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: random.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: readcoords.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: readinput.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: remspace.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: repulsion.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: resetmsd.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: runspecial.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: square.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: stress.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: sw3.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: testdih.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: testrun
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: test.txt
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: therm.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: tmp.files
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: triple.f_old
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: triple.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-nigel: triplepi.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: verlet.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: volume.f
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: volume.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: writecoords.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: writegr.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: writestress.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: writetheta.o
+Only in /suphys/powles/CarbonSim/edip-code/edip-rcpomp: writexbs.o
+++++++++++++++++++++++++++++++++++++
+Files which are the same
+++++++++++++++++++++++++++++++++++++
+bondcoord.f
+constants.f
+coordination.f
+cutoff.f
+dihedral2.f
+dihedral4.f
+distance.f
+distnab.f
+distribution.f
+linear.f
+makespecial.f
+nabor.f
+pbc.f
+printfinish.f
+printinput.f
+printrings.f
+properties.f
+readinput.f
+remspace.f
+repulsion.f
+resetmsd.f
+runspecial.f
+therm.f
+writecoords.f
+writetheta.f
+++++++++++++++++++++++++++++++++++++
+Files which differ
+++++++++++++++++++++++++++++++++++++
+checkinput.f
+common.f
+defaults.f
+density.f
+dihedral.f
+edgetherm.f
+energy.f
+force.f
+init.f
+main.f
+Makefile
+pair.f
+parse.f
+printav.f
+printstatus.f
+printtime.f
+readcoords.f
+stress.f
+tmp.diff
+triple.f
+verlet.f
+writegr.f
+writestress.f
+writexbs.f
+++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++
+checkinput.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        if (usetestdih)   nodihedral=.true.
+++++++++++++++++++++++++++++++++++++
+common.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        logical usetestdih
+                                                                >        logical usepair2
+                                                                >        logical usesw3
+C OpenMP parallelization related items                          <
+      integer*4 ncpu, icpu                                      <
+      integer*4 OMP_GET_MAX_THREADS                             <
+      integer*4 OMP_GET_THREAD_NUM                              <
+      parameter (MAXCPU=8)                                      <
+                                                                <
+      !definition of timetau has moved to constants.f           <
+      parameter (NMAX=4096,NNN=50,NP=0.5*NNN*NMAX)              |        parameter (NMAX=30000,NNN=50,NP=0.5*NNN*NMAX)
+      common /FLAGS2/ norings,static,special                    |        common /FLAGS2/ norings,static,special,usetestdih,usepair
+      common /FLAGS4/ steepestdescent,xbspbc                    |        common /FLAGS4/ steepestdescent,usesw3,xbspbc
+      common /ZZZZ/   z(NMAX), zz(NMAX)                         |        common /ZDERV/  z(NMAX), zz(NMAX), dzdx(NNN,3), dzdxx(NNN
+      common /ZDERV/  dzdx(NNN,3), dzdxx(NNN,NNN,3)             <
+      common /STRES/  totstr(3,3),pressure,biaxial,smin,smax,ns |        common /STRES/  totstr(3,3),smin,smax,nstress
+      common /BOXVOL/ vol                                       <
+c Arrays used for reducing energies and forces in parallel sect <
+      common /EREDC/  u2i(MAXCPU), u3i(MAXCPU), udihi(MAXCPU)   <
+      common /FREDC/  fxx(NMAX,3,MAXCPU)                        <
+                                                                <
+!$OMP THREADPRIVATE (/ZDERV/,/ZFORC/)                           <
+++++++++++++++++++++++++++++++++++++
+defaults.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        usepair2=.false.
+                                                                >        usetestdih=.false.
+                                                                >        usesw3=.false.
+++++++++++++++++++++++++++++++++++++
+density.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+      volm=vol*1e-30                                            |        volume=box(1)*box(2)*box(3)*1e-30
+      rho=dfloat(natom)*amass/volm                              |        rho=dfloat(natom)*amass/volume
+      write(6,140) volm*1e27                                    |        write(6,140) volume*1e27
+++++++++++++++++++++++++++++++++++++
+dihedral.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        if (usetestdih)   call testdih(i)
+++++++++++++++++++++++++++++++++++++
+edgetherm.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+      do i=1,natom                                              |        do i=ifix+1,natom
+      do i=1,natom                                              |        do i=ifix+1,natom
+      do i=1,natom                                              |        do i=ifix+1,natom
+++++++++++++++++++++++++++++++++++++
+energy.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+      open(unit=7,file='energies.txt',status='unknown')         <
+          pair = aa * (bb/rij**4 - bond) * exp(sigma/(rij-a12)) |            u2=u2 + aa * (bb/rij**4 - bond) * exp(sigma/(rij-a12)
+          write(7,*) rij, pair                                  <
+          u2=u2 + pair                                          <
+            triple = zexpgam*theta                              |
+            write(7,*)rij, triple/2.0                           |              u3=u3 + zexpgam*theta
+            write(7,*)dr(i,kk), triple/2.0                      <
+            u3=u3 + triple                                      <
+                                                                <
+          end do                                                |            end do
+c   kk                                                          |
+c  neighbours                                                   <
+c   atom                                                        <
+      close(unit=7)                                             <
+++++++++++++++++++++++++++++++++++++
+force.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+c +-----------------------+                                     |        call distance
+c | Get Number of Threads |                                     <
+c +-----------------------+                                     <
+      ncpu=1                                                    <
+!$    ncpu=OMP_GET_MAX_THREADS()                                <
+c +------------------------+                                    |  c +-------------------------+
+c | Clear temporary arrays |                                    |  c | Branch to SW3 potential |
+c +------------------------+                                    |  c +-------------------------+
+      do icpu=1,ncpu                                            |        if (usesw3) then
+        u2i(icpu)=0.0                                           |          do i=1,natom
+        u3i(icpu)=0.0                                           |            call sw3(i)
+        udihi(icpu)=0.0                                         |          end do
+      end do                                                    |
+                                                                |          pe= u2 + u3
+      do i=1,natom                                              |          return
+      do ind=1,3                                                |        end if
+          do icpu=1,ncpu                                        <
+            fxx(i,ind,icpu)=0.0                                 <
+          end do                                                <
+        end do                                                  <
+      end do                                                    <
+      call distance                                             <
+!$OMP PARALLEL DO SCHEDULE(STATIC) PRIVATE(i)                   <
+        call pair(i)                                            |          call pair(i)
+!$OMP END PARALLEL DO                                           <
+                                                                <
+c +--------------------------+                                  <
+c | Manually reduce energies |                                  <
+c +--------------------------+                                  <
+      u2=0.0                                                    <
+      u3=0.0                                                    <
+      udih=0.0                                                  <
+      do icpu=1,ncpu                                            <
+        u2=u2 + u2i(icpu)                                       <
+        u3=u3 + u3i(icpu)                                       <
+        udih=udih + udihi(icpu)                                 <
+      end do                                                    <
+      pe=u2+u3+udih                                             <
+                                                                <
+c +------------------------+                                    <
+c | Manually reduce forces |                                    <
+c +------------------------+                                    <
+      do i=1,natom                                              <
+        do ind=1,3                                              <
+          fx(i,ind)=0.0                                         <
+          do icpu=1,ncpu                                        <
+            fx(i,ind)=fx(i,ind) + fxx(i,ind,icpu)               <
+          end do                                                <
+        end do                                                  <
+      end do                                                    <
+                                                                >        pe= u2 + u3 + udih
+                                                                >     
+++++++++++++++++++++++++++++++++++++
+init.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        if (usesw3) ndim=2
+      call volume                                               <
+      write(6,*)'Initializing...'                               <
+c     call stress(0)                                            <
+++++++++++++++++++++++++++++++++++++
+main.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+c disable stress calcs in parallelized version (not correctly c <
+      calcstress = .false.                                      <
+      call init                                                 <
+                                                                >        call init
+++++++++++++++++++++++++++++++++++++
+Makefile
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >  pair2.o\
+                                                                >  sw3.o\
+                                                                >  testdih.o\
+volume.o\                                                       |  triplepi.o\
+GOAL = edip-rcpomp                                              |  GOAL = edip
+FFLAGS = -O3 -openmp                                            |  FFLAGS = -O4
+FC = ifort                                                      <
+                                                                >  square: square.o ; $(FC) $(FFLAGS) -o square square.f
+                                                                >
+                                                                >  cubic: cubic.o ; $(FC) $(FFLAGS) -o cubic cubic.f
+                                                                >
+                                                                >  diamond: diamond.o ; $(FC) $(FFLAGS) -o diamond diamond.f
+++++++++++++++++++++++++++++++++++++
+pair.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+c +-------------------+                                         |        if (usepair2) then
+c | Get thread number |                                         |          call pair2(i)
+c +-------------------+                                         |          return
+      icpu=1                                                    |        end if
+!$    icpu=OMP_GET_THREAD_NUM()+1                               <
+        u2i(icpu)=u2i(icpu) + part1*part2                       |          u2=u2 + part1*part2
+            fxx(i,ind,icpu) = fxx(i,ind,icpu) - f2              |              fx(i,ind) = fx(i,ind) - f2
+            fxx(k,ind,icpu) = fxx(k,ind,icpu) + f2              |              fx(k,ind) = fx(k,ind) + f2
+            !if (calcstress) call stress(i,kk,f2,ind)           |              if (calcstress) call stress(i,kk,f2,ind)
+              fxx(k,ind,icpu) = fxx(k,ind,icpu) - f2            |                fx(k,ind) = fx(k,ind) - f2
+              fxx(m,ind,icpu) = fxx(m,ind,icpu) + f2            |                fx(m,ind) = fx(m,ind) + f2
+              !if (calcstress) call stress(k,mm,f2,ind)         |                if (calcstress) call stress(k,mm,f2,ind)
+++++++++++++++++++++++++++++++++++++
+parse.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        elseif (index(line,'usetestdih').eq.1) then 
+                                                                >          usetestdih=.true.
+                                                                >        elseif (index(line,'usepair2').eq.1) then 
+                                                                >          usepair2=.true.
+                                                                >        elseif (index(line,'usesw3').eq.1) then 
+                                                                >          usesw3=.true.
+++++++++++++++++++++++++++++++++++++
+printav.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+ 120  format('Energy removed by thermostat:',1P,E10.2,' eV')    |   120  format('Energy removed by thermostat:',F7.2,' eV')
+++++++++++++++++++++++++++++++++++++
+printstatus.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                <
+c     if (.not.calcstress) pressure=0.0                         <
+      write(6,370) pressure                                     <
+ 220  format('   Temp(K) MSD(Ang) Zav  %sp %sp2 %sp3  MVtot P(G |   220  format('   Temp(K) MSD(Ang) Zav  %sp %sp2 %sp3  MVtot',/)
+c   1P statements make first digit in exponential notation non- |
+ 300  format($,I8.8,1X,1P,E9.3)                                 |   300  format($,I5.5,1X,F7.3)
+ 330  format($,1X,1P,E9.3)                                      |   330  format($,1X,F7.4)
+c 340  format($,1X,1P,E9.3)                                     |   340  format($,1X,F4.2)
+ 340  format($,1X,F5.2)                                         <
+ 360  format($,1X,F6.3)                                         |   360  format(  1X,F6.3)
+ 370  format(  1X,1P,E10.4)                                     <
+++++++++++++++++++++++++++++++++++++
+printtime.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+        write(6,140) numstep*h*timetau                          <
+ 140  format('  simulation time: ',F7.2,' ps')                  <
+++++++++++++++++++++++++++++++++++++
+readcoords.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+ 210  format(d23.11,2x,i10,2x,i4)                               |   210  format(d23.11,2x,i10,1x,i5)
+ 310  format(d23.11,2x,i10,2x,i4)                               |   310  format(d23.11,2x,i10,1x,i5)
+++++++++++++++++++++++++++++++++++++
+stress.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+      if (.not.calcstress) return                               |
+        nstress=nstress + 1                                     |          nstress=nstress + 1
+          if (inrange(x(j,3))) then                             |            if (inrange(x(j,3))) then
+          end if                                                |            end if
+          fac= 160.219 / vol / nstress                          <
+                                                                <
+c         write(6,*) 'end of loop over atoms in stress'         <
+                                                                <
+          biaxial=0.0                                           <
+          pressure=0.0                                          <
+c         write(6,*)totstr(1,1),totstr(2,2),totstr(3,3),biaxial <
+          do in1=1,3                                            <
+           pressure=pressure + fac*totstr(in1,in1)              <
+           if (in1.eq.2) biaxial=pressure/2.0                   <
+          end do                                                <
+                                                                <
+          pressure=pressure/3.0                                 <
+c         write(6,*) pressure,biaxial                           <
+                                                                <
+        zav= 0.5*(x(i,3) + x(j,3))                              |          zav= 0.5*(x(i,3) + x(j,3))
+        if (inrange(zav)) then                                  |          if (inrange(zav)) then
+++++++++++++++++++++++++++++++++++++
+tmp.diff
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        dimension xx(NMAX,3)                                     
+                                                                >                                                                 
+                                                                >          do i=1,natom                                           
+                                                                >            do ind=1,3                                           
+                                                                >              if (xbspbc) then                                   
+                                                                >                xx(i,ind)=x(i,ind)-box(ind)*nint(x(i,ind)/box(ind
+                                                                >              else                                               
+                                                                >                xx(i,ind)=x(i,ind)                               
+                                                                >              end if                                             
+                                                                >            end do                                               
+                                                                >          end do                                                 
+                                                                >                                                                 
+                                                                >          if (mod(numstep,abs(nsnap)).eq.0) goto 110             
+                                                                >         write(8,120) ((xx(i,ind),ind=1,3),i=1,natom)            
+                                                                >                                                                 
+                                                                >         if (.not.usesw3) write(8,*) 'tmat 1 0 0 0 0 1 0 1 0'    
+                                                                >                                                                 
+                                                                >        open(unit=8,file='in.mv',status='unknown',access='append'
+                                                                >                                                                 
+                                                                >         write(8,140) ((xx(i,ind),ind=1,3),i=1,natom)            
+                                                                >   120  format('atom C ',3F9.3)                                  
+                                                                >   140  format(3F9.3)                                            
+++++++++++++++++++++++++++++++++++++
+triple.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+c +-------------------+                                         <
+c | Get thread number |                                         <
+c +-------------------+                                         <
+      icpu=1                                                    <
+!$    icpu=OMP_GET_THREAD_NUM()+1                               <
+          u3i(icpu)=u3i(icpu) + zexpgam*theta                   |            u3 = u3 + zexpgam*theta
+              fxx(i,ind,icpu) = fxx(i,ind,icpu) - f3            |                fx(i,ind) = fx(i,ind) - f3
+              fxx(m,ind,icpu) = fxx(m,ind,icpu) + f3            |                fx(m,ind) = fx(m,ind) + f3
+              !if (calcstress) call stress(i,mm,f3,ind)         |                if (calcstress) call stress(i,mm,f3,ind)
+                fxx(m,ind,icpu) = fxx(m,ind,icpu) - f3          |                  fx(m,ind) = fx(m,ind) - f3
+                fxx(n,ind,icpu) = fxx(n,ind,icpu) + f3          |                  fx(n,ind) = fx(n,ind) + f3
+                !if (calcstress) call stress(m,nn,f3,ind)       |                  if (calcstress) call stress(m,nn,f3,ind)
+++++++++++++++++++++++++++++++++++++
+verlet.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+c     write(*,*)'In Verlet...'                                  <
+++++++++++++++++++++++++++++++++++++
+writegr.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+                                                                >        if (usesw3) avrho=dfloat(natom)/(box(1)*box(2))
+                                                                >          if (usesw3) fac= dfloat(natom) * 2.0*pi*r * widthbin
+++++++++++++++++++++++++++++++++++++
+writestress.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+c     call stress(0)                                            |
+      fac= 160.219 / vol / nstress                              |        if (smin.gt.smax) then
+                                                                >          volume=box(1)*box(2)*box(3)
+                                                                >        else
+                                                                >          volume=box(1)*box(2)*(smax-smin)
+                                                                >        end if
+                                                                >
+                                                                >        fac= 160.219 / volume / nstress
+      write(6,*) 'Volume [Ang^3]=',vol                          |        write(6,*) 'Volume [Ang^3]=',volume
+                                                                >
+                                                                >        biaxial=0.0
+                                                                >        pressure= 0.0
+                                                                >        do ind=1,3
+                                                                >          pressure=pressure + fac*totstr(ind,ind)
+                                                                >          if (ind.eq.2) biaxial=pressure/2.0
+                                                                >        end do
+                                                                >        pressure=pressure/3.0
+                                                                >
+                                                                >        close(unit=8)
+++++++++++++++++++++++++++++++++++++
+writexbs.f
+/suphys/powles/CarbonSim/edip-code/edip-rcpomp /suphys/powles/CarbonSim/edip-code/edip-nigel
+++++++++++++++++++++++++++++++++++++
+       write(8,*) 'tmat 1 0 0 0 0 1 0 1 0'                      |         if (.not.usesw3) write(8,*) 'tmat 1 0 0 0 0 1 0 1 0'
