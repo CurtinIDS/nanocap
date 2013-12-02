@@ -3,14 +3,15 @@ Created on Sep 12, 2013
 
 @author: Marc Robinson
 '''
-import unittest
+import unittest,sys,os
+if __name__ == "__main__":sys.path.append(os.path.abspath(__file__+"/../../"))
 from nanocap.core.util import *
 from nanocap.core.globals import *
 from nanocap.objects import points
 from nanocap.ext.edip import interface
 
-print "ROOTDIR",ROOTDIR
-clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
+from nanocap.clib import clib_interface
+clib = clib_interface.clib
 
 class CheckGaussianEnergyAndForce(unittest.TestCase):  
     def testEDIPInterface(self):

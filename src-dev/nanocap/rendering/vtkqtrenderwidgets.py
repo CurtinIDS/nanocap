@@ -28,8 +28,9 @@ from nanocap.gui.forms import GenericForm,TitleBar,OptionsWindow
   
 class VtkQtFrame(QtGui.QWidget):
     def __init__(self, ID, MainWindow, Gui):
-        QtGui.QWidget.__init__(self)    
-        self.layout = QtGui.QVBoxLayout(self)
+        QtGui.QWidget.__init__(self,MainWindow)    
+        #@self.layout = QtGui.QVBoxLayout(self)
+        self.layout = QtGui.QGridLayout(self)
         #self.layout.set 
         self.ID = ID
         self.MainWindow = MainWindow
@@ -93,19 +94,21 @@ class VtkQtFrame(QtGui.QWidget):
         self.topToolbar.addAction(self.AxesButton)
         
 
-        self.layout.addWidget(self.topToolbar)
+        self.layout.addWidget(self.topToolbar,0,0)
         
         self.VTKRenderWindowInteractor = QVTKRenderWindowInteractor(self)
+        self.layout.addWidget(self.VTKRenderWindowInteractor,1,0)
         self.VTKRenderWindowInteractor.Initialize()
+        #self.VTKRenderWindowInteractor.Start()
         #self.VTKRenderWindowInteractor.setMouseTracking(True)
         printd("assigned VTKRenderWindowInteractor")
         self.VTKPicker = vtkCellPicker() 
         self.VTKPicker.SetTolerance(0.000001)
         self.VTKPicker.AddObserver("EndPickEvent", self.picked)
         self.VTKRenderWindowInteractor.SetPicker(self.VTKPicker)
+        
 
-
-        self.layout.addWidget(self.VTKRenderWindowInteractor)
+        
         
         self.rotateCameraFlag = 0
         
@@ -191,6 +194,8 @@ class VtkQtFrame(QtGui.QWidget):
         self.SaveImageRotationOptionsWindow =SaveImageRotationOptionsWindow(self,self.MainWindow)
         printd("End init vtkFrame")
         self.VTKCamera.Azimuth(90)
+        
+        self.setLayout(self.layout)
         
 #    def sizeHint(self):
 #        return QtCore.QSize(700,700)

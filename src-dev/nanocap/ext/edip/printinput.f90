@@ -21,8 +21,8 @@
  130  FORMAT('NPRINT=',I3)
  140  FORMAT('NSNAP=',I4)
 
- 150  FORMAT($,'H=',F7.5)
- 160  FORMAT($,'  NSTEP=',I6,'  STARTT=',I5,'  ITHERM=',I1)
+ 150  FORMAT('H=',F7.5)
+ 160  FORMAT('  NSTEP=',I6,'  STARTT=',I5,'  ITHERM=',I1)
  170  FORMAT('  IGR=',I1,'  IMSD=',I1)
 
       end

@@ -22,10 +22,10 @@ class ShowButton(QtGui.QWidget):
         self.containerLayout = QtGui.QHBoxLayout()
         self.setLayout(self.containerLayout)
         self.checkbox = QtGui.QCheckBox()
-        self.checkbox.setFixedWidth(25)
+        #self.checkbox.setFixedWidth(25)
         self.containerLayout.addWidget(self.checkbox)
         self.containerLayout.setContentsMargins(0, 0, 0, 0)
-        self.containerLayout.setSpacing(4)
+        #self.containerLayout.setSpacing(4)
         self.containerLayout.setAlignment(QtCore.Qt.AlignCenter)
 
 class SaveButton(QtGui.QWidget):
@@ -170,6 +170,7 @@ class DoubleSpinBox(QtGui.QDoubleSpinBox):
 class HolderWidget(QtGui.QWidget):
     def __init__(self,widgets):
         QtGui.QWidget.__init__(self, None)
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
         self.containerLayout = QtGui.QHBoxLayout()
         self.setLayout(self.containerLayout)
         try:
@@ -177,8 +178,8 @@ class HolderWidget(QtGui.QWidget):
         except:
             for widget in widgets:self.containerLayout.addWidget(widget)
         self.containerLayout.setContentsMargins(0, 0, 0, 0)
-        self.containerLayout.setSpacing(2)
-        self.containerLayout.setAlignment(QtCore.Qt.AlignCenter)
+        #self.containerLayout.setSpacing(2)
+        self.containerLayout.setAlignment(QtCore.Qt.AlignHCenter)
 
 class GenericForm(QtGui.QWidget):
     def __init__(self, parent=None,width=10.0,title=None,show=False,isGroup=True,
@@ -364,7 +365,7 @@ class GenericForm(QtGui.QWidget):
         f = lb.font()
         f.setBold(True)
         lb.setFont(f)
-        lb.setStyleSheet("QWidget {font: bold 11pt }")
+        lb.setStyleSheet("QWidget {font: bold "+str(font_size)+"pt }")
         layout.addWidget(lb)
         layout.addWidget(frame2)
         

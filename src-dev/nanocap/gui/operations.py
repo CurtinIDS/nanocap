@@ -111,7 +111,7 @@ class Operations(QtGui.QWidget):
             self.ObjectActors.setupSchlegelRingActors(self.Processor.schlegelCarbonLattice,self.Processor.schlegelMaxVerts,
                                               self.Processor.schlegelRings,self.Processor.schlegelVertsPerRingCount)  
 #            
-         
+        printl("ending")
 #        
         if(self.config.opts["GenType"]=="Nanotube"):  
             self.ToggleTubeDualLatticePoints()
@@ -123,7 +123,8 @@ class Operations(QtGui.QWidget):
             dualLattice = self.Processor.fullerene.thomsonPoints 
             self.ToggleFullereneDualLatticePoints()
             self.ToggleFullereneCarbonAtoms()
-#                  
+#       
+        printl("ending")           
         self.ToggleTriangulation()
         self.ToggleCarbonBonds()
         self.ToggleCarbonRings()
@@ -131,7 +132,7 @@ class Operations(QtGui.QWidget):
         self.ToggleSchlegel()
         self.ToggleScreenInfo()
 #        
-
+        printl("ending")
         try:self.VTKFrame.centerCameraOnPointSet(carbonLattice)
         except:self.VTKFrame.centerCameraOnPointSet(dualLattice)
         

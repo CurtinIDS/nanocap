@@ -2,6 +2,18 @@
       implicit double precision (a-h,o-z)
 
       double precision mv
+      
+      parameter (NMAX=10000,NNN=100,NP=INT(NNN*NMAX*0.5))
+      parameter (NUMBIN=600,WIDTHBIN=0.01,NGR=2,NVAR=6)
+      parameter (NUMBIN2=181,WIDTHBIN2=1.0)
+      parameter (MAXCELL1=100,MAXCELL=100,MAXINCELL=50)
+!      parameter (MAXCELL=150,MAXINCELL=50)
+      parameter (MAXSLAB=1000)
+      parameter (MAXCPU=32)
+      parameter (pi=3.1415926536)
+      parameter (AMASS=12.01*1.66e-27)
+      parameter (BOLTZMANN=8.617e-5) 
+      parameter (tau1=-6.0*2.5, tau2=6.0)
 
       character*80 namespecial
 
@@ -24,37 +36,20 @@
       logical nodihedral
       logical norepulsion
 
-! OpenMP parallelization related items
       integer*4 ncpu, icpu
       integer*4 OMP_GET_MAX_THREADS
       integer*4 OMP_GET_THREAD_NUM
-      parameter (MAXCPU=32)
 
-! Derived reduced unit conversion factors
-! (energies in eV, distances in Angstroms, mass in 12.01 amu)
-      parameter (pi=3.1415926536)
-      parameter (AMASS=12.01*1.66e-27)
-      parameter (BOLTZMANN=8.617e-5)      !!! consider 0.025eV/300K !!!
+      !!! consider 0.025eV/300K !!!
       !parameter (TIMETAU=1e12*1e-10*(AMASS/1.6e-19)**0.5)
       !definition of timetau has moved to constants.f
 
-      parameter (tau1=-6.0*2.5, tau2=6.0)
-
-      parameter (NMAX=500000,NNN=50,NP=INT(NNN*NMAX*0.5))
-      parameter (NUMBIN=600,WIDTHBIN=0.01,NGR=2,NVAR=6)
-      parameter (NUMBIN2=181,WIDTHBIN2=1.0)
-      parameter (MAXCELL1=100,MAXCELL=100,MAXINCELL=50)
-!      parameter (MAXCELL=150,MAXINCELL=50)
-      parameter (MAXSLAB=1000)
-
-! Parameters for EDIP
       common /PARAM1/ aa,bb,beta,sigma,a1,a2
       common /PARAM2/ qq,xlam,xmu,gamma,pilam
       common /PARAM3/ zlow,zhigh,zalpha
       common /PARAM4/ flow,fhigh,falpha
       common /PARAM5/ zdih,zrep,zrep2,c0,bondcutoff
 
-! Parameters for control file
       common /ENTRY/  varlist(0:100,NVAR),npass,nsnap
 
       common /ELOST/  elosttherm,nrescale
@@ -97,8 +92,8 @@
       common /FIXED/ ifix
       common /CONDU/ nslab,nswap
 
-! Arrays used for reducing energies and forces in parallel sections
       common /EREDC/  u2i(MAXCPU), u3i(MAXCPU), udihi(MAXCPU)
       common /FREDC/  fxx(NMAX,3,MAXCPU)
+
 
 !$OMP THREADPRIVATE (/ZDERV/,/ZFORC/)

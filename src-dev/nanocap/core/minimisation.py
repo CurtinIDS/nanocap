@@ -80,6 +80,8 @@ class Minimiser(object):
         
         initial_gamma = self.get_initial_scale(pointSet)
 
+        printl("initial_gamma",initial_gamma)
+        
         gamma = fmin(self.minimise_scale_step_operations, initial_gamma, 
                      args=(pointSet,),
                      xtol=0.0001, ftol=0.0001,full_output=0)
@@ -367,9 +369,9 @@ class carbonLatticeMinimiser(Minimiser):
         self.FF.args[0] = (bounds[3]-bounds[0])*2000.0
         self.FF.args[1] = (bounds[4]-bounds[1])*2000.0
         self.FF.args[2] = (bounds[5]-bounds[2])*2000.0
-        
+        printl("end setup_force_field")
     
-    def update_output(self,pointSet,renderUpdate=True):
+    def update_output(self,pointSet,renderUpdate=False):
         #pointSet.update()  
         self.processor.updateCarbonLattice(renderUpdate=renderUpdate)
     

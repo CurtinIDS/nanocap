@@ -57,3 +57,34 @@ folder which is bundled with both the source code and standalone application.
 
 Each license is compatible with the Creative Commons Attribution-NonCommercial 2.5 
 License. 
+
+Releases
+========
+
+1.0.0-alpha
+-----------
+
+Win32
+    - Issue with embedding the vtk window in a qt widget. Mainly due to return
+    value of vtk_object.winId() not being compatible with qt_widget.SetWindowInfo()
+    winId() return val is platform specific. On windows returns PyCObject, so have to:
+
+        WId = self.winId()
+
+        if type(WId).__name__ == 'PyCObject':
+            from ctypes import pythonapi, c_void_p, py_object
+        
+            pythonapi.PyCObject_AsVoidPtr.restype  = c_void_p
+            pythonapi.PyCObject_AsVoidPtr.argtypes = [py_object]
+        
+            WId = pythonapi.PyCObject_AsVoidPtr(WId)
+        
+        self._RenderWindow.SetWindowInfo(str(int(WId))) 
+
+    - Had to turn off the rendering multithreading - need to relook at modifying 
+    opengl objects between threads. Ensure only done on the gui thread loop.
+
+
+
+
+

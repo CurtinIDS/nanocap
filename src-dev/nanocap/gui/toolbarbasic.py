@@ -165,7 +165,7 @@ class toolbarBasic(toolbar):
         row.addWidget(QtGui.QLabel("Carbon Lattice"),3,0,alignment=QtCore.Qt.AlignRight) 
         row.addWidget(self.CarbonMinimiseCombo,3,1,alignment=QtCore.Qt.AlignLeft) 
 
-        
+        sep = self.MainWidget.addSeparator(dummy=False)
         row = self.MainWidget.newRow(self)
         row.RowLayout.setSpacing(5)
         self.StartMinSearchBT = QtGui.QPushButton('Generate')

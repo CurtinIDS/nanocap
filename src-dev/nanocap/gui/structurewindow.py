@@ -11,7 +11,7 @@ QtGui, QtCore = QT.QtGui, QT.QtCore
 import numpy
 
 from nanocap.core import globals
-from nanocap.gui.forms import TableWidget,ShowButton,SaveButton
+from nanocap.gui.forms import TableWidget,ShowButton,SaveButton,HolderWidget
 import nanocap.core.processes as processes
 from nanocap.core.util import *
 import copy
@@ -35,13 +35,28 @@ class StructureWindow(QtGui.QWidget):
         #row = self.newRow(self)
         self.MinimaTable = TableWidget(260,300)
         self.MinimaTable.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
+        #self.MinimaTable.verticalScrollBar().setDisabled(True)
+        #self.MinimaTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        
+        self.MinimaTable.verticalScrollBar().setStyleSheet("QScrollBar {width:0px;}")        
         
         self.ButtonTable = TableWidget(160,300)
         self.ButtonTable.setSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
         self.ButtonTable.verticalHeader().hide()
+        #self.ButtonTable.verticalScrollBar().setStyleSheet("QScrollBar {width:0px;}")        
+        #self.ButtonTable.verticalScrollBar().setDisabled(True)
+        #self.ButtonTable.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         
         self.ButtonTable.horizontalScrollBar().setDisabled(True)
-        self.ButtonTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.ButtonTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        
+        
+        
+        self.VScollBar = QtGui.QScrollBar()
+        self.connect(self.ButtonTable.verticalScrollBar(), QtCore.SIGNAL("valueChanged(int)"), self.slideMoved)
+        self.connect(self.MinimaTable.verticalScrollBar(), QtCore.SIGNAL("valueChanged(int)"), self.slideMoved)
+        
+        self.DummyScollBar = QtGui.QScrollBar()
         
         self.contentlayout = QtGui.QHBoxLayout(self)
         self.contentlayout.setContentsMargins(5,5,5,5)
@@ -50,6 +65,14 @@ class StructureWindow(QtGui.QWidget):
         
         self.contentlayout.addWidget(self.MinimaTable)
         self.contentlayout.addWidget(self.ButtonTable)
+        
+        
+        #self.MinimaTable.setVerticalScrollBar(self.DummyScollBar)
+        #self.ButtonTable.setVerticalScrollBar(self.VScollBar)
+        #self.contentlayout.addWidget(self.VScollBar) 
+        #self.ButtonTable.verticalScrollBar().setStyleSheet("QScrollBar {width:0px;}")          
+        
+        #self.VScollBar.show()    
         
         self.StructureLog = self.Processor.structureLog[self.GenType]
         
@@ -68,7 +91,20 @@ class StructureWindow(QtGui.QWidget):
         #self.resize(QtCore.QSize(size.width()+10,size.height()))
         
         #row.addWidget(self.MinimaTable)
-    
+    def slideMoved(self,val):
+        self.ButtonTable.verticalScrollBar().setValue(val)
+        self.MinimaTable.verticalScrollBar().setValue(val)  
+        
+        
+    def slideMoved222(self,val):
+        self.ButtonTable.verticalScrollBar().setValue(self.VScollBar.value())
+        self.MinimaTable.verticalScrollBar().setValue(self.VScollBar.value())        
+        self.ButtonTable.verticalScrollBar().setSliderPosition(val)
+        self.MinimaTable.verticalScrollBar().setSliderPosition(val)
+        ##self.ButtonTable.scrollContentsBy(0,val)
+        #self.MinimaTable.scrollContentsBy(0,val)
+        pass
+        
     def updateStructureTable(self): 
         printl("updateStructureTable",self.config.opts["GenType"],threading.currentThread())
         
@@ -92,6 +128,13 @@ class StructureWindow(QtGui.QWidget):
             
         printl("end updateStructureTable")   
         
+        self.VScollBar.setMaximum(self.MinimaTable.verticalScrollBar().maximum())
+        self.VScollBar.setMinimum(self.MinimaTable.verticalScrollBar().minimum())     
+        self.VScollBar.setSingleStep(self.MinimaTable.verticalScrollBar().singleStep())
+        self.VScollBar.setSliderPosition(self.MinimaTable.verticalScrollBar().sliderPosition())
+        
+        #self.VScollBar  = self.MinimaTable.verticalScrollBar()
+        
         self.config.opts["GUIlock"] = False
     
     def setupHeaders(self,headers):
@@ -110,8 +153,8 @@ class StructureWindow(QtGui.QWidget):
         self.MinimaTable.setupHeaders(labels,widths)
         self.scaleWindow()
         
-        labels = ["D","F","C","Save"]
-        widths = [20,20,20,40]
+        labels = ["Top.","Uncon.","Con.","Save"]
+        widths = [40,50,40,40]
         self.ButtonTable.setupHeaders(labels,widths)
     
     def scaleWindow(self):
@@ -163,25 +206,25 @@ class StructureWindow(QtGui.QWidget):
         col = len(data)
         col= 0 
         widget = ShowButton() 
-        self.ButtonTable.setCellWidget(row,col,widget)
+        self.ButtonTable.setCellWidget(row,col,HolderWidget(widget))
         call = lambda checked,row=row,col=col,button=widget: self.showDStructure(row,col,button,checked)
         self.connect(widget.checkbox, QtCore.SIGNAL('stateChanged(int)'), call)
         
         col +=1
         widget = ShowButton() 
-        self.ButtonTable.setCellWidget(row,col,widget)
+        self.ButtonTable.setCellWidget(row,col,HolderWidget(widget))
         call = lambda checked,row=row,col=col,button=widget: self.showFStructure(row,col,button,checked)
         self.connect(widget.checkbox, QtCore.SIGNAL('stateChanged(int)'), call)
         
         col +=1
         widget = ShowButton() 
-        self.ButtonTable.setCellWidget(row,col,widget)
+        self.ButtonTable.setCellWidget(row,col,HolderWidget(widget))
         call = lambda checked,row=row,col=col,button=widget: self.showCStructure(row,col,button,checked)
         self.connect(widget.checkbox, QtCore.SIGNAL('stateChanged(int)'), call)
         
         col +=1
         widget = SaveButton() 
-        self.ButtonTable.setCellWidget(row,col,widget)
+        self.ButtonTable.setCellWidget(row,col,HolderWidget(widget))
         call = lambda row=row,col=col,button=widget: self.saveStructure(row,col,widget)
         self.connect(widget.button, QtCore.SIGNAL('clicked()'), call)
         
@@ -396,7 +439,7 @@ class StructureWindow(QtGui.QWidget):
         height = tsize.height()
         width = self.MinimaTable.horizontalHeader().length() 
         width += self.MinimaTable.verticalHeader().width()        
-        width += self.MinimaTable.verticalScrollBar().width()       
+        #width += self.MinimaTable.verticalScrollBar().width()       
 
         margins = self.contentlayout.contentsMargins()
         width += margins.left() + margins.right()
@@ -413,6 +456,12 @@ class StructureWindow(QtGui.QWidget):
         
         
         self.MinimaTable.resize(QtCore.QSize(width+10,height+20))
+        
+#        self.VScollBar.setMaximum(self.MinimaTable.verticalScrollBar().maximum())
+#        self.VScollBar.setMinimum(self.MinimaTable.verticalScrollBar().minimum())     
+#        self.VScollBar.setSingleStep(self.MinimaTable.verticalScrollBar().singleStep())
+#        self.VScollBar.setSliderPosition(self.MinimaTable.verticalScrollBar().sliderPosition())
+        
         #printl("resizing minima table")
         return QtCore.QSize(width+10,height+20)
     
