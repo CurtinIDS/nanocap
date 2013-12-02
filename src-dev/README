@@ -61,7 +61,7 @@ License.
 Releases
 ========
 
-1.0.0-alpha
+1.0.1-alpha
 -----------
 
 Win32
@@ -85,6 +85,8 @@ Win32
     opengl objects between threads. Ensure only done on the gui thread loop.
 
 
-
+1.0-alpha
+-----------
+	- Initial release. Primary development on OS X 10.7. 
 
 

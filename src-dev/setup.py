@@ -52,7 +52,7 @@ for arg in sys.argv:
 sys.argv = SETUP_TOOLS_ARGS        
 
 PVER = "2.7"
-VER = '1.0-alpha'
+VER = '1.0.1-alpha'
 NAME = 'NanoCap'
 APPNAME = '%s-%s' % (NAME, VER)
 BUNDLENAME = '%s.app' % NAME
