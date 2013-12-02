@@ -77,31 +77,35 @@ required for the use of the GUI enable NanoCap should be easy to install.
 Windows
 -------
 
+- From source:
+
 Using PythonXY, https://code.google.com/p/pythonxy/. NanoCap can be used from source on most
-windows machines. The default package set in PythonXY is sufficient for running NanoCap with 
-the exception of the below.
+windows machines. In addition to PythonXY, PySide is also needed:
 
 PythonXY installs MinGW which includes C and Fortran compilers (GCC and GFortran). These are
 used to compile the C and Fortran extensions. To allow the routines to run in parrallel, openmp
 is required:
 
-mingw-get install libgopenmp
+	mingw-get install libgopenmp
 
 After python setup.py install, nanocap will be installed somewhere like this:
 
-C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap
+	C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap
 
 and can be ran using:
 
-python C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap\main.py.
+	python C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap\main.py.
 
 Alternatively, the user_scripts can be ran from any location:
 
-python user_scripts/bulk_capped_nanotubes.py
+	python user_scripts/bulk_capped_nanotubes.py
 
 
+- Standalone (exe):
 
+User must download and install the Microsoft Visual C++ 2008 Redistributable Package:
 
+	http://www.microsoft.com/en-au/download/details.aspx?id=29
 
 
 
