@@ -53,35 +53,40 @@ class Operations(QtGui.QWidget):
             self.ObjectActors.FullereneDualLatticePoints.update()
             try:
                 carbonLattice = self.Processor.fullerene.carbonAtoms
+                print "Render update carbonLattice",carbonLattice.pos[0],carbonLattice.pos[1],carbonLattice.pos[2]
                 self.ObjectActors.FullereneCarbonAtomsPoints.initArrays(carbonLattice)
                 self.ObjectActors.FullereneCarbonAtomsPoints.update()
             except:pass
             
         if(self.config.opts["GenType"]=="Nanotube"):  
-            dualLattice = self.Processor.nanotube.cappedTubeThomsonPoints
+            dualLattice = self.Processor.cappedNanotube.thomsonPoints
             printl("CappedNanotubeTubeDualLatticePoints arrays",
-                   self.Processor.nanotube.cappedTubeThomsonPoints.pos[0:10],
-                   self.Processor.cap.thomsonPoints.pos[0:10])
+                   self.Processor.cappedNanotube.thomsonPoints.pos[0:10],
+                   self.Processor.cappedNanotube.cap.thomsonPoints.pos[0:10])
             self.ObjectActors.CappedNanotubeTubeDualLatticePoints.initArrays(dualLattice)
             self.ObjectActors.CappedNanotubeTubeDualLatticePoints.update()
             
-            self.ObjectActors.CapDualLatticePoints.initArrays(self.Processor.cap.thomsonPoints)
+            self.ObjectActors.CapDualLatticePoints.initArrays(self.Processor.cappedNanotube.cap.thomsonPoints)
             self.ObjectActors.CapDualLatticePoints.update()
         
-            self.ObjectActors.ReflectedCapDualLatticePoints.initArrays(self.Processor.reflectedCap.thomsonPoints)
+            self.ObjectActors.ReflectedCapDualLatticePoints.initArrays(self.Processor.cappedNanotube.reflectedCap.thomsonPoints)
             self.ObjectActors.ReflectedCapDualLatticePoints.update()
             
-            self.ObjectActors.NanotubeTubeDualLatticePoints.initArrays(self.Processor.nanotube.tubeThomsonPoints)
+            self.ObjectActors.NanotubeTubeDualLatticePoints.initArrays(self.Processor.cappedNanotube.nanotube.thomsonPoints)
             self.ObjectActors.NanotubeTubeDualLatticePoints.update()
         
             try:
-                carbonLattice = self.Processor.nanotube.cappedTubeCarbonAtoms
+                carbonLattice = self.Processor.cappedNanotube.carbonAtoms
                 self.ObjectActors.CappedNanotubeTubeCarbonAtomsPoints.initArrays(carbonLattice)
                 self.ObjectActors.CappedNanotubeTubeCarbonAtomsPoints.update()
             except:pass
             
         if(self.config.opts["CalcTriangulation"] and self.config.opts["ShowTriangulation"]):
             self.ObjectActors.setupTriangleMesh(dualLattice,self.Processor.ntriangles,self.Processor.verts)
+        
+#        self.ObjectActors.setupTriangleMesh(self.Processor.fullerene.carbonAtoms,
+#                                            self.Processor.fullerene.ntriangles,
+#                                            self.Processor.fullerene.verts)
         
         if(self.config.opts["CalcCarbonBonds"] and self.config.opts["ShowCarbonBonds"]):
             self.ObjectActors.setupBondActors(self.Processor.nbonds,self.Processor.bonds)
@@ -280,8 +285,8 @@ class Operations(QtGui.QWidget):
                 carbonAtoms = self.Processor.fullerene.carbonAtoms
                 thomsonPoints = self.Processor.fullerene.thomsonPoints
             if(self.config.opts["GenType"]=="Nanotube"):
-                carbonAtoms = self.Processor.nanotube.cappedTubeCarbonAtoms
-                thomsonPoints = self.Processor.nanotube.cappedTubeThomsonPoints
+                carbonAtoms = self.Processor.cappedNanotube.carbonAtoms
+                thomsonPoints = self.Processor.cappedNanotube.thomsonPoints
             try:
                 String = "Rings: "
                 for i in range(3,self.Processor.MaxVerts):

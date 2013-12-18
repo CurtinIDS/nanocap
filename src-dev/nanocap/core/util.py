@@ -16,17 +16,91 @@ from collections import defaultdict
 
 import numpy
 
-from nanocap.core.globals import QT
-QtGui, QtCore, QtOpenGL = QT.QtGui, QT.QtCore, QT.QtOpenGL
-
+try:
+    from nanocap.core.globals import QT
+    QtGui, QtCore, QtOpenGL = QT.QtGui, QT.QtCore, QT.QtOpenGL
+except:pass
 #clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
 
-from nanocap.clib import clib_interface
-clib = clib_interface.clib
+#from nanocap.clib import clib_interface
+#clib = clib_interface.clib
 
 uniqueMask = numpy.zeros(9999,int)
 uniqueInputMask = numpy.zeros(9999,int)
 outputWidget = None
+
+def get_root():
+    frozen = getattr(sys, 'frozen', '')
+    
+    if not frozen:
+        # not frozen: in regular python interpreter
+        main = os.path.abspath(unicode(__file__, sys.getfilesystemencoding( ))+"/../")
+        approot = os.path.dirname(main)
+    
+    elif frozen in ('dll', 'console_exe', 'windows_exe'):
+        # py2exe:
+        approot = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+    
+    elif frozen in ('macosx_app',):
+        # py2app:
+        # Notes on how to find stuff on MAC, by an expert (Bob Ippolito):
+        # http://mail.python.org/pipermail/pythonmac-sig/2004-November/012121.html
+        approot = os.environ['RESOURCEPATH']
+        
+    return approot
+
+
+def unit_normal(a, b, c):
+    x = numpy.linalg.det([[1,a[1],a[2]],
+         [1,b[1],b[2]],
+         [1,c[1],c[2]]])
+    y = numpy.linalg.det([[a[0],1,a[2]],
+         [b[0],1,b[2]],
+         [c[0],1,c[2]]])
+    z = numpy.linalg.det([[a[0],a[1],1],
+         [b[0],b[1],1],
+         [c[0],c[1],1]])
+    mag = (x**2 + y**2 + z**2)**.5
+    return (x/mag, y/mag, z/mag)
+
+
+def write_xyz(filename,pointSet,constrained=False):
+    f = open(filename,"w")
+    f.write(str(pointSet.npoints)+"\n")
+    f.write("\n")
+    for i in range(0,pointSet.npoints):
+        if not constrained:f.write("C "+str(pointSet.pos[i*3])+" "+str(pointSet.pos[i*3+1])+" "+str(pointSet.pos[i*3+2])+"\n")
+        else:f.write("C "+str(pointSet.constrained_pos[i*3])+" "+str(pointSet.constrained_pos[i*3+1])+" "+str(pointSet.constrained_pos[i*3+2])+"\n")
+    f.close()
+    
+
+def get_relative_path(filename):
+    frozen = getattr(sys, 'frozen', '')
+    
+    if not frozen:
+        # not frozen: in regular python interpreter
+        approot = os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
+    
+    elif frozen in ('dll', 'console_exe', 'windows_exe'):
+        # py2exe:
+        approot = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+    
+    elif frozen in ('macosx_app',):
+        # py2app:
+        # Notes on how to find stuff on MAC, by an expert (Bob Ippolito):
+        # http://mail.python.org/pipermail/pythonmac-sig/2004-November/012121.html
+        approot = os.environ['RESOURCEPATH']
+        
+    return os.path.join(approot,filename)
+
+def path_from_file(filename,path_from_exe=""):
+    if hasattr(sys, "frozen"):
+        exe = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+        print "exe",exe
+        return os.path.abspath(exe+path_from_exe)
+    #print os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
+    return os.path.dirname(unicode(filename, sys.getfilesystemencoding( )))
+    
 
 def module_path():
     if hasattr(sys, "frozen"):
@@ -39,28 +113,6 @@ def waitGUIlock():
         printl("awaiting globals.GUIlock=False",globals.GUIlock)
         time.sleep(0.1)
     printl("ending globals.GUIlock=False",globals.GUIlock)    
-
-def scale_points_to_rad(npoints,pos,reqrad,length=None):
-    if(length!=None):
-       # length = self.processor.nanotube.tubeThomsonPointsCOM[2]*2 
-        scale_points_to_cylinder(npoints,pos,reqrad,length)
-    else:
-        scale_points_to_sphere(npoints,pos,reqrad)
-    
-def scale_points_to_sphere(npoints,pos,reqrad):                
-    clib.scale_rad(ctypes.c_int(npoints),
-                   pos.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-                   ctypes.c_double(reqrad),
-                   ctypes.c_int(0),
-                   ctypes.c_double(0.0))  
-
-def scale_points_to_cylinder(npoints,pos,reqrad,length):                
-    clib.scale_rad(ctypes.c_int(npoints),
-                   pos.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-                   ctypes.c_double(reqrad),
-                   ctypes.c_int(1),
-                   ctypes.c_double(length))  
-
 
 def get_centered_string(fmt,length,args):
     args = map(str,args)

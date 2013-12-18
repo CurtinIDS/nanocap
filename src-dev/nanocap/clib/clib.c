@@ -366,6 +366,235 @@ int construct_neb_list(int npoints,
 	return 1;
 }
 
+void calc_volume_from_rings_using_div_thereom(int nrings,
+											  int maxverts,
+											  int* rings,
+											  int* vertsPerRingCount,
+											  double* pos,
+											  double* out)
+{
+	/* Uses divergence theorem. Discrete volumes of each ring using normal.
+	 *
+	 *  /// div(F) dV = //  x.n dA
+	 *
+	 *  define F = (1,0,0), div(F) = 1
+	 *
+	 *  /// 1 dV = // x.n dA
+	 *
+	 *  V = sum (x*n*at) , at is area of polygon, x is center[0], n is normal[0] i.e. at (1,0,0)
+	 *
+	 * http://www.mathworks.com.au/matlabcentral/fileexchange/15221-triangulationvolume/content/triangulationVolume.m
+	 *
+	 * maybe check normals are outward facing...
+	 */
+
+	double area,vol,magc,ta,tv,dp;
+	int i,j,k,jindex1,jindex0;
+	int v1,v2,v3;
+
+	double p1[3],p2[3],p3[3],totxyz[3],p[3],n[3],center[3];
+
+	vol = 0.0;
+	area = 0.0;
+	for(i=0;i<nrings;i++){
+
+		v1 = rings[i*maxverts];
+		v2 = rings[i*maxverts + 1];
+		v3 = rings[i*maxverts + 2];
+
+
+		for(j=0;j<3;j++){
+			p1[j] = pos[v3*3+j] - pos[v1*3+j];
+			p2[j] = pos[v3*3+j] - pos[v2*3+j];
+		}
+
+		cross(p1,p2,p3);
+		magc = magnitude(p3[0],p3[1],p3[2]);
+
+		for(j=0;j<3;j++){
+			n[j] = p3[j]/magc;
+			totxyz[j] = 0.0;
+			center[j] = 0.0;
+		}
+
+//		dp = dot(p1,n);
+//		//printf(" dp %lf \n",dp);
+//		if(dp<0){
+//			cross(p2,p1,p3);
+//			for(j=0;j<3;j++){
+//				n[j] = p3[j]/magc;
+//			}
+//			//dp = dot(v1,n);
+//			//printf(" corrected dp %lf \n",dp);
+//		}
+
+
+
+
+		for(j=0;j<vertsPerRingCount[i];j++){
+
+			jindex0 = j;
+			jindex1 = ((j+1) % vertsPerRingCount[i]);
+			v1 = rings[i*maxverts + jindex0];
+			v2 = rings[i*maxverts + jindex1];
+
+			for(k=0;k<3;k++)
+			{
+				p1[k] = pos[v1*3+k];
+				p2[k] = pos[v2*3+k];
+
+			}
+
+			cross(p1,p2,p3);
+//			dp = dot(p3,n);
+//			//printf(" dp %lf \n",dp);
+//			if(dp<0){
+//				cross(p2,p1,p3);
+//				//for(j=0;j<3;j++){
+//				//	n[j] = c[j]/magc;
+//				//}
+//				//dp = dot(v1,n);
+//				//printf(" corrected dp %lf \n",dp);
+//			}
+
+			for(k=0;k<3;k++)
+			{
+				center[k] +=  pos[v1*3+k]/vertsPerRingCount[i];
+				totxyz[k] += p3[k];
+			}
+
+		}
+
+		/*As we do fabs, it does not matter that the normals are outward
+		 *facing. Otherwise use v1.n to indicate if the sign of n is correct.
+		 *As below check dp and reverse the cross product if < 0
+		 */
+
+
+		ta = fabs( dot(totxyz,n) / 2.0);
+		tv = fabs( center[0] * n[0] * ta);
+
+
+
+		vol = vol + tv;
+		area = area + ta;
+
+		//printf(" current volume %lf %lf %lf\n",vol,tv,center[0]);
+
+
+	}
+	//printf("triangulated surface area %lf \n",area);
+	//printf("triangulated volume %lf \n",vol);
+	out[0] = area;
+	out[1] = vol;
+
+}
+
+
+void calc_volume_using_div_thereom(int ntri, int* verts, double* pos, double* out)
+{
+	/* Uses divergence theorem. Discrete volumes of each triangle using normal.
+	 *
+	 *  /// div(F) dV = //  x.n dA
+	 *
+	 *  define F = (1,0,0), div(F) = 1
+	 *
+	 *  /// 1 dV = // x.n dA
+	 *
+	 *  V = sum (x*n*at) , at is area of triangle
+	 *
+	 * http://www.mathworks.com.au/matlabcentral/fileexchange/15221-triangulationvolume/content/triangulationVolume.m
+	 *
+	 * maybe check normals are outward facing...
+	 */
+
+	double area,vol,magc,ta,tv,dp;
+	int i,j,u,v,w;
+
+	double a[3],b[3],c[3],nc[3],p[3],n[3],v1[3];
+
+	vol = 0.0;
+	area = 0.0;
+	for(i=0;i<ntri;i++){
+
+		u = verts[i*3];
+		v = verts[i*3+1];
+		w = verts[i*3+2];
+
+		for(j=0;j<3;j++){
+			a[j] = pos[v*3+j] - pos[u*3+j];
+			b[j] = pos[w*3+j] - pos[u*3+j];
+			v1[j] = pos[u*3+j];
+		}
+
+		cross(a,b,c);
+		magc = magnitude(c[0],c[1],c[2]);
+		ta = 0.5*magc;
+
+		//printf(" area of triangle %d is %lf\n",i,ta);
+
+		for(j=0;j<3;j++){
+			p[j] = (pos[u*3+j] + pos[v*3+j] + pos[w*3+j])/3.0;
+			n[j] = c[j]/magc;
+
+			//printf(" n %lf ",n[j]);
+		}
+
+		/*As we do fabs, it does not matter that the normals are outward
+		 *facing. Otherwise use v1.n to indicate if the sign of n is correct.
+		 *As below check dp and reverse the cross product if < 0
+		 */
+
+		dp = dot(v1,n);
+		//printf(" dp %lf \n",dp);
+		if(dp<0){
+			cross(b,a,c);
+			for(j=0;j<3;j++){
+				n[j] = c[j]/magc;
+			}
+			//dp = dot(v1,n);
+			//printf(" corrected dp %lf \n",dp);
+		}
+
+
+		//tv = fabs(p[0] * n[0] * ta);
+		tv = (p[0] * n[0] * ta);
+
+		vol = vol + tv;
+		area = area + ta;
+
+		//printf(" current volume %lf \n",vol);
+
+
+	}
+	//printf("triangulated surface area %lf \n",area);
+	//printf("triangulated volume %lf \n",vol);
+	out[0] = area;
+	out[1] = vol;
+
+}
+
+//typedef struct EdgeStruct Edge;
+//
+//typedef struct TriangleStruct Triangle;
+//
+//struct EdgeStruct{
+//	//int  maxtri;
+//	int  points[2];
+//	int  ntriangles;
+//	int  triangles[10];
+//	//Triangle* triangles[2];
+//};
+//
+//
+//struct TriangleStruct{
+//	int  points[3];
+//	Edge* edges[3];
+//};
+//
+
+
+
 int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 		 double* culled_outcenters,double* AvBondLength )
 {
@@ -373,12 +602,30 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 	int count;
 	int MAXTRI;
 	int i,j,k,d,m,found,dz,t;
+
+
+
 	//char * test;
 	//npoints = posdim/3;
     //printf(" in C , %d \n",npoints);
     //scanf("%s", &test);
     MAXTRI = npoints*5;
 	double ij,jk,ik;
+
+//	int nedges;
+//	nedges = 0;
+//	Edge* edges = malloc(3*MAXTRI*sizeof(Edge));
+//
+//	for (i = 0; i < 3*MAXTRI; i++)
+//	{
+//		edges[i].ntriangles=0;
+//	}
+
+	//Triangle* triangles = malloc(MAXTRI);
+
+	//edges = (Edge*) malloc(nedges*sizeof(Edge));
+
+
 //	double centers[MAXTRI*3];
 //	double radius[MAXTRI];
 //	double norms[MAXTRI*3];
@@ -407,6 +654,7 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 	double bondfactor=1.6;
 
 	double zaxis[]= {0.0,0.0,1.0};
+
 
     //printf(" in C , %d \n",npoints);
 
@@ -503,7 +751,7 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 						mp[1] = pos[m*3+1]-ccenter[1];
 						mp[2] = pos[m*3+2]-ccenter[2];
 						disttocenter = magnitude_diff(mp,nullv);
-						if(disttocenter<rad){
+						if(disttocenter<=rad){
 							found = 1;
 							break;
 							  }
@@ -559,6 +807,8 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 		}
 
 	}
+
+
 
 	//Now we check for triangles constructed inside the close surface
 	//Can happen if the diameter of the sphere/cylinder is of the same size as the
@@ -669,6 +919,9 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 
 			//printf("tri %d intersectf_count %d\n",t0,intersectf_count);
 			//printf("tri %d intersectb_count %d\n",t0,intersectb_count);
+
+
+
 			}
 		else{
 		//}
@@ -681,13 +934,181 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 
 			//printf("center %lf %lf %lf \n", culled_outcenters[count*3],culled_outcenters[count*3+1],culled_outcenters[count*3+2]);
 			//printf("index %d %d %d \n", culled_outtriangleindexs[count*3],culled_outtriangleindexs[count*3+1],culled_outtriangleindexs[count*3+2]);
-			count++;
 
+
+//			edges[nedges].points[0] = i0;
+//			edges[nedges].points[1] = j0;
+//			edges[nedges].triangles[0] = count;
+//			//edges[nedges].ntriangles++;
+//
+//			nedges++;
+//			edges[nedges].points[0] = j0;
+//			edges[nedges].points[1] = k0;
+//			edges[nedges].triangles[0] = count;
+//			//edges[nedges].ntriangles++;
+//			nedges++;
+//			edges[nedges].points[0] = k0;
+//			edges[nedges].points[1] = i0;
+//			edges[nedges].triangles[0] = count;
+//			//edges[nedges].ntriangles++;
+//			nedges++;
+
+			count++;
+			//printf( "edge %d %d \n",edges[nedges-1].points[0],edges[nedges-1].points[1]);
 
 		}
 	}
 
+    printf( "end \n");
     triangle_count = count;
+
+//    //collate edges
+//    int unique_nedges;
+//    int t2;
+//    unique_nedges = 0;
+//    Edge* unique_edges = malloc(2*MAXTRI*sizeof(Edge));
+//
+//    for (i = 0; i < 2*MAXTRI; i++)
+//    {
+//    	unique_edges[i].ntriangles=0;
+//    }
+//
+//    for (t = 0; t < nedges; t++)
+//    {
+//    	found = 0;
+//    	for (t2 = 0; t2 < unique_nedges; t2++)
+//    	    {
+//
+//    		found = compare_edges(unique_edges[t2],edges[t]);
+//    		if(found==1){break;}
+//    	    }
+//
+//    	if(found==0){
+//    		unique_edges[unique_nedges].points[0] = edges[t].points[0];
+//    		unique_edges[unique_nedges].points[1] = edges[t].points[1];
+//    		unique_edges[unique_nedges].triangles[0] = edges[t].triangles[0];
+//    		unique_edges[unique_nedges].ntriangles++;
+//    		unique_nedges++;
+//    	}
+//    	else{
+//    		unique_edges[t2].triangles[unique_edges[t2].ntriangles] = edges[t].triangles[0];
+//    		unique_edges[t2].ntriangles++;
+//
+//    	}
+//
+//    }
+//
+//
+//    printf("unique_nedges %d \n",unique_nedges);
+////
+////
+////
+////
+////
+//    int maxcull = unique_nedges*3/2;
+//
+//    int trilist[maxcull];
+//    int c;
+////	for (c = 0; c < maxcull; c++)
+////	    {
+////		culllist[c] = -1;
+////	    }
+//
+//    count = 0;
+//    for (t = 0; t < unique_nedges; t++)
+//    {
+//    	if(unique_edges[t].ntriangles > 2)
+//    	{
+//    		printf("edge %d (%d %d) has %d triangles\n", t,unique_edges[t].points[0],unique_edges[t].points[1],unique_edges[t].ntriangles );
+//    		for (t2 = 0; t2 < unique_edges[t].ntriangles; t2++)
+//    		  {
+//
+////    			for (c = 0; c < count; c++)
+////    			    {
+////    				if(culllist[c] == unique_edges[t].triangles[t2])
+////    				{
+//    			trilist[count] = unique_edges[t].triangles[t2];
+//				count++;
+////    					break;
+////    				}
+////
+////    			    }
+//
+//    			printf("triangle %d \n",unique_edges[t].triangles[t2]);
+//
+//    		  }
+//    	}
+//    }
+//    /*
+//     * Here we remove triangles that share edges that themselves have
+//     * > 2 triangles attached.
+//     *
+//     */
+//    int culllist[maxcull];
+//    int unilist[maxcull];
+//    int ncull = 0;
+//    int nunique = 0;
+//    int nu;
+//    int duplicate = 0;
+//    for (c = 0; c < count; c++)
+//    {
+//    	for (nu = 0; nu < nunique; nu++)
+//    	    {
+//    			if(trilist[c] == unilist[nu])
+//    			{
+//    			duplicate = 1;
+//    			break;
+//    			}
+//    	    }
+//    	if(!duplicate) { // if our value wasn't found in 'b' we will add this non-dublicate at index
+//    	   unilist[nunique] = trilist[c];
+//    	   nunique++;
+//		}
+//    	else
+//    	{
+//    		culllist[ncull] = trilist[c];
+//    		printf("triangle to cull due to shared edges %d\n",culllist[ncull]);
+//    		ncull++;
+//
+//
+//    	}
+//    	duplicate = 0;
+//
+//    }
+
+//    count = 0;
+//    found = 0;
+//    for (t = 0; t < triangle_count; t++)
+//    {
+//    	found=0;
+//    	for (c = 0; c < ncull; c++)
+//    	    {
+//    		if(culllist[c]==t)
+//    		{
+//    			found=1;
+//    			break;
+//    		}
+//
+//    	    }
+//    	if(found==0){
+//    		culled_outcenters[count*3] = culled_outcenters[t*3];;
+//			culled_outcenters[count*3+1] = culled_outcenters[t*3+1];
+//			culled_outcenters[count*3+2] = culled_outcenters[t*3+2] ;
+//			culled_outtriangleindexs[count*3] = culled_outtriangleindexs[t*3];
+//			culled_outtriangleindexs[count*3+1] = culled_outtriangleindexs[t*3+1];
+//			culled_outtriangleindexs[count*3+2] = culled_outtriangleindexs[t*3+2];
+//			count++;
+//    	}
+//
+//    }
+//    triangle_count = count;
+
+
+
+    //calc_volume_using_div_thereom(triangle_count,culled_outtriangleindexs,pos);
+    //edges = NULL;
+    //free(edges);
+    //free(triangles);
 
 	free(centers);
 	free(radius);
@@ -701,6 +1122,26 @@ int triangulate(int npoints,double* pos,int* culled_outtriangleindexs,
 	return triangle_count;
 
 }
+
+//int compare_edges(Edge e1, Edge e2)
+//{
+//	int same = 0;
+//	if(e1.points[0] == e2.points[0])
+//	{
+//		if(e1.points[1] == e2.points[1])
+//		{
+//			same=1;
+//		}
+//	}
+//	if(e1.points[0] == e2.points[1])
+//	{
+//		if(e1.points[1] == e2.points[0])
+//		{
+//			same=1;
+//		}
+//	}
+//	return same;
+//}
 
 void sep_vector(double* v1, double* v2, double* outv)
 {

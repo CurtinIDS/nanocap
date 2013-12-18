@@ -1,8 +1,15 @@
 '''
-Created on Aug 24, 2011
+-=-=-=-=-=-=-= NanoCap -=-=-=-=-=-=-=
+Created: Aug 24 2011
+Copyright Marc Robinson 2013
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-@author: Marc
+Cap base class. Contains instances of Points
+Routines for setting up carbon atoms, dual lattice 
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
+
 from nanocap.core.globals import *
 import os,sys,math,copy,random,time
 import numpy
@@ -12,7 +19,7 @@ from nanocap.core.util import *
 from nanocap.clib import clib_interface
 clib = clib_interface.clib
 
-class cap(object):
+class Cap(object):
     def __init__(self):
         self.thomsonPoints = points.Points("Cap Dual Lattice Points")
         self.thomsonPoints.initArrays(0)
