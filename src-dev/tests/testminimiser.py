@@ -5,14 +5,14 @@ Created on Sep 20, 2013
 '''
 
 import unittest
+import os,sys
+sys.path.append(os.path.abspath(os.path.dirname(__file__)+"/../"))
 from nanocap.core.util import *
 from nanocap.core.globals import *
 from nanocap.core import globals
 from nanocap.core import processes
 from nanocap.core import config
 
-print "ROOTDIR",ROOTDIR
-clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
 
 class MinimiserCheck(unittest.TestCase):
     def testNanotubeDualLatticeMinimisation(self):
@@ -38,8 +38,10 @@ class MinimiserCheck(unittest.TestCase):
         self.processor.resetCap(seed)
         
         self.processor.minimiseDualLattice()
+        
+        
             
-    def testFullereneDualLatticeMinimisation(self):
+    def xtestFullereneDualLatticeMinimisation(self):
         self.config = config.Config()
         self.config.setHomeDir(os.getcwd())
         self.config.setUser("Test")

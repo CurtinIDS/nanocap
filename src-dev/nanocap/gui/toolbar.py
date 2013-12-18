@@ -193,23 +193,23 @@ class toolbar(QtGui.QWidget):
                                      l=self.config.opts["NanotubeLength"],
                                      capEstimate = self.config.opts["EstimateCapPoints"])
         
-        self.NanotubeTubeThomsonPointsEntry.setValue(self.Processor.nanotube.tubeThomsonPoints.npoints)
-        self.NanotubeTubeCarbonAtomEntry.setValue(self.Processor.nanotube.tubeCarbonAtoms.npoints)
+        self.NanotubeTubeThomsonPointsEntry.setValue(self.Processor.cappedNanotube.nanotube.thomsonPoints.npoints)
+        self.NanotubeTubeCarbonAtomEntry.setValue(self.Processor.cappedNanotube.nanotube.carbonAtoms.npoints)
         
         self.NanotubeCapThomsonPointsEntry.setValue(self.config.opts["NCapDualLatticePoints"])
         self.NanotubeCapCarbonAtomEntry.setValue(self.config.opts["NCapCarbonAtoms"])
         
-        self.NanotubeForceCutoffChanged(self.Processor.nanotube.cutoff)
+        self.NanotubeForceCutoffChanged(self.Processor.cappedNanotube.nanotube.cutoff)
         
-        self.NanotubeLengthEntry.setValue(self.Processor.nanotube.length)
-        printl("setting minimum",int(self.Processor.nanotube.minimumLength*100))
-        self.NanotubeLengthSlider.setMinimum(int(self.Processor.nanotube.minimumLength)*100)
-        self.NanotubeLengthEntry.setMinimum(self.Processor.nanotube.minimumLength)
+        self.NanotubeLengthEntry.setValue(self.Processor.cappedNanotube.nanotube.length)
+        printl("setting minimum",int(self.Processor.cappedNanotube.nanotube.minimumLength*100))
+        self.NanotubeLengthSlider.setMinimum(int(self.Processor.cappedNanotube.nanotube.minimumLength)*100)
+        self.NanotubeLengthEntry.setMinimum(self.Processor.cappedNanotube.nanotube.minimumLength)
             
-        self.ObjectActors.NanotubeTubeDualLatticePoints.initArrays(self.Processor.nanotube.tubeThomsonPoints)
+        self.ObjectActors.NanotubeTubeDualLatticePoints.initArrays(self.Processor.cappedNanotube.nanotube.thomsonPoints)
         self.ObjectActors.NanotubeTubeDualLatticePoints.update()
         
-        self.ObjectActors.NanotubeTubeCarbonAtomsPoints.initArrays(self.Processor.nanotube.tubeCarbonAtoms)
+        self.ObjectActors.NanotubeTubeCarbonAtomsPoints.initArrays(self.Processor.cappedNanotube.nanotube.carbonAtoms)
         self.ObjectActors.NanotubeTubeCarbonAtomsPoints.update()
         
         self.Operations.ToggleTubeDualLatticePoints()
@@ -229,23 +229,23 @@ class toolbar(QtGui.QWidget):
         seed = self.getNanotubeCapSeed()
         self.Processor.resetCap(seed=seed)
         
-        self.NanotubeCapThomsonPointsEntry.setValue(self.Processor.cap.thomsonPoints.npoints)
-        NcCap = self.Processor.cap.thomsonPoints.npoints*2 - 2
+        self.NanotubeCapThomsonPointsEntry.setValue(self.Processor.cappedNanotube.cap.thomsonPoints.npoints)
+        NcCap = self.Processor.cappedNanotube.cap.thomsonPoints.npoints*2 - 2
         self.NanotubeCapCarbonAtomEntry.setValue(NcCap)
         
-        tNt = 2*self.Processor.cap.thomsonPoints.npoints + self.Processor.nanotube.tubeThomsonPoints.npoints
-        tNc = 2*NcCap + self.Processor.nanotube.tubeCarbonAtoms.npoints
+        tNt = 2*self.Processor.cappedNanotube.cap.thomsonPoints.npoints + self.Processor.cappedNanotube.nanotube.thomsonPoints.npoints
+        tNc = 2*NcCap + self.Processor.cappedNanotube.nanotube.carbonAtoms.npoints
         
         self.CappedNanotubeThomsonPointsEntry.setValue(tNt)
         self.CappedNanotubeCarbonAtomEntry.setValue(tNc)
         
-        self.ObjectActors.CappedNanotubeTubeDualLatticePoints.initArrays(self.Processor.nanotube.cappedTubeThomsonPoints)
+        self.ObjectActors.CappedNanotubeTubeDualLatticePoints.initArrays(self.Processor.cappedNanotube.thomsonPoints)
         self.ObjectActors.CappedNanotubeTubeDualLatticePoints.update()
         
-        self.ObjectActors.CapDualLatticePoints.initArrays(self.Processor.cap.thomsonPoints)
+        self.ObjectActors.CapDualLatticePoints.initArrays(self.Processor.cappedNanotube.cap.thomsonPoints)
         self.ObjectActors.CapDualLatticePoints.update()
         
-        self.ObjectActors.ReflectedCapDualLatticePoints.initArrays(self.Processor.reflectedCap.thomsonPoints)
+        self.ObjectActors.ReflectedCapDualLatticePoints.initArrays(self.Processor.cappedNanotube.reflectedCap.thomsonPoints)
         self.ObjectActors.ReflectedCapDualLatticePoints.update()
         
         self.Operations.ToggleTubeDualLatticePoints()
@@ -464,7 +464,7 @@ class toolbar(QtGui.QWidget):
         if(self.config.opts["GenType"]=="Fullerene"):
             self.Processor.minsearch.addGaussian(self.Processor.fullerene.thomsonPoints)    
         if(self.config.opts["GenType"]=="Nanotube"):
-            self.Processor.minsearch.addGaussian(self.Processor.nanotube.cappedTubeThomsonPoints) 
+            self.Processor.minsearch.addGaussian(self.Processor.cappedNanotube.thomsonPoints) 
     
     def setAddGaussians(self):
         if(self.AddGaussiansCk.isChecked()):
@@ -542,7 +542,7 @@ class toolbar(QtGui.QWidget):
     def NanotubeForceSliderChanged(self,val):
         cutoff = float(val)/100.0
         self.NanotubeForceCutoff.setValue(cutoff)
-        self.Processor.nanotube.cutoff = cutoff 
+        self.Processor.cappedNanotube.setZcutoff(cutoff) 
     
     
     def setAutoNanotubeZCutoff(self):
@@ -550,7 +550,7 @@ class toolbar(QtGui.QWidget):
         if self.autoCutoffCB.isChecked():
             self.NanotubeForceCutoffSlider.setDisabled(True)
             self.NanotubeForceCutoff.setDisabled(True)
-            self.Processor.nanotube.setZcutoff(self.config.opts["NCapDualLatticePoints"])
+            self.Processor.cappedNanotube.setZcutoffFromCapPoints(self.config.opts["NCapDualLatticePoints"])
             try:
                 self.NanotubeForceCutoffSlider.setValue(self.Processor.nanotube.cutoff*100)
                 self.NanotubeForceCutoff.setValue(self.Processor.nanotube.cutoff)
@@ -566,7 +566,7 @@ class toolbar(QtGui.QWidget):
         try:self.NanotubeForceCutoffSlider.setValue(val*100)
         except:pass
         self.ObjectActors.moveNanotubeCutoffPlane(val)
-        self.Processor.nanotube.cutoff = val 
+        self.Processor.cappedNanotube.setZcutoff(val) 
         self.config.opts["NanotubeZCutoff"] = val
     
         

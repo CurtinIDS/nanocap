@@ -321,25 +321,25 @@ class gui():
     def saveCurrentStructure(self,folder=None,makeVideo=True):
         if(folder == None):return
         
-        self.processor.saveCurrentStructure(folder,update=False)
+        folder_ext = self.processor.saveCurrentStructure(folder,recalculate=False)
         
         if(makeVideo):
-            self.vtkframe.makeRotationImages(folder, degPerRotation=2)
+            self.vtkframe.makeRotationImages(folder_ext, degPerRotation=2)
             self.threadManager.submit_to_queue(encodeImages,
-                                               folder+"/rotation_images/", folder,
+                                               folder_ext+"/rotation_images/", folder_ext,
                                                framerate=25, ffmpeg="ffmpeg"
                                                )  
             
         self.vtkframe.VTKRenderer.ResetCamera()  
         fp = self.vtkframe.VTKCamera.GetFocalPoint()
         #self.gui.vtkframe.move_camera((0,0,-10),fp,(1,0,0))
-        self.vtkframe.saveImage(str(folder)+"/view.jpg",overwrite=True,resolution=None)
+        self.vtkframe.saveImage(str(folder_ext)+"/view.jpg",overwrite=True,resolution=None)
         
         self.mdiarea.setActiveSubWindow(self.schlegelWindow)
         self.schlegelframe.VTKRenderer.ResetCamera()  
         fp = self.schlegelframe.VTKCamera.GetFocalPoint()
         self.schlegelframe.move_camera((0,0,-10),(0,0,0),(1,0,0))
-        self.schlegelframe.saveImage(str(folder)+"/schlegel_view.jpg",overwrite=True,resolution=None)
+        self.schlegelframe.saveImage(str(folder_ext)+"/schlegel_view.jpg",overwrite=True,resolution=None)
         self.mdiarea.setActiveSubWindow(self.vtkWindow)
     
     

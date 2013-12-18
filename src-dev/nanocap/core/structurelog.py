@@ -46,23 +46,27 @@ class Structure(object):
             printl("fullerene.carbonAtoms.pos", self.fullerene.carbonAtoms.pos is structobject.carbonAtoms.pos)   
             printl("fullerene.thomsonPoints.freeflags", self.fullerene.thomsonPoints.freeflags is structobject.thomsonPoints.freeflags)   
             
+            #self.fullerene.calcInfo()
+            
+            #raw_input()
+            
             
         if(self.type=="Nanotube"):    
-            self.nanotube = copy.deepcopy(structobject)
-            self.cap = copy.deepcopy(cap)
+            self.cappedNanotube = copy.deepcopy(structobject)
+            #self.cap = copy.deepcopy(cap)
 #            self.NCapDualLattice=NCapDualLattice
 #            self.NTubeDualLattice=NTubeDualLattice
 #            self.NCapCarbonAtoms=NCapCarbonAtoms
 #            self.NTubeCarbonAtoms=NTubeCarbonAtoms
             
             printl("added structure checking copies")
-            printl("nanotube", self.nanotube is structobject)     
+            printl("cappedNanotube ", self.cappedNanotube is structobject)     
             
     def getDualLatticeEnergy(self):
         if(self.type=="Fullerene"):
             return self.fullerene.thomsonPoints.FinalEnergy
         if(self.type=="Nanotube"):
-            return self.nanotube.cappedTubeThomsonPoints.FinalEnergy
+            return self.cappedNanotube.thomsonPoints.FinalEnergy
     
     def getCarbonLatticeEnergy(self):
         try:
@@ -74,10 +78,10 @@ class Structure(object):
                 return FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy
             
             if(self.type=="Nanotube"):
-                FinalEnergy = self.nanotube.cappedTubeCarbonAtoms.FinalEnergy
-                FinalEnergyPerAtom = self.nanotube.cappedTubeCarbonAtoms.FinalEnergy/self.nanotube.cappedTubeCarbonAtoms.npoints
-                FinalScale = self.nanotube.cappedTubeCarbonAtoms.FinalScale
-                FinalScaleEnergy = self.nanotube.cappedTubeCarbonAtoms.FinalScaleEnergy
+                FinalEnergy = self.cappedNanotube.carbonAtoms.FinalEnergy
+                FinalEnergyPerAtom = self.cappedNanotube.carbonAtoms.FinalEnergy/self.cappedNanotube.carbonAtoms.npoints
+                FinalScale = self.cappedNanotube.carbonAtoms.FinalScale
+                FinalScaleEnergy = self.cappedNanotube.carbonAtoms.FinalScaleEnergy
                 return FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy
         
         except:
@@ -97,7 +101,7 @@ class Structure(object):
 #            self.nanotube_m = self.n.m
 #            self.nanotube_u = self.n.u
 #            self.nanotube_mappingAngle = self.n.mappingAngle
-#            self.nanotube_tubeDualLatticeCOM = self.n.tubeThomsonPointsCOM
+#            self.nanotube_tubeDualLatticeCOM = self.n.thomsonPointsCOM
             
         
         
@@ -109,7 +113,7 @@ class Structure(object):
 #        if(nanotube!=None):
 #            printl("nanotube_n", nanotube.n is self.n.n)     
 #            printl("nanotube_n", self.n is nanotube)  
-#            printl("nanotube_n", self.n.tubeCarbonAtoms is nanotube.tubeCarbonAtoms)  
+#            printl("nanotube_n", self.n.carbonAtoms is nanotube.carbonAtoms)  
         
 class StructureLog(object):
     def __init__(self,type):
@@ -180,22 +184,22 @@ class StructureLog(object):
         FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy = self.structures[i].getCarbonLatticeEnergy()
         
         if(self.type=="Nanotube"):
-            Nd = str(self.structures[i].nanotube.cappedTubeThomsonPoints.npoints)
-            Nd += " "+str(self.structures[i].cap.thomsonPoints.npoints)
-            Nd += " "+str(self.structures[i].nanotube.tubeThomsonPoints.npoints)
+            Nd = str(self.structures[i].cappedNanotube.thomsonPoints.npoints)
+            Nd += " "+str(self.structures[i].cappedNanotube.cap.thomsonPoints.npoints)
+            Nd += " "+str(self.structures[i].cappedNanotube.nanotube.thomsonPoints.npoints)
             
             try:
-                Nc = str(self.structures[i].nanotube.cappedTubeCarbonAtoms.npoints)
-                Nc += " "+str(self.structures[i].cap.thomsonPoints.npoints*2 - 2)
-                Nc += " "+str(self.structures[i].nanotube.tubeCarbonAtoms.npoints)
+                Nc = str(self.structures[i].cappedNanotube.carbonAtoms.npoints)
+                Nc += " "+str(self.structures[i].cappedNanotube.cap.thomsonPoints.npoints*2 - 2)
+                Nc += " "+str(self.structures[i].cappedNanotube.nanotube.carbonAtoms.npoints)
             except:
                 Nc = 0
                 printl("log: no carbon atoms found")
                 
-            Ch = str(self.structures[i].nanotube.n)+" "
-            Ch += str(self.structures[i].nanotube.m)
-            Length =str(self.structures[i].nanotube.length)
-            Scale = str(self.structures[i].nanotube.scale)
+            Ch = str(self.structures[i].cappedNanotube.nanotube.n)+" "
+            Ch += str(self.structures[i].cappedNanotube.nanotube.m)
+            Length =str(self.structures[i].cappedNanotube.nanotube.length)
+            Scale = str(self.structures[i].cappedNanotube.nanotube.scale)
             data  = [i,Ch,Scale,Length,Nd,Nc,
             self.structures[i].rings[3],
             self.structures[i].rings[4],

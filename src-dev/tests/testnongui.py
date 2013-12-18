@@ -12,32 +12,40 @@ from nanocap.core import globals
 from nanocap.core import processes
 from nanocap.core import config
 from nanocap.objects import tube
-
-
-print "ROOTDIR",ROOTDIR
-clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
+from nanocap.clib import clib_interface
+clib = clib_interface.clib
 
 class TestNonGui(unittest.TestCase):  
-    def xtestBasicFullereneOps(self):
+    def testBasicFullereneOps(self):
+        
+        
         self.config = config.Config()
+        self.config.setHomeDir(os.getcwd())
+        self.config.setUser("Example")
+            
         self.config.opts["GenType"]="Fullerene"
         self.config.opts["CalcCappedTubeCarbonAtoms"]=True
         self.config.opts["CalcCarbonRings"]=True
         self.config.opts["CalcCarbonBonds"]=True
         self.config.opts["CalcTriangulation"]=True     
         self.config.opts["CalcSchlegel"]=False     
-        self.config.opts["NFullereneDualLatticePoints"] = 100
-        self.config.opts["isNanotube"]=0
-        self.config.opts["AutoNanotubeZCutoff"]=True
+        self.config.opts["NFullereneDualLatticePoints"] = 60
         self.config.opts["MinTol"]=1e-5
-        self.config.opts["AutoNanotubeZCutoff"]=True
+        self.config.opts["CarbonMinimise"]=True
 
-        self.processor = processes.processor(config = self.config)
+        self.processor = processes.Processor(config = self.config)
         
-        self.processor.resetFullereneThomsonPoints(seed  = 12345)
-        
-        printl("globals.CalcTriangulation",globals.CalcTriangulation)
+        self.processor.resetFullereneDualLattice(seed  = 12345)
+    
         self.processor.minimiseDualLattice()
+        
+        
+        self.processor.minimiseCarbonAtoms()
+        
+        #self.processor.saveCurrentStructure()
+        
+        print self.processor.fullerene
+        
         
     def xtestMinSearchFullereneVsTime(self):
         self.config = config.Config()
@@ -110,7 +118,7 @@ class TestNonGui(unittest.TestCase):
         self.processor.minimaSearch()
 
     
-    def testBasicNanotubeOps(self):
+    def xtestBasicNanotubeOps(self):
         
         self.config = config.Config()
         

@@ -325,7 +325,7 @@ class dualLatticeMinimiser(Minimiser):
         if(self.config.opts["GenType"]=="Nanotube"):
             '''set the z-cutoff for thomson potential the nanotube '''
             if(self.FF.ID=="Thomson"):
-                self.FF.args[2] = self.processor.nanotube.cutoff
+                self.FF.args[2] = self.processor.cappedNanotube.nanotube.cutoff
     
 #    def final_operations(self,pointSet):
 #        if(globals.CarbonMinimise and self.updateFlag):
@@ -337,10 +337,10 @@ class dualLatticeMinimiser(Minimiser):
             
     def pre_force_call_operations(self,pos,pointSet):       
         if(self.config.opts["GenType"]=="Nanotube"):
-            length=self.processor.nanotube.tubeThomsonPointsCOM[2]*2 
+            length=self.processor.cappedNanotube.nanotube.thomsonPointsCOM[2]*2 
         else:
             length=None
-        scale_points_to_rad(pointSet.npoints,pos,self.req_radius,length=length)          
+        clib_interface.scale_points_to_rad(pointSet.npoints,pos,self.req_radius,length=length)          
         
     
     def post_force_call_operations(self,pos,pointSet): 
@@ -382,11 +382,11 @@ class carbonLatticeMinimiser(Minimiser):
     
     def apply_scale(self,gamma,pointSet):
         if(self.config.opts["GenType"]=="Nanotube"):
-            length=self.processor.nanotube.tubeThomsonPointsCOM[2]*2.0
+            length=self.processor.cappedNanotube.nanotube.thomsonPointsCOM[2]*2.0
         else:
             length=None
         
-        scale_points_to_rad(pointSet.npoints,pointSet.pos,float(gamma[0]),length=length) 
+        clib_interface.scale_points_to_rad(pointSet.npoints,pointSet.pos,float(gamma[0]),length=length) 
         
     
     def get_initial_scale(self,pointSet):

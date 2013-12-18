@@ -12,9 +12,9 @@ dirs
 import os,numpy,sys,inspect,platform
 import ctypes
 
-import PySide
-from PySide import QtGui, QtCore, QtOpenGL
-QT = PySide
+#import PySide
+#from PySide import QtGui, QtCore, QtOpenGL
+#QT = PySide
 
 try:
     import PySide
@@ -42,8 +42,8 @@ if(PLATFORM!='win'):os.environ["OMP_NUM_THREADS"] = "4"
 NPF = numpy.float64
 NPF32 = numpy.float32
 NPI = numpy.int32
-use_clib=True
-DEBUG=False
+use_clib= True
+DEBUG   = False
 VERBOSE = True
 IconDir = ":Icons/"
 IconDir = ":"

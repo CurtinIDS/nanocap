@@ -7,20 +7,23 @@ Created on Aug 15, 2013
 import ctypes,sys,numpy,os,inspect
 from nanocap.core.globals import *
 from nanocap.core.util import *
-#edip = ctypes.cdll.LoadLibrary("edip.so") 
-#DIR = os.path.dirname(__file__)
-#DIR = os.path.dirname(__file__)
-def my_path(path_from_exe=""):
-    if hasattr(sys, "frozen"):
-        exe = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
-        return os.path.abspath(exe+path_from_exe)
-    #print os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
-    return os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
+
 
 if(PLATFORM=="win"):lib="edip.dll"
 else:  lib="edip.so"
     
-edip = ctypes.cdll.LoadLibrary(my_path(path_from_exe = "/../Resources/ext/edip" )+"/"+lib) 
+#relative_lib = os.path.join(os.path.dirname(get_relative_path(__file__)),lib)    
+    
+#if(PLATFORM == "win"):path_relative_to_exe = "/ext/edip"
+#elif(PLATFORM == "osx"):path_relative_to_exe = "/../Resources/ext/edip"
+#else:path_relative_to_exe = ""
+
+#print path_from_file(__file__,path_relative_to_exe)+"/"+lib
+
+relative_lib = os.path.join(get_root(),"ext","edip",lib)
+
+print "relative_lib",relative_lib
+edip = ctypes.cdll.LoadLibrary(relative_lib) 
 
 parameters={}
 parameters["gamma"] = 1.35419222406125

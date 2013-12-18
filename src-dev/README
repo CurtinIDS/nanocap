@@ -61,6 +61,20 @@ License.
 Releases
 ========
 
+1.0.2-alpha
+-----------
+
+	- Move ring calcuation routines to it's own module and added calls in the fullerene
+	and capped nanotube classes
+	
+	- Added cappednanotube class, which holds nanotube, cap and reflected cap objects. 
+	Dual lattice points and carbon atoms are constructed by joining the pointSets 
+	together.
+	
+	- Added volume and surface area calculation for fullerenes. Uses divergence theorem
+	and the carbon atom rings. The normal to each ring is used along with the surface area
+	to determine the volume. Sphericity is then calculated.  
+
 1.0.1-alpha
 -----------
 

@@ -241,17 +241,17 @@ class MinimaSearch(object):
            if(self.config.opts["CarbonMinimise"]): 
                self.processor.updateDualLattice(renderUpdate=False)
                self.processor.fullerene.carbonAtoms.pos = numpy.copy(self.uniqueMinimaCarbon[ID].pos)
-               #self.processor.updateCarbonLattice()
+               self.processor.updateCarbonLattice(renderUpdate=False)
            else:
                pass
                #self.processor.updateDualLattice()
                
         if(self.config.opts["GenType"]=="Nanotube"):
-            self.processor.nanotube.cappedTubeThomsonPoints.pos = numpy.copy(self.uniqueMinima[ID].pos) 
+            self.processor.cappedNanotube.thomsonPoints.pos = numpy.copy(self.uniqueMinima[ID].pos) 
             if(self.config.opts["CarbonMinimise"]): 
                self.processor.updateDualLattice(renderUpdate=False)
-               self.processor.nanotube.cappedTubeCarbonAtoms.pos = numpy.copy(self.uniqueMinimaCarbon[ID].pos)
-               #self.processor.updateCarbonLattice()
+               self.processor.cappedNanotube.carbonAtoms.pos = numpy.copy(self.uniqueMinimaCarbon[ID].pos)
+               self.processor.updateCarbonLattice(renderUpdate=False)
             else:
                 pass
                #self.processor.updateDualLattice()
@@ -387,10 +387,11 @@ class MinimaSearch(object):
                     if(self.config.opts["GenType"]=="Fullerene"):
                        carbonAtoms = self.processor.fullerene.carbonAtoms
                     if(self.config.opts["GenType"]=="Nanotube"):
-                       carbonAtoms = self.processor.nanotube.cappedTubeCarbonAtoms   
+                       carbonAtoms = self.processor.cappedNanotube.carbonAtoms   
                     
                     self.processor.carbonLatticeMinimiser.minimise_scale(carbonAtoms)
                     self.processor.carbonLatticeMinimiser.minimise(carbonAtoms)   
+                    
                     self.uniqueMinimaCarbon.append(copy.deepcopy(carbonAtoms))
                 
                 self.processor.addCurrentStructure()
