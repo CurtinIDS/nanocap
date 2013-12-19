@@ -46,9 +46,10 @@ class Processor(object):
             self.config = config
             
         self.minimiser = minimisation .dualLatticeMinimiser(self)
-        
         self.minsearch = minimasearch.MinimaSearch(self,self.minimiser)
-        self.carbonLatticeMinimiser = minimisation .carbonLatticeMinimiser(self)
+        self.carbonLatticeMinimiser = minimisation.carbonLatticeMinimiser(self,self.config.opts["CarbonForceField"])
+        
+        
         
         self.structureLog = {}
         self.structureLog["Fullerene"] = structurelog.StructureLog("Fullerene")
@@ -56,6 +57,11 @@ class Processor(object):
         
         self.ringCount = numpy.zeros(10,NPI)
     
+    def setupCarbonLatticeMinimiser(self,FFID=None):
+        if(FFID!=None):self.config.opts["CarbonForceField"] = FFID
+        self.carbonLatticeMinimiser = minimisation.carbonLatticeMinimiser(self,self.config.opts["CarbonForceField"])
+        
+        
     
     def waitGUIlock(self):
         time.sleep(0.1)
@@ -180,163 +186,40 @@ class Processor(object):
             folder += "/"+self.cappedNanotube.get_single_line_description(carbonAtoms=carbonAtoms,
                                                                           dualLattice=dualLattice,
                                                                           carbonEnergy=carbonEnergy)
-            
-#            scale = self.cappedNanotube.nanotube.scale
-#            IPperc = float(self.isolatedPentagons)/float(self.ringCount[5])*100.0
-#            
-#            folder += "/CappedNanotube_n_"+str(self.cappedNanotube.nanotube.n)+"_m_"+str(self.cappedNanotube.nanotube.m)
-#            folder+="_Length_"+str(self.cappedNanotube.nanotube.length+(2.0/self.cappedNanotube.nanotube.scale))
-#            folder+="_IP%_"+str(IPperc)
-#            if(carbonAtoms):folder+="_Nccap_"+str(self.config.opts["NCapCarbonAtoms"])
-#            if(dualLattice):folder+="_Ntcap_"+str(self.cappedNanotube.cap.thomsonPoints.npoints)
-#            if(carbonEnergy):
-#                try:folder+="_Energy_"+str(self.cappedNanotube.carbonAtoms.FinalEnergy)
-#                except:folder+="_Energy_"+str(self.cappedNanotube.thomsonPoints.FinalEnergy)
-#            else:folder+="_Energy_"+str(self.cappedNanotube.thomsonPoints.FinalEnergy)
-
             printl("making dir",folder)
-            #os.makedirs(folder)
             try:os.makedirs(folder)
             except:pass
-            
-            
-            
+
             if(carbonAtoms):
                 write_xyz(folder+"/atom_coords.xyz",self.cappedNanotube.carbonAtoms)
-                
                 try:write_xyz(folder+"/atom_coords.xyz",self.cappedNanotube.carbonAtoms,contstrained=True)
-                except:pass
-#                f = open(folder+"/atom_coords.xyz","w")
-#                
-#                f.write(str(self.cappedNanotube.carbonAtoms.npoints)+"\n")
-#                f.write("\n")
-#                for i in range(0,self.cappedNanotube.carbonAtoms.npoints):
-#                    f.write("C "+str(self.cappedNanotube.carbonAtoms.pos[i*3])+" "+str(self.cappedNanotube.carbonAtoms.pos[i*3+1])+" "+str(self.cappedNanotube.carbonAtoms.pos[i*3+2])+"\n")
-#                f.close()
-#                
-#                try:
-#                    f = open(folder+"/atom_coords_constrained.xyz","w")
-#                    f.write(str(self.cappedNanotube.carbonAtoms.npoints)+"\n")
-#                    f.write("\n")
-#                    for i in range(0,self.cappedNanotube.carbonAtoms.npoints):
-#                        f.write("C "+str(self.cappedNanotube.carbonAtoms.constrained_pos[i*3])+" "+str(self.cappedNanotube.carbonAtoms.constrained_pos[i*3+1])+" "+str(self.cappedNanotube.carbonAtoms.constrained_pos[i*3+2])+"\n")
-#                    f.close()
-#                except:
-#                    pass
-            
+                except:pass            
             if(dualLattice):
                 write_xyz(folder+"/thomson_coords.txt",self.cappedNanotube.thomsonPoints)
-                
-#                f = open(folder+"/thomson_coords.txt","w")
-#                for i in range(0,self.cappedNanotube.thomsonPoints.npoints):
-#                    f.write(str(self.cappedNanotube.thomsonPoints.pos[i*3])+" "+str(self.cappedNanotube.thomsonPoints.pos[i*3+1])+" "+str(self.cappedNanotube.thomsonPoints.pos[i*3+2])+"\n")
-#                f.close()
-            
-            
-            f = open(folder+"/info.txt","w") 
-#            if(dualLattice):f.write("Total_Thomson_Points_Nt "+str(self.cappedNanotube.thomsonPoints.npoints)+"\n")
-#            if(carbonAtoms):f.write("Total_Carbon_Atoms_Nc "+str(self.cappedNanotube.carbonAtoms.npoints)+"\n")
-#            if(dualLattice):f.write("Cap_Thomson_Points_NtCap "+str(self.cappedNanotube.cap.thomsonPoints.npoints)+"\n")
-#            if(carbonAtoms):f.write("Cap_Carbon_Atoms_NcCap "+str(self.cappedNanotube.cap.thomsonPoints.npoints*2.0 - 2)+"\n")
-#            if(dualLattice):f.write("Tube_Thomson_Points_NtTube "+str(self.cappedNanotube.nanotube.thomsonPoints.npoints)+"\n")
-#            if(carbonAtoms):f.write("Tube_Carbon_Atoms_NcTube "+str(self.cappedNanotube.nanotube.carbonAtoms.npoints)+"\n")
-#            if(dualLattice):f.write("Energy "+str(self.cappedNanotube.thomsonPoints.FinalEnergy)+"\n")
-#            
-#            try:f.write("carbon_lattice_scale "+str(self.cappedNanotube.carbonAtoms.FinalScale)+"\n")
-#            except:pass    
-#            try:f.write("carbon_lattice_scaled_energy "+str(self.cappedNanotube.carbonAtoms.FinalScaleEnergy)+"\n")
-#            except:pass 
-#            try:f.write("carbon_lattice_energy "+str(self.cappedNanotube.carbonAtoms.FinalEnergy)+"\n")
-#            except:pass       
-#
-#            f.write("Ring_stats:\n")
-#            for i in range(0,len(self.ringCount)):
-#                if(i==5):f.write("Number_of_"+str(i)+"-agons "+str(self.ringCount[i])+" IP "+str(self.isolatedPentagons)+"\n") 
-#                else:f.write("Number_of_"+str(i)+"-agons "+str(self.ringCount[i])+"\n")  
-#            f.write(str("%3.2f" % self.percHex)+" % Hex" +"\n")  
-#            
-#            f.write("n "+str(self.cappedNanotube.nanotube.n)+"\n")
-#            f.write("m "+str(self.cappedNanotube.nanotube.m)+"\n")
-#            f.write("Rad "+str(self.cappedNanotube.nanotube.rad)+"\n")
-#            f.write("Circumference "+str(self.cappedNanotube.nanotube.circumference)+"\n")
-#            f.write("Length "+str(self.cappedNanotube.nanotube.length + (2.0/self.cappedNanotube.nanotube.scale) )+"\n")
-#            f.write("Surface_area "+str(self.cappedNanotube.nanotube.surfaceArea + 4*math.pi*(1.0/self.cappedNanotube.nanotube.scale))+"\n")
-            
+
+            f = open(folder+"/info.txt","w")
             f.write(self.cappedNanotube.__repr__())
-            
             f.close() 
 
         else:
             self.fullerene.calcInfo()
-        
-            #raw_input()
-            folder+="/Fullerene"
             
-            if(carbonAtoms):folder+="_Nc_"+str(self.fullerene.carbonAtoms.npoints)
-            if(dualLattice):folder+="_Nt_"+str(self.fullerene.thomsonPoints.npoints)
-            if(carbonEnergy):
-                try:folder+="_Energy_"+str(self.fullerene.carbonAtoms.FinalEnergy)
-                except:folder+="_Energy_"+str(self.fullerene.thomsonPoints.FinalEnergy)
-            else:folder+="_Energy_"+str(self.fullerene.thomsonPoints.FinalEnergy)
-            IPperc = float(self.fullerene.isolatedPentagons)/float(self.fullerene.ringCount[5])*100.0
-            folder+="_IP%_"+str(IPperc)
-            
+            folder += "/"+self.fullerene.get_single_line_description(carbonAtoms=carbonAtoms,
+                                                                          dualLattice=dualLattice,
+                                                                          carbonEnergy=carbonEnergy)
             try:os.makedirs(folder)
             except:pass
-
+            
             if(carbonAtoms):
-                f = open(folder+"/atom_coords.xyz","w")
-                f.write(str(self.fullerene.carbonAtoms.npoints)+"\n")
-                f.write("\n")
-                for i in range(0,self.fullerene.carbonAtoms.npoints):
-                    f.write("C "+str(self.fullerene.carbonAtoms.pos[i*3])+" "+str(self.fullerene.carbonAtoms.pos[i*3+1])+" "+str(self.fullerene.carbonAtoms.pos[i*3+2])+"\n")
-                f.close()
-                
-                try:
-                    f = open(folder+"/atom_coords_constrained.xyz","w")
-                    f.write(str(self.fullerene.carbonAtoms.npoints)+"\n")
-                    f.write("\n")
-                    for i in range(0,self.fullerene.carbonAtoms.npoints):
-                        f.write("C "+str(self.fullerene.carbonAtoms.constrained_pos[i*3])+" "+str(self.fullerene.carbonAtoms.constrained_pos[i*3+1])+" "+str(self.fullerene.carbonAtoms.constrained_pos[i*3+2])+"\n")
-                    f.close()
-                except:
-                    pass
-            
+                write_xyz(folder+"/atom_coords.xyz",self.fullerene.carbonAtoms)
+                try:write_xyz(folder+"/atom_coords.xyz",self.fullerene.carbonAtoms,contstrained=True)
+                except:pass            
             if(dualLattice):
-                f = open(folder+"/thomson_coords.txt","w")
-                for i in range(0,self.fullerene.thomsonPoints.npoints):
-                    f.write(str(self.fullerene.thomsonPoints.pos[i*3])+" "+str(self.fullerene.thomsonPoints.pos[i*3+1])+" "+str(self.fullerene.thomsonPoints.pos[i*3+2])+"\n")
-                f.close() 
-            
+                write_xyz(folder+"/thomson_coords.txt",self.fullerene.thomsonPoints)
+                       
             f = open(folder+"/info.txt","w") 
-            
-#            f.write("Nt "+str(self.fullerene.thomsonPoints.npoints)+"\n")
-#            f.write("Nc "+str(self.fullerene.carbonAtoms.npoints)+"\n")
-#            f.write("energy "+str(self.fullerene.thomsonPoints.FinalEnergy)+"\n")
-#            
-#            try:f.write("carbon_lattice_scale "+str(self.fullerene.carbonAtoms.FinalScale)+"\n")
-#            except:pass    
-#            try:f.write("carbon_lattice_scaled_energy "+str(self.fullerene.carbonAtoms.FinalScaleEnergy)+"\n")
-#            except:pass 
-#            try:f.write("carbon_lattice_energy "+str(self.fullerene.carbonAtoms.FinalEnergy)+"\n")
-#            except:pass  
-#            try:f.write("Average radius "+str(self.fullerene.radius)+" +- "+str(self.fullerene.radius_std)+"\n") 
-#            except:pass     
-#            try:f.write("Constrained average radius "+str(self.fullerene.constrained_radius)+" +- "+str(self.fullerene.constrained_radius_std)+"\n") 
-#            except:pass   
-#            try:f.write("Unconstrained average radius "+str(self.fullerene.unconstrained_radius)+" +- "+str(self.fullerene.unconstrained_radius_std)+"\n") 
-#            except:pass   
-            
             f.write(self.fullerene.__repr__())
-            
-            
-            
-#            f.write("Ring_stats:\n")
-#            for i in range(0,len(self.ringCount)):
-#                if(i==5):f.write("Number_of_"+str(i)+"-agons "+str(self.ringCount[i])+" IP "+str(self.isolatedPentagons)+"\n")  
-#                else:f.write("Number_of_"+str(i)+"-agons "+str(self.ringCount[i])+"\n") 
-#
-#            f.write(str("%3.2f" % self.percHex)+" % Hex" +"\n")  
+            f.close()
             
         return folder
     def renderUpdate(self):
@@ -645,13 +528,13 @@ class Processor(object):
         printh("Total fullerene dual lattice points",self.fullerene.thomsonPoints.npoints,"seed",seed)
     
     def minimaSearch(self):
-        
-#        if(self.config.opts["NMinima"]==1):
-#            printh("Will not perform minima search for 1 structure..",self.config.opts["NMinima"])
+        self.carbonLatticeMinimiser = minimisation.carbonLatticeMinimiser(self,self.config.opts["CarbonForceField"])
+#        if(self.config.opts["NStructures"]==1):
+#            printh("Will not perform minima search for 1 structure..",self.config.opts["NStructures"])
         if(self.config.opts["GenType"]=="Fullerene"):
             try:self.fullerene 
             except:return
-            #if(globals.MinLoop==True):# and globals.NMinima>1):
+            #if(globals.MinLoop==True):# and globals.NStructures>1):
             self.minsearch.search(self.fullerene.thomsonPoints)
             #else:
             #    self.minimiser.minimise(self.fullerene.thomsonPoints)
@@ -659,7 +542,7 @@ class Processor(object):
         if(self.config.opts["GenType"]=="Nanotube"):
             try:self.cappedNanotube 
             except:return
-            #if(globals.MinLoop==True):# and globals.NMinima>1):
+            #if(globals.MinLoop==True):# and globals.NStructures>1):
             self.minsearch.search(self.cappedNanotube.thomsonPoints)
             #else:
             #    self.minimiser.minimise(self.nanotube.cappedTubeThomsonPoints)
@@ -682,6 +565,8 @@ class Processor(object):
                 
                      
     def minimiseCarbonAtoms(self):
+        self.carbonLatticeMinimiser = minimisation.carbonLatticeMinimiser(self,self.config.opts["CarbonForceField"])
+        
         if(self.config.opts["GenType"]=="Fullerene"):
             try:self.fullerene 
             except:return
@@ -693,7 +578,7 @@ class Processor(object):
                " edip_energy_per_atom ",self.fullerene.carbonAtoms.FinalEnergy/self.fullerene.carbonAtoms.npoints)
             
         if(self.config.opts["GenType"]=="Nanotube"):
-            try:self.nanotube 
+            try:self.cappedNanotube 
             except:return
             #printl(self.cappedNanotube.carbonAtoms.pos)
             self.carbonLatticeMinimiser.minimise_scale(self.cappedNanotube.carbonAtoms)

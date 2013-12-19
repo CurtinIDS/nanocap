@@ -1,0 +1,113 @@
+NanoCap 
+Copyright (c) 2013 M. Robinson
+
+Source
+======
+
+The NanoCap source is a combination of Python and C extensions. The C extensions are
+built and installed automatically when the setup script is ran (see below). The only
+required modifications to the setup.py file relate to extension libraries located in the
+nanocap/ext directory. The make files and names of the compiled .so need to be entered 
+into the setup.py file in the following places:
+
+NON_C_EXTS = []
+EXTENSION_MAKEFILES = []
+
+NanoCap is bundled with the EDIP extension and thus, the setup.py file looks like this:
+
+NON_C_EXTS = ['ext/edip/edip',]
+EXTENSION_MAKEFILES = ['ext/edip/Makefile.pythonlib',]
+
+Once the extensions libraries makefiles and libs are entered into the setup.py
+script, the NanoCap source can be installed in typical Python fashion:
+
+python setup.py build
+python setup.py install
+
+The build will run the makefiles defined in EXTENSION_MAKEFILES and copy the resultant libs 
+in NON_C_EXTS to the temporary build directory before python installs nanocap into the 
+site-packages directory.
+
+Requirements
+============
+
+NanoCap requires the following libraries
+
+NumPY 
+SciPY
+
+The GUI enabled version requires:
+
+Qt + PySide
+VTK
+
+
+
+OSX
+---
+Numpy and Scipy can be installed using the python package manager PyPi or easy_install:
+
+pip install numpy
+pip install scipy
+
+The easiest way to use PyCan from source on OSX is to install the above libs using Homebrew:
+
+http://www.brew.sh/
+
+The following formula are avaibable:
+
+brew install python --universal
+brew install qt --developer -v
+brew install pyside
+brew install --python --qt vtk
+
+Gfortran is also needed to compile the EDIP extension.
+
+Linux
+-----
+Numpy and Scipy can be installed using the python package manager PyPi or easy_install:
+
+pip install numpy
+pip install scipy
+
+Using packages managers bundled with most linux distributions, the additional libs 
+required for the use of the GUI enable NanoCap should be easy to install.
+
+
+Windows
+-------
+
+- From source:
+
+Using PythonXY, https://code.google.com/p/pythonxy/. NanoCap can be used from source on most
+windows machines. In addition to PythonXY, PySide is also needed:
+
+	http://qt-project.org/wiki/PySide_Binaries_Windows
+
+PythonXY installs MinGW which includes C and Fortran compilers (GCC and GFortran). These are
+used to compile the C and Fortran extensions. To allow the routines to run in parrallel, openmp
+is required:
+
+	mingw-get install libgopenmp
+
+After python setup.py install, nanocap will be installed somewhere like this:
+
+	C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap
+
+and can be ran using:
+
+	python C:\Python27\Lib\site-packages\NanoCap-1.0_alpha-py2.7.egg\nanocap\main.py.
+
+Alternatively, the user_scripts can be ran from any location:
+
+	python user_scripts/bulk_capped_nanotubes.py
+
+
+- Standalone (exe):
+
+User must download and install the Microsoft Visual C++ 2008 Redistributable Package:
+
+	http://www.microsoft.com/en-au/download/details.aspx?id=29
+
+
+
