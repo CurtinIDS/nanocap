@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<center><title>Carbon Lattice Force Fields</title></center>
+<link href="Optimisation.html" title="Optimisation" rel="next" />
+<link href="dforcefields.html" title="Dual Lattice Force Fields" rel="prev" />
+<link href="forcefields.html" title="Force Fields" rel="up" />
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/default_style.css" />
+
+</head>
+<body>
+
+<div class="navigation">
+<span>Previous: <a href="dforcefields.html">Dual Lattice Force Fields</a></span>
+<span>Next: <a href="Optimisation.html">Optimisation</a></span>
+<span>Up: <a href="forcefields.html">Force Fields</a></span>
+</div>
+<hr />
+<div><h2 id="a0000000211">4.2 Carbon Lattice Force Fields</h2>
+<p>Currently there are 3 force fields implemented in <tt class="ttfamily">NanoCap</tt>. These are selected in the <b class="bfseries">Calculations–<img src="images/img-0002.png" alt="$&gt;$" style="vertical-align:0px; 
+                                     width:11px; 
+                                     height:10px" class="math gen" />Carbon Lattice</b> options as shown in Fig. <a href="sect0009.html#carbonlatticeoptions">7</a>. </p><div id="carbonlatticeoptions" class="figure"><center><img src="images/img-0037.png" alt="\includegraphics[scale= 0.6]{../../screens/nanocap_carbon_lattice_options_win.png}" style="width:351px; height:294px" />
+ <div class="caption"><b>Figure 7</b>: <span><tt class="ttfamily">NanoCap</tt> input options for a fullerene</span></div>  </center></div><p>Each force field is described below: </p><ol class="enumerate">
+<li value="1"><p><b class="bfseries">Unit Radius Topology</b> </p><p>By default, when a carbon lattice is constructed a carbon force field is not used and the structure is simply a result of the triangulated dual lattice. This generates a topology of unit radius (cylindrical if a capped nanotube) and as such is labelled the </p></li><li value="2"><p><b class="bfseries">Scaled Topology</b> </p><p>The simplest force field that produces a carbon structure of physical dimensions is the <b class="bfseries">scaled topology</b> force field. This forcefield uses the ideal C-C bond length of 1.421   to optimise the carbon lattice. The fictitious <i class="itshape">energy</i> is given by the sum of squares deviation from this ideal bond length. This force field only does return derivatives and as such can only be used with the <b class="bfseries">MC</b> or <b class="bfseries">SIMPLEX</b> optimisers (see Section <a href="Optimisation.html">5</a>). </p></li><li value="3"><p><b class="bfseries">EDIP</b> </p><p>The most sophistic force field implemented in <tt class="ttfamily">NanoCap</tt> is the Environmental Dependence Interatomic Potential (EDIP). Using EDIP produces the most physically sound structures and its use is recommended. For a theoretical description of EDIP please refer to the following paper: </p><p><b class="bfseries">Generalizing the environment-dependent interaction potential for carbon</b> </p><p>N. A. Marks <i class="itshape">Phys. Rev. B 63, 035401 2000</i> </p><p>url: <a href="http://journals.aps.org/prb/abstract/10.1103/PhysRevB.63.035401">http://journals.aps.org/prb/abstract/10.1103/PhysRevB.63.035401</a> </p></li>
+</ol></div>
+
+
+
+
+
+<hr />
+<div class="navigation">
+<span>Previous: <a href="dforcefields.html">Dual Lattice Force Fields</a></span>
+<span>Next: <a href="Optimisation.html">Optimisation</a></span>
+<span>Up: <a href="forcefields.html">Force Fields</a></span>
+</div>
+
+</body>
+
+</html>

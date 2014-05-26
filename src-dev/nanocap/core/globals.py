@@ -18,7 +18,7 @@ import ctypes
 from nanocap.core import config
 
 
-VERSION = "1.1.0 beta"
+VERSION = "1.0.10 beta"
 COPYRIGHT = " M Robinson 2012 - 2014"
         
 ps = platform.system()

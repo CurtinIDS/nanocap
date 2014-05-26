@@ -1,0 +1,49 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=Doc.chm
+Contents file=chm.hhc
+Default Window=Help
+Default topic=index.html
+Display compile progress=Yes
+Error log file=help.log
+Full-text search=Yes
+Index file=chm.hhk
+Language=0x0 
+Title=NanoCap Guide & Documentation
+
+[WINDOWS]
+Help="NanoCap Guide & Documentation","chm.hhc","chm.hhk","index.html","index.html",,,,,0x73520,,0x383e,[200,200,1000,800],,,,,,,0
+
+[FILES]
+sect0003.html
+sect0019.html
+sect0021.html
+sect0014.html
+sect0004.html
+sect0010.html
+sect0008.html
+sect0016.html
+forcefields.html
+cappednanotubes.html
+sect0011.html
+Optimisation.html
+Examples.html
+sect0012.html
+index.html
+sect0013.html
+dforcefields.html
+sect0007.html
+sect0018.html
+sect0017.html
+sect0009.html
+Code.html
+sect0020.html
+Rendering.html
+sect0001.html
+sect0006.html
+sect0002.html
+sect0015.html
+sect0005.html
+
+
+[MERGE FILES]
