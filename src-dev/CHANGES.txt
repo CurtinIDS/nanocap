@@ -1,0 +1,66 @@
+========
+Changes
+========
+
+1.1.0-beta, 13/05/14
+--------------------
+
+	- Significant overall of underlying code and class structure. The Structure base class
+	now holds may useful methods. Removal of processes module which improves transparency 
+	within the code.
+
+	- Introduction of SQLite database using the sqlite3 module for python. Stored in the 
+	nanocap user directory. Holds all structures and associated information. NanoCap can 
+	now be used as a simpler viewer of previously constructed structures.
+	
+	- Added unified data model such that the SQL database and session structure logs work 
+	with a consistent data format. 
+	
+	- Tests and User scripts are now release dependent, and are bundled with the src.
+
+
+1.0.2-alpha , 19/12/13
+----------------------
+
+	- Added scaled topology generation. The fullerenes and/or capped nanotubes are scaled
+	to give the roughly the correct C-C bond length. Simple optimisation to minimise the 
+	residual square difference between oberserved and current bond lengths. 
+	
+	- Move ring calcuation routines to it's own module and added calls in the fullerene
+	and capped nanotube classes
+	
+	- Added cappednanotube class, which holds nanotube, cap and reflected cap objects. 
+	Dual lattice points and carbon atoms are constructed by joining the pointSets 
+	together.
+	
+	- Added volume and surface area calculation for fullerenes. Uses divergence theorem
+	and the carbon atom rings. The normal to each ring is used along with the surface area
+	to determine the volume. Sphericity is then calculated.  
+
+1.0.1-alpha , 02/12/13
+----------------------
+
+Win32
+    - Issue with embedding the vtk window in a qt widget. Mainly due to return
+    value of vtk_object.winId() not being compatible with qt_widget.SetWindowInfo()
+    winId() return val is platform specific. On windows returns PyCObject, so have to:
+
+        WId = self.winId()
+
+        if type(WId).__name__ == 'PyCObject':
+            from ctypes import pythonapi, c_void_p, py_object
+        
+            pythonapi.PyCObject_AsVoidPtr.restype  = c_void_p
+            pythonapi.PyCObject_AsVoidPtr.argtypes = [py_object]
+        
+            WId = pythonapi.PyCObject_AsVoidPtr(WId)
+        
+        self._RenderWindow.SetWindowInfo(str(int(WId))) 
+
+    - Had to turn off the rendering multithreading - need to relook at modifying 
+    opengl objects between threads. Ensure only done on the gui thread loop.
+
+
+1.0-alpha
+-----------
+	- Initial release. Primary development on OS X 10.7. 
