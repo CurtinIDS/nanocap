@@ -23,7 +23,7 @@ else:  lib="clib.so"
 
 #relative_lib = os.path.join(os.path.dirname(get_relative_path(__file__)),lib)
 
-relative_lib = os.path.join(get_root(),"clib",lib)
+relative_lib = os.path.join(get_root(),"clib","lib",lib)
 
 print "relative_lib",relative_lib
 #

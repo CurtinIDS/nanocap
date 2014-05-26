@@ -8,37 +8,24 @@ import unittest
 from nanocap.core.util import *
 from nanocap.core.globals import *
 from nanocap.core import globals
-from nanocap.core import processes
-from nanocap.core import config
+from nanocap.structures import nanotube
+from nanocap.clib import clib_interface
+clib = clib_interface.clib
 
-print "ROOTDIR",ROOTDIR
-clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
 
 class TestNanotube(unittest.TestCase): 
     def testNanotube(self):
-        self.config = config.Config()
-        self.config.setHomeDir(os.getcwd())
-        self.config.setUser("Test")
+        n=6
+        m=4
+        l=5.0
+        u=1
+        p=True
         
-        self.config.opts["GenType"]="Nanotube"
-        self.config.opts["CalcCappedTubeCarbonAtoms"]=True
-        self.config.opts["CalcCarbonRings"]=True
-        self.config.opts["CalcCarbonBonds"]=True
-        self.config.opts["CalcTriangulation"]=True     
-        self.config.opts["CalcSchlegel"]=False     
-        self.config.opts["NCapDualLatticePoints"] = 16
-        self.config.opts["AutoNanotubeZCutoff"]=True
-        self.config.opts["NMinima"]=3
-        self.config.opts["CarbonMinimise"]=True
-        self.config.opts["BasinClimb"]=True
+        myNanotube = nanotube.Nanotube()
+        myNanotube.construct_nanotube(n,m,length=l,units=u,periodic=p)
 
         
-        self.processor = processes.Processor(config = self.config)
-            
-        self.processor.resetNanotube(5,5)
-        
-        #self.processor.resetNanotube(16,12,None)
-        
-        #self.processor.resetNanotube(37,31,None)        
+        print myNanotube
+              
 if __name__ == "__main__":
     unittest.main()  

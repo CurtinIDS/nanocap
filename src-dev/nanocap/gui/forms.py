@@ -6,15 +6,42 @@ Copyright Marc Robinson 2013
 
 Basic Qt widgets
 
+**depreciated remove in next release
+
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
 from nanocap.core.globals import *
 import os,time,platform,random,math
-from nanocap.core.globals import QT
+from nanocap.gui.settings import *
 QtGui, QtCore = QT.QtGui, QT.QtCore
  
 from numpy import *
 from nanocap.core.util import *
+
+
+class ColorButton(QtGui.QPushButton):
+    def __init__(self,irgb=(1,0,0),width=25):
+        QtGui.QPushButton.__init__(self)
+        self.rgb = numpy.array(irgb)*255
+        self.irgb = numpy.array(irgb)*255
+        self.width = width
+        self.setFixedWidth(self.width)
+        self.Qcolor = QtGui.QColor(self.rgb[0],self.rgb[1],self.rgb[2])         
+        self.setStyleSheet("QPushButton { background-color: %s ; border-radius: 5px }" % self.Qcolor.name())
+        #call = lambda button=self: self.changeColor
+        self.connect(self, QtCore.SIGNAL('clicked()'), self.changeColor)
+    
+    def changeColor(self):
+        col = self.getQtColour(self.rgb)
+        self.setStyleSheet("QPushButton { background-color: %s ; border-radius: 5px }" % col.name())
+        self.emit(QtCore.SIGNAL("colorChanged(int,int,int)"),col.red(),col.green(),col.blue())
+        printd("emitting",col.red(),col.green(),col.blue())
+        
+    def getQtColour(self,icol):
+        qCol = QtGui.QColor(self.rgb[0],self.rgb[1],self.rgb[2])    
+        col = QtGui.QColorDialog().getColor(qCol)
+        if col.isValid():return col
+        else:return qCol 
 
 class ShowButton(QtGui.QWidget):
     def __init__(self):
@@ -29,6 +56,31 @@ class ShowButton(QtGui.QWidget):
         self.containerLayout.setAlignment(QtCore.Qt.AlignCenter)
 
 class SaveButton(QtGui.QWidget):
+    def __init__(self):
+        QtGui.QWidget.__init__(self, None)
+        self.containerLayout = QtGui.QHBoxLayout()
+        self.setLayout(self.containerLayout)
+        self.button = QtGui.QPushButton()
+        self.button.setIcon(QtGui.QIcon(str(IconDir) + 'save.png'))
+        self.button.setFixedWidth(18)
+        self.containerLayout.addWidget(self.button)
+        self.containerLayout.setContentsMargins(0, 0, 0, 0)
+        self.containerLayout.setSpacing(4)
+        self.containerLayout.setAlignment(QtCore.Qt.AlignCenter)
+        
+        colourstring="red"
+        self.setStyleSheet("QWidget { border: none}")
+        
+        self.button.setStyleSheet(
+        "QPushButton { \
+            border: none;\
+        }\
+            QPushButton:pressed {\
+            background: rgb(105, 105, 105);\
+        }\
+        ")
+        
+class ViewButton(QtGui.QWidget):
     def __init__(self):
         QtGui.QWidget.__init__(self, None)
         self.containerLayout = QtGui.QHBoxLayout()
@@ -153,22 +205,39 @@ class TableWidget(QtGui.QTableWidget):
         return QtCore.QSize(self.w+20,self.h)
 
 class SpinBox(QtGui.QSpinBox):
-    def __init__(self):
+    def __init__(self,val=0):
         QtGui.QSpinBox.__init__(self)
         self.setMaximum(10000000)
         self.setMinimum(-10000000)
         self.setFixedWidth(80)
+        self.setValue(val)
         
 class DoubleSpinBox(QtGui.QDoubleSpinBox):
-    def __init__(self):
+    def __init__(self,val=0):
         QtGui.QDoubleSpinBox.__init__(self)
         self.setMaximum(10000000.0)
         self.setMinimum(-10000000.0)
         self.setFixedWidth(80)
+        self.setValue(val)
 
+class holder(QtGui.QWidget):
+    def __init__(self,mw,mh):
+        QtGui.QWidget.__init__(self)
+        self.containerLayout = QtGui.QVBoxLayout()
+        self.setLayout(self.containerLayout)
+        self.containerLayout.setContentsMargins(0, 0, 0, 0)
+        self.containerLayout.setSpacing(0)
+        self.mw,self.mh = mw,mh
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
+        
+    def addWidget(self,widget):
+        self.containerLayout.addWidget(widget)
+        
+    def sizeHint(self):
+        return QtCore.QSize(self.mw,self.mh)    
 
 class HolderWidget(QtGui.QWidget):
-    def __init__(self,widgets):
+    def __init__(self,widgets=[]):
         QtGui.QWidget.__init__(self, None)
         self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
         self.containerLayout = QtGui.QHBoxLayout()
@@ -180,10 +249,37 @@ class HolderWidget(QtGui.QWidget):
         self.containerLayout.setContentsMargins(0, 0, 0, 0)
         #self.containerLayout.setSpacing(2)
         self.containerLayout.setAlignment(QtCore.Qt.AlignHCenter)
+    def addWidget(self,widget):
+        self.containerLayout.addWidget(widget)
+
+class VHolderWidget(QtGui.QWidget):
+    def __init__(self,widgets=[]):
+        QtGui.QWidget.__init__(self, None)
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
+        self.containerLayout = QtGui.QVBoxLayout()
+        self.setLayout(self.containerLayout)
+        try:
+            self.containerLayout.addWidget(widgets)
+        except:
+            for widget in widgets:self.containerLayout.addWidget(widget)
+        self.containerLayout.setContentsMargins(0, 0, 0, 0)
+        #self.containerLayout.setSpacing(2)
+        self.containerLayout.setAlignment(QtCore.Qt.AlignCenter)
+    def addWidget(self,widget):
+        self.containerLayout.addWidget(widget)
 
 class GenericForm(QtGui.QWidget):
-    def __init__(self, parent=None,width=10.0,title=None,show=False,isGroup=True,
-              doNotShrink=False,popup=False,isScrollView=False):
+    def __init__(self, parent=None,width=None,title=None,show=False,isGroup=True,
+              doNotShrink=False,popup=False,isScrollView=False,height=None,align = QtCore.Qt.AlignTop):
+        
+        self.width = width
+        self.height = height
+        #printl("width",width,"height",height)
+        #raw_input()
+        
+        if self.width == None:self.width = -1
+        if self.height == None:self.height = -1
+        
         if(popup):
             QtGui.QWidget.__init__(self)
             #self.setParent(parent)
@@ -193,7 +289,10 @@ class GenericForm(QtGui.QWidget):
         #QtGui.QWidget.__init__(self,self.MainWindow,QtCore.Qt.Tool | QtCore.Qt.WindowStaysOnTopHint)
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
         
-        self.width = width
+        #self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Minimum)
+        
+        #self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
+        
         if(doNotShrink==True):self.setMinimumWidth(self.width)
         self.parent = parent
         self.title = title
@@ -204,20 +303,19 @@ class GenericForm(QtGui.QWidget):
         self.FormLayout = QtGui.QVBoxLayout()
         self.FormLayout.setSpacing(0)
         self.FormLayout.setContentsMargins(0,0,0,0)
-        self.FormLayout.setAlignment( QtCore.Qt.AlignCenter)
+        self.FormLayout.setAlignment( align)
     
         if(self.isGroup):
             self.Group = QtGui.QGroupBox(self.title)
-            self.Group.setAlignment(QtCore.Qt.AlignCenter)
+            self.Group.setAlignment(align)
+            self.Group.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Minimum)
             if(self.isScrollView==True):
                 
                 self.ScrollWidget = QtGui.QWidget()
-                
-                
                 self.ScrollLayout = QtGui.QVBoxLayout()
                 self.ScrollLayout.setSpacing(0)
                 self.ScrollLayout.setContentsMargins(0,0,0,0)
-                self.ScrollLayout.setAlignment( QtCore.Qt.AlignTop)
+                self.ScrollLayout.setAlignment( align)
                 self.ScrollWidget.setLayout(self.ScrollLayout)
                 
                 self.ScrollView = QtGui.QScrollArea(self)
@@ -227,12 +325,11 @@ class GenericForm(QtGui.QWidget):
                 self.ScrollView.setEnabled(True)
                 self.ScrollView.setWidget(self.ScrollWidget)
                 #self.ScrollView.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Minimum)  
-                
 
                 self.ContentLayout = QtGui.QVBoxLayout()
                 self.ContentLayout.setSpacing(0)
                 self.ContentLayout.setContentsMargins(0,0,0,0)
-                self.ContentLayout.setAlignment(QtCore.Qt.AlignTop)
+                self.ContentLayout.setAlignment(align)
                     
                 self.Group.setLayout(self.ContentLayout)
                 self.ScrollLayout.addWidget(self.Group)
@@ -242,7 +339,7 @@ class GenericForm(QtGui.QWidget):
                 self.ContentLayout = QtGui.QVBoxLayout()
                 self.ContentLayout.setSpacing(0)
                 self.ContentLayout.setContentsMargins(0,0,0,0)
-                self.ContentLayout.setAlignment( QtCore.Qt.AlignTop)
+                self.ContentLayout.setAlignment(align)
                     
                 self.Group.setLayout(self.ContentLayout)
                 self.FormLayout.addWidget(self.Group)
@@ -250,12 +347,10 @@ class GenericForm(QtGui.QWidget):
             if(self.isScrollView==True):
                 
                 self.ScrollWidget = QtGui.QWidget()
-                
-                
                 self.ScrollLayout = QtGui.QVBoxLayout()
                 self.ScrollLayout.setSpacing(0)
                 self.ScrollLayout.setContentsMargins(0,0,0,0)
-                self.ScrollLayout.setAlignment( QtCore.Qt.AlignTop)
+                self.ScrollLayout.setAlignment( align)
                 self.ScrollWidget.setLayout(self.ScrollLayout)
                 
                 self.ScrollView = QtGui.QScrollArea(self)
@@ -267,13 +362,11 @@ class GenericForm(QtGui.QWidget):
                 #self.ScrollView.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Minimum)  
                 
 
-
-                   
                 self.ContentWidget = QtGui.QWidget()
                 self.ContentLayout = QtGui.QVBoxLayout()
                 self.ContentLayout.setSpacing(0)
                 self.ContentLayout.setContentsMargins(0,0,0,0)
-                self.ContentLayout.setAlignment(QtCore.Qt.AlignCenter)   
+                self.ContentLayout.setAlignment(align)   
                     
                 self.ContentWidget.setLayout(self.ContentLayout)
                 self.ScrollLayout.addWidget(self.ContentWidget)
@@ -282,9 +375,10 @@ class GenericForm(QtGui.QWidget):
             else:
                 self.ContentWidget = QtGui.QWidget()
                 self.ContentLayout = QtGui.QVBoxLayout()
+                
                 self.ContentLayout.setSpacing(0)
                 self.ContentLayout.setContentsMargins(0,0,0,0)
-                self.ContentLayout.setAlignment(QtCore.Qt.AlignCenter)
+                self.ContentLayout.setAlignment(align)
                 if(self.title!=None):
                     self.TitleLabel = QtGui.QLabel(self.title) 
                     row = FormRow()
@@ -292,7 +386,10 @@ class GenericForm(QtGui.QWidget):
                     self.ContentLayout.addWidget(row)
                     #self.ContentLayout.addWidget(self.TitleLabel)  
                 self.ContentWidget.setLayout(self.ContentLayout)
+                
+                
                 self.FormLayout.addWidget(self.ContentWidget)  
+                
         self.setLayout(self.FormLayout)
         #self.parent.addWidget(self)
         #self.parent.addWidget(self)    
@@ -303,6 +400,15 @@ class GenericForm(QtGui.QWidget):
         if(show):
             self.show() 
         
+        
+            
+    def setBackgroundColour(self,colourstring):
+        self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
+    
+    def sizeHint(self):
+        #print "QtCore.QSize(self.width,self.height)  ",QtCore.QSize(self.width,self.height)  
+        return QtCore.QSize(self.width,self.height)  
+        
     def setTitle(self,string):
     
         self.Group.setTitle(string)
@@ -310,19 +416,32 @@ class GenericForm(QtGui.QWidget):
     def newRow(self,align=None):
         row = FormRow(align=align)
         self.ContentLayout.addWidget(row)
+        
         return row
     
     def newGrid(self):
         widget = QtGui.QWidget()
         self.ContentLayout.addWidget(widget) 
+        self.ContentLayout.setAlignment(widget, QtCore.Qt.AlignCenter)
         gridLayout = QtGui.QGridLayout()
         gridLayout.setSpacing(2)
         gridLayout.setContentsMargins(0, 0, 0, 0)
         widget.setLayout(gridLayout)
-        
         return gridLayout
     
     
+    
+    def addWidget(self,widget,align="HTCenter"):
+        row = self.newRow(align=align)
+        self.ContentLayout.setAlignment(row, QtCore.Qt.AlignTop)
+        row.addWidget(widget)
+    
+    def addWidgets(self,widgets,align="HTCenter"):
+        row = self.newRow(align=align)
+        self.ContentLayout.setAlignment(row, QtCore.Qt.AlignTop)
+        row.addWidgets(widgets)    
+        
+        
     def addHeaderOld(self,text):
         row = self.newRow()
         lb = QtGui.QLabel(text)
@@ -334,12 +453,12 @@ class GenericForm(QtGui.QWidget):
         #self.ContentLayout.addWidget(lb)
         return row
     
-    def addHeader(self,text):
+    def addHeader(self,text,frame=True,align=QtCore.Qt.AlignHCenter,bold=True):
         row = self.newRow()
         
         layout= QtGui.QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setAlignment(QtCore.Qt.AlignHCenter)
+        layout.setAlignment(align)
         flayout1= QtGui.QVBoxLayout()
         flayout2= QtGui.QVBoxLayout()
         #flayout1.setContentsMargins(0, 0, 0, 0)
@@ -359,15 +478,17 @@ class GenericForm(QtGui.QWidget):
         widget=QtGui.QWidget()
         widget.setLayout(layout)
         widget.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
-        layout.addWidget(frame1)
+        if(frame):layout.addWidget(frame1)
         
         lb = QtGui.QLabel(text)
         f = lb.font()
         f.setBold(True)
         lb.setFont(f)
-        lb.setStyleSheet("QWidget {font: bold "+str(font_size)+"pt }")
+        lb.setStyleSheet("QWidget {font: "+str(font_size)+"pt }")
+        if(bold):lb.setStyleSheet("QWidget {font: bold "+str(font_size)+"pt }")
+        
         layout.addWidget(lb)
-        layout.addWidget(frame2)
+        if(frame):layout.addWidget(frame2)
         
         row.addWidget(widget)
         #self.ContentLayout.addWidget(lb)
@@ -441,7 +562,9 @@ class FormRow(QtGui.QWidget):
         if(align=="HTCenter"):
             self.RowLayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)    
         if(align=="Top"):
-            self.RowLayout.setAlignment(QtCore.Qt.AlignTop)          
+            self.RowLayout.setAlignment(QtCore.Qt.AlignTop)      
+        if(align=="Bottom"):
+            self.RowLayout.setAlignment(QtCore.Qt.AlignBottom)      
     def align(self,align):
         if(align=="Right"):
             self.RowLayout.setAlignment(QtCore.Qt.AlignRight)
@@ -456,7 +579,9 @@ class FormRow(QtGui.QWidget):
         if(align=="HTCenter"):
             self.RowLayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)    
         if(align=="Top"):
-            self.RowLayout.setAlignment(QtCore.Qt.AlignTop)                 
+            self.RowLayout.setAlignment(QtCore.Qt.AlignTop)   
+        if(align=="Bottom"):
+            self.RowLayout.setAlignment(QtCore.Qt.AlignBottom)                   
     def addWidget(self,widget):
         self.RowLayout.addWidget(widget)
         #self.RowLayout.setSpacing(0)
@@ -468,14 +593,17 @@ class FormRow(QtGui.QWidget):
             #self.RowLayout.setContentsMargins(0,0,0,0)    
     def removeWidget(self,widget):    
         self.RowLayout.removeWidget(widget)
+    
+    def setBackgroundColour(self,colourstring):
+        self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
         
 class OptionsWindow(QtGui.QWidget):
-    def __init__(self, MainWindow,Name,vars=None,popup = True,parent=None):
+    def __init__(self, parent,Name,vars=None,popup = True):
         self.Name = Name
-        self.MainWindow = MainWindow
+       
         if(popup):
-            QtGui.QWidget.__init__(self,self.MainWindow,QtCore.Qt.Tool)
-            self.setParent(self.MainWindow)
+            QtGui.QWidget.__init__(self,parent,QtCore.Qt.Tool)
+            self.setParent(parent)
         else:
             QtGui.QWidget.__init__(self)
             #self.setParent(parent)

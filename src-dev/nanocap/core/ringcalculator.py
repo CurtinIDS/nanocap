@@ -15,7 +15,6 @@ returns:
 
 from nanocap.core.globals import *
 from nanocap.core.util import *
-import nanocap.core.globals as globals
 import os,sys,math,copy,random,time,threading,Queue,ctypes
 from nanocap.clib import clib_interface
 clib = clib_interface.clib
@@ -37,91 +36,24 @@ def calculate_volume_from_rings(pointSet,
                                                  pointSet.pos.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                                                  out.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
     
-#    surfaceArea = 0
-#    volume = 0
-#    for i in range(0,nrings):
-#        #print "ring",i,"verts",vertsPerRingCount[i]
-#
-#        v1,v2,v3 = rings[i*maxVerts],rings[i*maxVerts+1],rings[i*maxVerts+2]      
-#          
-#        p1 = numpy.array([pointSet.pos[v1*3],
-#                          pointSet.pos[v1*3+1],
-#                          pointSet.pos[v1*3+2]])    
-#        p2 = numpy.array([pointSet.pos[v2*3],
-#                          pointSet.pos[v2*3+1],
-#                          pointSet.pos[v2*3+2]])    
-#        p3 = numpy.array([pointSet.pos[v3*3],
-#                          pointSet.pos[v3*3+1],
-#                          pointSet.pos[v3*3+2]])    
-#        
-#        
-#        #norm = unit_normal(p1,p2,p3)
-#        
-#        #norm = normalise(numpy.cross(p1-p3,p2-p3))
-#        norm = normalise(numpy.cross(p3-p1,p3-p2))
-#        
-#        #check outward
-#        
-##        dp = numpy.dot(p1,norm)
-##        if(dp<0):
-##            norm = normalise(numpy.cross(p3-p2,p3-p1))
-##            dp = numpy.dot(p1,norm)
-##            print "corrected",dp
-#                    
-#        totxyz = numpy.zeros(3,NPF)
-#        
-#        center = numpy.zeros(3,NPF)
-#        for j in range(0,vertsPerRingCount[i]): 
-#            print "v",j,rings[i*maxVerts +j]
-#            
-#            jindex0 = j
-#            jindex1 = ((j+1) % vertsPerRingCount[i])
-#            v1,v2 = rings[i*maxVerts+jindex0],rings[i*maxVerts+jindex1]
-#                    
-#            p1 = numpy.array([pointSet.pos[v1*3],
-#                              pointSet.pos[v1*3+1],
-#                              pointSet.pos[v1*3+2]])    
-#            
-#            p2 = numpy.array([pointSet.pos[v2*3],
-#                              pointSet.pos[v2*3+1],
-#                              pointSet.pos[v2*3+2]])    
-#            
-#            cp = numpy.cross(p1,p2)
-##            dp = numpy.dot(p1,cp)
-##            if(dp<0):
-##                cp = numpy.cross(p2,p1)
-##                dp = numpy.dot(p1,cp)
-##                print "corrected",dp
-#            
-#            center+= p1/vertsPerRingCount[i]
-#            
-#            print jindex0,jindex1,p1,p2,cp
-#            totxyz+=cp
-#        
-#        
-#        
-#        area = numpy.abs(numpy.dot(totxyz,norm)/2.0)
-#        
-#        print center,area
-#        
-#        surfaceArea += area
-#        
-#        volume += numpy.abs(center[0] * norm[0] * area)
-#        
-#        #print "area of ring",abs(area/2.0)
-#            
-#    #self.surfaceArea,self.volume = 1,1
-#    printl("surfaceArea",surfaceArea,"volume", volume)
-    
-    
-#    for p in range(0,pointSet.npoints):
-#        print pointSet.pos[p*3+2]
     return out[0],out[1]
     
 
 def calculate_rings(pointSet,MaxNebs=3,MaxVerts=9):
     
     stime = time.time()
+    if(pointSet.npoints==0):
+        outdict = {}
+        outdict['percHex'] = 0
+        outdict['isolatedPentagons'] = 0
+        outdict['ringCount'] = 0
+        outdict['VertsPerRingCount'] = 0
+        outdict['ringdict'] = 0
+        outdict['RingsPerVertCount'] = 0
+        outdict['Rings'] = 0
+        outdict['nrings'] = 0
+        outdict['MaxVerts'] = 0
+        return outdict
     
     NebList = numpy.zeros(pointSet.npoints*MaxNebs,NPI)
     NebDist = numpy.zeros(pointSet.npoints*MaxNebs,NPF)
@@ -168,6 +100,18 @@ def calculate_rings(pointSet,MaxNebs=3,MaxVerts=9):
                                      pointSet.pos.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
     
     printl("nrings",nrings)
+    if(nrings==0):
+        outdict = {}
+        outdict['percHex'] = 0
+        outdict['isolatedPentagons'] = 0
+        outdict['ringCount'] = 0
+        outdict['VertsPerRingCount'] = 0
+        outdict['ringdict'] = 0
+        outdict['RingsPerVertCount'] = 0
+        outdict['Rings'] = 0
+        outdict['nrings'] = 0
+        outdict['MaxVerts'] = 0
+        return outdict
     
     VertsPerRingCount = VertsPerRingCount[0:nrings]
     ringdict = count_entries(VertsPerRingCount)

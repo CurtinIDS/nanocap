@@ -7,7 +7,6 @@ import unittest,sys,os
 if __name__ == "__main__":sys.path.append(os.path.abspath(__file__+"/../../"))
 from nanocap.core.util import *
 from nanocap.core.globals import *
-from nanocap.objects import points
 from nanocap.ext.edip import interface
 
 from nanocap.clib import clib_interface

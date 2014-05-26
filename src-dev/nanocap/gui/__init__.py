@@ -1,7 +1,5 @@
 '''
-Created on Aug 1, 2013
+Created on Apr 10, 2014
 
-@author: M Robinson
+@author: Marc Robinson
 '''
-
-

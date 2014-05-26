@@ -219,7 +219,7 @@ class FollowerText(object):
 
 
 
-class vtkRenderWindowText(vtkTextActor):
+class RenderWindowText(vtkTextActor):
     def __init__(self,inputtext,Size,x,y,r,g,b):
         self.Input =  inputtext
         self.Size =  Size
