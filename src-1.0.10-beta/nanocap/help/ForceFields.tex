@@ -1,0 +1,53 @@
+\section{Force Fields}\label{forcefields}
+
+\nanocap~implements force fields for the optimisation of the both the dual lattices and carbon lattices of each structure. When a structure is saved information relating to the force field is also stored. This allows the same topologies to be optimised by various force fields. Outlined in the next sections are the force fields currently available in \nanocap~.
+
+\subsection{Dual Lattice Force Fields}\label{dforcefields}
+
+Currently, only one force field is implemented to optimise a structure's dual lattice - labelled: \textit{The Thomson Problem}. The total energy of a system of $N_D$ dual lattice points is given by the sum of pair interaction energies:
+
+\begin{equation*}
+ \displaystyle \phi = \sum_{i=1}^{N_{D}}\sum_{j=i+1}^{N_{D}}\frac{1}{| \vect{r_i}-\vect{r_j}| } 
+\end{equation*}
+
+where $\vect{r}$ denotes the position vector of each point. When the dual lattice belongs to a fullerene, the full system is included in the loop of pair interactions. For a capped nanotube however, there is restriction to the points included in the force field calculation. A cutoff length is introduced along the nanotube beyond which points are exclude from the force evaluation. This is required to ensure a uniform arrangement of points in the capped region and reduce the concentration of points in the apex of the cap. This cutoff length is automatically determined basen upon the density of points in the nanotube but can be set manually in the options described in Section \ref{cappednanotubes}
+
+\subsection{Carbon Lattice Force Fields}
+
+Currently there are 3 force fields implemented in \nanocap. These are selected in the \textbf{Calculations--$>$Carbon Lattice} options as shown in Fig.~\ref{carbonlatticeoptions}.
+
+ \begin{figure}[h!]
+\centering
+\includegraphics[scale= 0.6]{../../../../screens/nanocap_carbon_lattice_options_win.png}
+\caption{\nanocap~input options for a fullerene}
+\label{carbonlatticeoptions}
+\end{figure}
+
+Each force field is described below:
+
+ \begin{enumerate}
+ 
+\item \textbf{Unit Radius Topology} 
+
+By default, when a carbon lattice is constructed a carbon force field is not used and the structure is simply a result of the triangulated dual lattice. This generates a topology of unit radius (cylindrical if a capped nanotube) and as such is labelled the 
+
+\item \textbf{Scaled Topology} 
+
+The simplest force field that produces a carbon structure of physical dimensions is the \textbf{scaled topology} force field. This forcefield uses the ideal C-C bond length of 1.421 \AA~ to optimise the carbon lattice. The fictitious \textit{energy} is given by the sum of squares deviation from this ideal bond length. This force field only does return derivatives and as such can only be used with the \textbf{MC} or \textbf{SIMPLEX} optimisers (see Section \ref{Optimisation}).
+
+\item \textbf{EDIP}
+
+The most sophistic force field implemented in \nanocap~is the Environmental Dependence Interatomic Potential (EDIP). Using EDIP produces the most physically sound structures and its use is recommended. For a theoretical description of EDIP please refer to the following paper: 
+
+\textbf{Generalizing the environment-dependent interaction potential for carbon}
+
+N. A. Marks \textit{Phys. Rev. B 63, 035401 2000}
+
+url: \url{http://journals.aps.org/prb/abstract/10.1103/PhysRevB.63.035401}
+
+  
+ \end{enumerate}
+%\end{document}
+
+
+    

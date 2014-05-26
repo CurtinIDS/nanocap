@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<center><title>Nanotube Construction</title></center>
+<link href="sect0019.html" title="Fullerenes" rel="next" />
+<link href="Examples.html" title="Examples" rel="prev" />
+<link href="Examples.html" title="Examples" rel="up" />
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/default_style.css" />
+
+</head>
+<body>
+
+<div class="navigation">
+<span>Previous: <a href="Examples.html">Examples</a></span>
+<span>Next: <a href="sect0019.html">Fullerenes</a></span>
+<span>Up: <a href="Examples.html">Examples</a></span>
+</div>
+<hr />
+<div><h2 id="a0000000220">10.1 Nanotube Construction</h2>
+<p><tt>nanocap_nanotube.py</tt> an example script to construct an uncapped nanotube. The code is shown below. </p><p>
+<div class="highlight" style="background: #ffffff"><pre style="color: #000000; border:1px solid #E2E2E2; background-color:#FFF8E2;; line-height: 125%"><span style="color: #009900; font-style: italic">&#39;&#39;&#39;</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=NanoCap=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+<span style="color: #009900; font-style: italic">Copyright Marc Robinson  2014</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+
+<span style="color: #009900; font-style: italic">A script to construct an uncapped</span>
+<span style="color: #009900; font-style: italic">nanotube.</span>
+
+<span style="color: #009900; font-style: italic">Input: </span>
+<span style="color: #009900; font-style: italic">    n,m = Chirality (n,m)</span>
+<span style="color: #009900; font-style: italic">    l = length</span>
+<span style="color: #009900; font-style: italic">    u = number of unit cells</span>
+<span style="color: #009900; font-style: italic">    p = periodic</span>
+<span style="color: #009900; font-style: italic">Output:</span>
+<span style="color: #009900; font-style: italic">    xyz file containing carbon</span>
+<span style="color: #009900; font-style: italic">    lattice</span>
+<span style="color: #009900; font-style: italic">    </span>
+<span style="color: #009900; font-style: italic">if periodic, length is ignored and</span>
+<span style="color: #009900; font-style: italic">unit cells is used</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+<span style="color: #009900; font-style: italic">&#39;&#39;&#39;</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.structures</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">nanotube</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.core</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">output</span>
+
+<span style="color: #000000">n=6</span>
+<span style="color: #000000">m=4</span>
+<span style="color: #000000">l=5.0</span>
+<span style="color: #000000">u=1</span>
+<span style="color: #000000">p=</span><span style="color: #0000FF; font-weight: bold">True</span>
+
+<span style="color: #000000">my_nanotube</span> <span style="color: #000000">=</span> <span style="color: #000000">nanotube.Nanotube()</span>
+<span style="color: #000000">my_nanotube.construct(n,m,length=l,</span>
+                     <span style="color: #000000">units=u,periodic=p)</span>
+
+<span style="color: #000000">output.write_xyz(</span><span style="color: #007F00">&quot;nanotube_carbon_lattice&quot;</span><span style="color: #000000">,</span>
+                 <span style="color: #000000">my_nanotube.carbon_lattice)</span>
+</pre></div>
+
+ </p></div>
+
+
+
+
+
+<hr />
+<div class="navigation">
+<span>Previous: <a href="Examples.html">Examples</a></span>
+<span>Next: <a href="sect0019.html">Fullerenes</a></span>
+<span>Up: <a href="Examples.html">Examples</a></span>
+</div>
+
+</body>
+
+</html>
