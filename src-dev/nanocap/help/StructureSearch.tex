@@ -1,0 +1,21 @@
+\subsection{Structure Search}
+
+As an alternative to constructing a single structure, \nanocap includes a tool for finding low energy structures by performing a \textit{structure search}. This is useful when finding the lowest energy topology is important or when an ensemble of structures are required. 
+
+The structure search options are accessed through the \textbf{File--$>$New Structure--$>$Structure Search} menu. The structure search window includes a panel of parameters that define the structure type and search criteria. Here the user can define the required structural properties as well as the force field and optimiser to use during the search. The search results are dynamically displayed in a table where the user can browse the details of each structure. During the search the user can view an individual structure by pressing the \textbf{view} button in the associated row in the table. This will load the structure into the main \nanocap~window. An example of the structure search window during a search in shown in Fig.~\ref{structure_search_progress}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale= 0.4]{../../../../screens/nanocap_structure_search_progress.png}
+\caption{\nanocap~structure search window during a search}
+\label{structure_search_progress}
+\end{figure}
+
+After a structure search, the current set of results can be compared against the local and online (in future releases) databases. The columns in the structure search table denoted \textbf{Local} and \textbf{Web} indicate the presence of the structure in the associated databases. If a structure is not found it's icon will change (to a \textbf{+} symbol) and it can be immediately added to the corresponding database with a single click. Results from a typical structure search after checking against the local \nanocap~database are shown in Fig.~\ref{structure_search_check}
+
+ \begin{figure}[h!]
+\centering
+\includegraphics[scale= 0.4]{../../../../screens/nanocap_structure_search_check.png}
+\caption{\nanocap~structure search window after a search and results have been checked against the local database}
+\label{structure_search_check}
+\end{figure}

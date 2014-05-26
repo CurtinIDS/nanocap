@@ -1,0 +1,86 @@
+\section{Storing, Loading and Exporting}
+
+Each individual structure loaded or created can be checked against the local and online \nanocap~databases. This is carried out in the \textbf{Storage} window on the main toolbar as shown in Fig.~\ref{StoreOptions}. 
+
+ \begin{figure}[h!]
+\centering
+\includegraphics[scale= 0.6]{../../../../screens/nanocap_single_storage.png}
+\caption{Checking a structure against the local and online \nanocap~databases}
+\label{StoreOptions}
+\end{figure}
+
+
+\subsection{The Local NanoCap Database}
+
+One of the main features of \nanocap~is the local database of structures which allows the user to efficiently store previously generated structures. By default the database is stored in the \nanocap~user directory (.nanocap). The database can be accessed in several ways; using the \nanocap~GUI, using the \nanocap~scripts or using an external SQLite client. Using the GUI,the \textbf{Database Viewer} window is located in the  \textbf{View--$>$Local Database} menu. 
+
+ \begin{figure}[h!]
+\centering
+\includegraphics[scale= 0.6]{../../../../screens/nanocap_db_menu.png}
+\includegraphics[scale= 0.6]{../../../../screens/nanocap_db_viewer.png}
+\caption{\nanocap~database viewer}
+\label{DBViewer}
+\end{figure}
+
+The database viewer provides an interactive interface to the \nanocap~database allowing real time searching and loading of stored structures (Fig.~\ref{DBViewer}). Additional search parameters can be added by pressing the \textbf{Select Properties} button which displays all possible database fields. When searching for a structure, logical expressions can be used for each file. For example, if \lq\texttt{> 100}\rq~is entered into the \texttt{Natoms} fields then only structures with more than 100 atoms will be returned. The column labelled \lq\texttt{>View}\rq~ provides buttons to load a structure into the main \nanocap~window. The loaded structures can then be modified, for example re-optimised with a different force field.
+
+To access the database via \python~scripts, the \nanocap~libraries can be used. For examples of these scripts see Section~\ref{Examples}.
+
+As the \nanocap~database is written using SQLite, a suitable database client can be used to view the database. An example using the \texttt{sqlite3} client is shown below: 
+
+\begin{lstlisting}[keywordstyle={\color{myterminalfont}},
+			language={sh},
+			commentstyle={\it\color{myterminalfont}},
+			emphstyle={\ttb\color{myterminalfont}},
+			stringstyle={\color{myterminalfont}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},
+			frame={},
+			basicstyle={\ttm\color{myterminalfont}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{myterminalbg}}]		
+bash-3.2$ sqlite3 ~/.nanocap/nanocap.db
+SQLite version 3.7.13 2012-06-11 02:05:22
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> .headers on;
+sqlite> .mode column
+sqlite> select id,type,Natoms,energy,ff_id from carbon_lattices
+   ...> where type="Fullerene" and ff_id="EDIP";
+id          type        natoms      energy            ff_id               
+----------  ----------  --------  ----------------  --------------------
+11          Fullerene   220       -1550.4155355469  EDIP                   
+50          Fullerene   200       -1403.7245939477  EDIP                
+51          Fullerene   200       -1403.5958295534  EDIP                
+52          Fullerene   200       -1404.0657391286  EDIP                
+53          Fullerene   200       -1402.8514086776  EDIP                
+54          Fullerene   200       -1403.3230258698  EDIP                
+55          Fullerene   200       -1404.3263445713  EDIP                
+56          Fullerene   200       -1403.4800906205  EDIP                
+57          Fullerene   200       -1404.3965982273  EDIP                
+58          Fullerene   200       -1404.1298467551  EDIP                
+59          Fullerene   200       -1403.4657122674  EDIP                
+64          Fullerene   200       -1403.7245939160  EDIP
+\end{lstlisting}
+
+
+\subsection{The Online NanoCap Database}
+
+The online \nanocap~database is currently under construction.
+
+\subsection{Exporting}
+
+Each structure in the current structure list can be exported to file. The options for exporting a structure can be found in the \textbf{File--$>$Export Structure} menu. The full list of export options are shown in Fig.~\ref{export_struct_optionst}. 
+
+
+ \begin{figure}[hp]
+\centering
+\includegraphics[scale= 0.6]{../../../../screens/nanocap_export_structure_menu.png}
+\includegraphics[scale= 0.6]{../../../../screens/nanocap_export_structure_win.png}
+\caption{\nanocap~export structure options}
+\label{export_struct_optionst}
+\end{figure}
+
+The export options include the ability to select which lattices are saved and in what file format. Currently only a simple $xyz$ file format is implemented which contains a minimum amount of data (the number of points and positions). In addition to the topology of the structure, structural information can also be saved. This includes energies, dimensions, connectivity (ring statistics) amongst other things.Using the rendering capabilities of \nanocap, images of the structure can also be automatically saved. This includes a series of images that capture a full rotation of the structure. These images can be encoded into a movie to simplify future inspection of the stored structure. Finally, the export options require a parent directly to save the aforementioned data. Within this directory a new directory will be created whose name uniquely identifies the current structure.

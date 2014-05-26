@@ -1,0 +1,165 @@
+\section{Examples}\label{Examples}
+
+The following section lists example scripts that utilise the \nanocap~libraries. %The current example list is as follows:
+
+%\begin{itemize}
+% \item \verb|nanocap_nanotube.py| 
+% \item \verb|nanocap_single_fullerene.py| 
+% \item \verb|nanocap_bulk_fullerenes.py| 
+%  \item \verb|nanocap_bulk_fullerenes.py| 
+%   \item \verb|nanocap_bulk_fullerenes.py| 
+%   
+% \end{itemize}
+
+These examples can be found in the \texttt{example\_scripts} directory of the \nanocap~source.
+
+
+\subsection{Nanotube Construction}
+
+\verb|nanocap_nanotube.py| an example script to construct an uncapped nanotube. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_nanotube.py}
+
+\subsection{Fullerenes}
+
+\subsubsection{Single Fullerene Construction}
+
+\verb|nanocap_single_fullerene.py| is an example script to construct and save a fullerene. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_single_fullerene.py}
+
+\subsubsection{Constructing Multiple Fullerenes }
+
+\verb|nanocap_bulk_fullerenes.py| is an example script to perform a structure search to construct and save multiple fullerenes. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_bulk_fullerenes.py}
+
+\subsection{Capped Nanotube Construction}
+
+\subsubsection{Single Capped Nanotube Construction}
+
+\verb|nanocap_single_capped_nanotube.py| is an example script to construct and save a capped nanotube. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_single_capped_nanotube.py}
+
+\subsubsection{Constructing Multiple Capped Nanotubes }
+
+\verb|nanocap_bulk_capped_nanotubes.py| is an example script to perform a structure search to construct and save multiple capped nanotube. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_bulk_capped_nanotubes.py}
+			
+\subsection{Database Operations}
+
+As \nanocap~uses an sqlite database, the database can be browsed from the command line:
+
+
+\subsubsection{Saving structures to the local database }
+
+\verb|nanocap_add_structure_to_db.py| is an example script to save a fullerene structure to disk. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_add_structure_to_db.py}
+
+\subsubsection{Loading structures from the local database }
+
+\verb|nanocap_load_from_db.py| is an example script to load a set of fullerene dual lattices and save to disk. The code is shown below.
+
+\lstinputlisting[keywordstyle={\ttb\color{blue}},
+			language={Python},
+			commentstyle={\tti\color{mygreen}},
+			emphstyle={\ttb\color{deepred}},
+			stringstyle={\color{deepgreen}},
+			showstringspaces={false},
+			otherkeywords={self},
+			emph={MyClass,__init__},%,nanocap,structures,nanocap,core},
+			frame={single},
+			basicstyle={\ttm\color{black}},
+			morekeywords={True,False},
+			captionpos={b},
+			backgroundcolor={\color{mycodebg}},
+			rulecolor={\color{mycodeborder}}]%
+			{../../example_scripts/nanocap_load_from_db.py}
+

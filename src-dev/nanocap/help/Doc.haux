@@ -1,0 +1,15 @@
+\newlabel{CarbonDualConnection}{{1}{X}}
+\@deflabeltype{CarbonDualConnection}{figure}
+\@@addtocsec{htoc}{sec1}{0}{\@print{1}\quad{}Installation{}}
+\@@addtocsec{htoc}{sec2}{1}{\@print{1.1}\quad{}Requirements{}}
+\@@addtocsec{htoc}{sec3}{1}{\@print{1.2}\quad{}Installing from source{}}
+\@@addtocsec{htoc}{sec4}{0}{\@print{2}\quad{}Fullerenes{}}
+\@@addtocsec{htoc}{sec5}{0}{\@print{3}\quad{}Nanotubes{}}
+\@@addtocsec{htoc}{sec6}{1}{\@print{3.1}\quad{}Finite tubes{}}
+\@@addtocsec{htoc}{sec7}{1}{\@print{3.2}\quad{}Periodic tubes{}}
+\@@addtocsec{htoc}{sec8}{0}{\@print{4}\quad{}Capped Nanotubes{}}
+\@@addtocsec{htoc}{sec9}{0}{\@print{5}\quad{}Force Fields{}}
+\@@addtocsec{htoc}{sec10}{1}{\@print{5.1}\quad{}Dual Lattice Force Fields{}}
+\@@addtocsec{htoc}{sec11}{1}{\@print{5.2}\quad{}Carbon Lattice Force Fields{}}
+\@@addtocsec{htoc}{sec12}{0}{\@print{6}\quad{}Optimisation{}}
+\@@addtocsec{htoc}{sec13}{0}{\@print{7}\quad{}Scientific Publications{}}
