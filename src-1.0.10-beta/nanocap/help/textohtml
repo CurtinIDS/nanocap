@@ -1,0 +1,2 @@
+#!/bin/bash
+plastex --renderer=XHTML --theme=plain Doc.tex 

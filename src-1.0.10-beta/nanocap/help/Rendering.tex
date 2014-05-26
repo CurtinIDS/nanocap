@@ -1,0 +1,32 @@
+\section{Rendering}\label{Rendering}
+
+\nanocap~provides a 3D rendering and interaction interface using the \texttt{VTK} libraries and the associated widgets in \texttt{Qt}. This allows real time inspection of the structures that are being constructed or previously found structures loaded from the database. Current capabilities include the rendering of both dual and carbon lattices, the carbon-carbon bonds, the ring network and the dimensions of the current structure. These options are dynamics, with any changes to the appearance of the current structure changing in real time. An example of the \nanocap rendering options and render window are shown in Fig.~\ref{renderingwindow}.
+
+ \begin{figure}[hp]
+\centering
+\includegraphics[scale= 0.45]{../../../../screens/nanocap_rendering_window.png}
+\caption{The \nanocap~rendering options and the corresponding render window.}
+\label{renderingwindow}
+\end{figure}
+
+\subsection{Schlegel View}
+
+In addition to the 3D view of the current structure a 2D projection (Schlegel) view can also be rendered. The two parameters involved in the calculation of this projection are accessed through \textbf{Calculations--$>$Schlegel}. The parameter \texttt{Gamma}($\gamma$) determines the magnitude of the projection via:
+\begin{equation*}
+\begin{split}
+\vect{r'} &= (x_i,y_i)\\
+x' &= x + \gamma_s\cdot \frac{x}{|\vect{r'}|} \\
+y' &= y + \gamma_s\cdot \frac{y}{|\vect{r'}|} \\
+\end{split}
+\end{equation*}
+The \texttt{Cutoff} value determines the points that are used for the projection. An example projection is shown in Fig.~\ref{schlegelrenderingwindow}.
+
+ \begin{figure}[hp]
+\centering
+\includegraphics[scale= 0.45]{../../../../screens/nanocap_schlegel_options.png}
+\includegraphics[scale= 0.45]{../../../../screens/nanocap_schlegel_window.png}
+\caption{Schlegel options and render window.}
+\label{schlegelrenderingwindow}
+\end{figure}
+
+

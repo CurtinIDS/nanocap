@@ -1,0 +1,41 @@
+\section{Optimisation}\label{Optimisation}
+
+The underlying design of \nanocap~ and the generalisation of point sets and forcefields, allows for a great deal of flexibility in optimisation routines. The same optimisation routine that is used to minimised the total dual lattice energy can be used to optimise the carbon lattice using a force field such as EDIP. Currently three methods of minimising the total energy are implemented and can be selected in either the  \textbf{Calculations--$>$Dual Lattice} or  \textbf{Calculations--$>$Carbon Lattice} options as shown in Fig.~\ref{optimisation_options}
+
+ \begin{figure}[h!]
+\centering
+\includegraphics[scale= 0.5]{../../../../screens/nanocap_dual_lattice_options_win.png}
+\includegraphics[scale= 0.5]{../../../../screens/nanocap_carbon_lattice_options_win.png}
+\caption{\nanocap~Optimisation options are shown for both the dual lattice and carbon lattice option windows.}
+\label{optimisation_options}
+\end{figure}
+
+These options include the number of minimisation steps and the tolerance used to determine convergence. A brief description of each of the optimisers is given below:
+
+ \begin{enumerate}
+
+\item \textbf{L-BFGS}
+
+The tastes, most robust optimiser is the Limited-memory Broyden--Fletcher--Goldfarb--Shanno method (LBFGS). This routine requires forces which are used to iteratively update an estimate of the Hessian matrix, which in turn is used to define new directions along which to perform line searches. \nanocap~uses the the LBFGS method as implemented in the \texttt{scipy.optimise} libraries (\url{http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.fmin_l_bfgs_b.html}). 
+
+
+\textbf{A Limited Memory Algorithm for Bound Constrained Optimization} R. H. Byrd, P. Lu and J. Nocedal.  \textit{(1995), SIAM Journal on Scientific and Statistical Computing, 16, 5, pp. 1190-1208.}
+
+\textbf{L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization} C. Zhu, R. H. Byrd and J. Nocedal.  \textit{(1997), ACM Transactions on Mathematical Software, 23, 4, pp. 550 - 560.}
+
+\textbf{L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization} J.L. Morales and J. Nocedal.  \textit{ (2011), ACM Transactions on Mathematical Software, 38, 1.}
+
+\item \textbf{SD}
+
+The steepest descent (SD) method minimises energy by simply following the direction of force (or the negative gradient of the potential field). The step size per iteration is determined by the current magnitude of force. The SD method is useful when visualising the optimisation process.
+
+\item \textbf{SIMPLEX}
+
+The simplex method is an optimisation routine which does not require the calculation of forces. As such is the only optimiser that works with the \textbf{Scaled Topology} force field. The implementation in \nanocap~again comes from the \texttt{scipy.optimise} libraries which implement algorithms presented in the following publications:
+
+\textbf{A Simplex Method for Function Minimization} Nelder, J.A. and Mead, R. \textit{The Computer Journal, 7, pp. 308-313}
+
+\textbf{Direct Search Methods: Once Scorned, Now Respectable} Wright, M.H.  \textit{Numerical Analysis 1995, Proceedings of the 1995 Dundee Biennial Conference in Numerical Analysis pp. 191-208}
+
+
+ \end{enumerate}

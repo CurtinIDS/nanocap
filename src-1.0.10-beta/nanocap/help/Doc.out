@@ -1,0 +1,36 @@
+\BOOKMARK [1][-]{section.1}{Installation}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Requirements}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Installing from source}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Generating a Single Structure}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{Fullerenes}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.2}{Nanotubes}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Finite tubes}{subsection.2.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Periodic tubes}{subsection.2.2}% 8
+\BOOKMARK [2][-]{subsection.2.3}{Capped Nanotubes}{section.2}% 9
+\BOOKMARK [1][-]{section.3}{Generating Multiple Structures}{}% 10
+\BOOKMARK [2][-]{subsection.3.1}{Structure Search}{section.3}% 11
+\BOOKMARK [1][-]{section.4}{Force Fields}{}% 12
+\BOOKMARK [2][-]{subsection.4.1}{Dual Lattice Force Fields}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.2}{Carbon Lattice Force Fields}{section.4}% 14
+\BOOKMARK [1][-]{section.5}{Optimisation}{}% 15
+\BOOKMARK [1][-]{section.6}{Storing, Loading and Exporting}{}% 16
+\BOOKMARK [2][-]{subsection.6.1}{The Local NanoCap Database}{section.6}% 17
+\BOOKMARK [2][-]{subsection.6.2}{The Online NanoCap Database}{section.6}% 18
+\BOOKMARK [2][-]{subsection.6.3}{Exporting}{section.6}% 19
+\BOOKMARK [1][-]{section.7}{Rendering}{}% 20
+\BOOKMARK [2][-]{subsection.7.1}{Schlegel View}{section.7}% 21
+\BOOKMARK [1][-]{section.8}{Scientific Publications}{}% 22
+\BOOKMARK [1][-]{section.9}{Code}{}% 23
+\BOOKMARK [2][-]{subsection.9.1}{Non-GUI Class Structure}{section.9}% 24
+\BOOKMARK [2][-]{subsection.9.2}{GUI Class Structure}{section.9}% 25
+\BOOKMARK [1][-]{section.10}{Examples}{}% 26
+\BOOKMARK [2][-]{subsection.10.1}{Nanotube Construction}{section.10}% 27
+\BOOKMARK [2][-]{subsection.10.2}{Fullerenes}{section.10}% 28
+\BOOKMARK [3][-]{subsubsection.10.2.1}{Single Fullerene Construction}{subsection.10.2}% 29
+\BOOKMARK [3][-]{subsubsection.10.2.2}{Constructing Multiple Fullerenes }{subsection.10.2}% 30
+\BOOKMARK [2][-]{subsection.10.3}{Capped Nanotube Construction}{section.10}% 31
+\BOOKMARK [3][-]{subsubsection.10.3.1}{Single Capped Nanotube Construction}{subsection.10.3}% 32
+\BOOKMARK [3][-]{subsubsection.10.3.2}{Constructing Multiple Capped Nanotubes }{subsection.10.3}% 33
+\BOOKMARK [2][-]{subsection.10.4}{Database Operations}{section.10}% 34
+\BOOKMARK [3][-]{subsubsection.10.4.1}{Saving structures to the local database }{subsection.10.4}% 35
+\BOOKMARK [3][-]{subsubsection.10.4.2}{Loading structures from the local database }{subsection.10.4}% 36
