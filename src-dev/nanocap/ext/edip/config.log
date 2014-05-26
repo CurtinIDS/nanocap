@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: i486 (Intel 80486)
 Processors active: 0 1 2 3
 Primary memory available: 8.00 gigabytes
-Default processor set: 154 tasks, 957 threads, 4 processors
-Load average: 1.38, Mach factor: 2.61
+Default processor set: 165 tasks, 1029 threads, 4 processors
+Load average: 0.73, Mach factor: 3.25
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -602,19 +602,19 @@ Using built-in specs.
 Target: x86_64-apple-darwin11
 Thread model: posix
 gcc version 4.6.2 20111019 (prerelease) (GCC) 
- /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/f951 conftest.f -ffixed-form -fPIC -feliminate-unused-debug-symbols -quiet -dumpbase conftest.f -mmacosx-version-min=10.7.4 -mtune=core2 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/finclude -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccKppzw3.s
+ /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/f951 conftest.f -ffixed-form -fPIC -feliminate-unused-debug-symbols -quiet -dumpbase conftest.f -mmacosx-version-min=10.7.4 -mtune=core2 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/finclude -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccKICtpW.s
 GNU Fortran (GCC) version 4.6.2 20111019 (prerelease) (x86_64-apple-darwin11)
 	compiled by GNU C version 4.6.2 20111019 (prerelease), GMP version 5.0.2, MPFR version 3.0.1-p4, MPC version 0.9
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 GNU Fortran (GCC) version 4.6.2 20111019 (prerelease) (x86_64-apple-darwin11)
 	compiled by GNU C version 4.6.2 20111019 (prerelease), GMP version 5.0.2, MPFR version 3.0.1-p4, MPC version 0.9
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
- as -arch x86_64 -force_cpusubtype_ALL -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//cc59XwLT.o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccKppzw3.s
+ as -arch x86_64 -force_cpusubtype_ALL -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccCcbYrY.o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccKICtpW.s
 Reading specs from /usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../../libgfortran.spec
 rename spec lib to liborig
- /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/collect2 -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//cc59XwLT.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v -idsym -dsym
+ /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/collect2 -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccCcbYrY.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v -idsym -dsym
 collect2 version 4.6.2 20111019 (prerelease) (x86_64 Darwin)
-/usr/bin/ld -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//cc59XwLT.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v
+/usr/bin/ld -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccCcbYrY.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v
 @(#)PROGRAM:ld  PROJECT:ld64-128.2
 Library search paths:
 	/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2
@@ -632,19 +632,19 @@ Using built-in specs.
 Target: x86_64-apple-darwin11
 Thread model: posix
 gcc version 4.6.2 20111019 (prerelease) (GCC) 
- /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/f951 conftest.f -ffixed-form -fPIC -feliminate-unused-debug-symbols -quiet -dumpbase conftest.f -mmacosx-version-min=10.7.4 -mtune=core2 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/finclude -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccXvhjoR.s
+ /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/f951 conftest.f -ffixed-form -fPIC -feliminate-unused-debug-symbols -quiet -dumpbase conftest.f -mmacosx-version-min=10.7.4 -mtune=core2 -auxbase conftest -g -O2 -version -fintrinsic-modules-path /usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/finclude -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccD5ga27.s
 GNU Fortran (GCC) version 4.6.2 20111019 (prerelease) (x86_64-apple-darwin11)
 	compiled by GNU C version 4.6.2 20111019 (prerelease), GMP version 5.0.2, MPFR version 3.0.1-p4, MPC version 0.9
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 GNU Fortran (GCC) version 4.6.2 20111019 (prerelease) (x86_64-apple-darwin11)
 	compiled by GNU C version 4.6.2 20111019 (prerelease), GMP version 5.0.2, MPFR version 3.0.1-p4, MPC version 0.9
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
- as -arch x86_64 -force_cpusubtype_ALL -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//cc0uZtYs.o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccXvhjoR.s
+ as -arch x86_64 -force_cpusubtype_ALL -o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccuHUnOy.o /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccD5ga27.s
 Reading specs from /usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../../libgfortran.spec
 rename spec lib to liborig
- /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/collect2 -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//cc0uZtYs.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v -idsym -dsym
+ /usr/local/gfortran/libexec/gcc/x86_64-apple-darwin11/4.6.2/collect2 -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccuHUnOy.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v -idsym -dsym
 collect2 version 4.6.2 20111019 (prerelease) (x86_64 Darwin)
-/usr/bin/ld -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//cc0uZtYs.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v
+/usr/bin/ld -dynamic -arch x86_64 -macosx_version_min 10.7.4 -weak_reference_mismatches non-weak -o conftest -lcrt1.10.5.o -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2 -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2/../../.. /var/folders/3w/s29npkfd2195m08nyk7jcll00000gp/T//ccuHUnOy.o -lgfortran -no_compact_unwind -lSystem -lgcc_ext.10.5 -lgcc -lquadmath -lm -lgcc_ext.10.5 -lgcc -lSystem -v
 @(#)PROGRAM:ld  PROJECT:ld64-128.2
 Library search paths:
 	/usr/local/gfortran/lib/gcc/x86_64-apple-darwin11/4.6.2
