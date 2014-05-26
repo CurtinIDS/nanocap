@@ -1,102 +1,71 @@
 '''
 -=-=-=-=-=-=-= NanoCap -=-=-=-=-=-=-=
-Created: Aug 2 2013
-Copyright Marc Robinson 2013
+Created: Apr 10, 2014
+Copyright Marc Robinson  2014
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-Qt Dock 
+Dock widget to hold toolbars
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
-
-from nanocap.core.globals import *
-import nanocap.core.globals as globals
 import os,sys,math,copy,random
-from nanocap.core.globals import QT
-QtGui, QtCore = QT.QtGui, QT.QtCore
-
 import numpy
 
-import nanocap.gui.forms as forms
-import nanocap.core.processes as processes
-import nanocap.gui.toolbaradvanced as toolbaradvanced
-import nanocap.gui.toolbarbasic as toolbarbasic
+from nanocap.core.globals import *
 from nanocap.core.util import *
+from nanocap.gui.settings import *
+from nanocap.gui.common import *
+from nanocap.gui.widgets import BaseWidget,HolderWidget
+import nanocap.gui.toolbar as toolbar
+from nanocap.gui import menubar
 
-class dock(QtGui.QDockWidget):    
+class Dock(QtGui.QDockWidget):    
     def __init__(self, Gui, MainWindow, width, height, title):
         QtGui.QDockWidget.__init__(self, None)
+                
         self.MainWindow = MainWindow
         self.Gui = Gui
-        self.Processor = self.Gui.processor
-        self.ThreadManager = self.Gui.threadManager
-        self.VTKFrame = self.Gui.vtkframe
-        self.ObjectActors = self.Gui.objectActors
-        #self.container = forms.GenericForm(isScrollView=True,width=width)
         self.setTitleBarWidget(QtGui.QWidget())
+        #self.holder = BaseWidget(h=0,w=n_DOCKWIDTH,align=QtCore.Qt.AlignTop)
         
-        self.container = QtGui.QWidget()
-        self.containerLayout = QtGui.QVBoxLayout()
-        self.container.setLayout(self.containerLayout)
-        self.containerLayout.setContentsMargins(0, 0, 0, 0)
-        self.containerLayout.setSpacing(0)
+        self.holder = HolderWidget(align=QtCore.Qt.AlignTop,stack="V")
+        self.holder.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
+        self.holder.setMinimumWidth(n_DOCKWIDTH)
+
+        self.MenuBar = menubar.MenuBar(self)        
+        self.holder.addWidget(self.MenuBar,align=QtCore.Qt.AlignTop)
         
-        #self.container.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
-        self.setWidget(self.container)
+        self.connect(self.MenuBar,QtCore.SIGNAL('new_structure_search()'), self.Gui.structureGenWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('new_single_structure()'), self.Gui.singleStructureGenWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('load_from_local()'), self.Gui.dataBaseViewerWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('export_structure()'), self.Gui.exportStructureWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('show_preferences()'), self.Gui.preferencesWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('show_local_database()'), self.Gui.dataBaseViewerWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('load_from_file()'), self.Gui.loadFromFileWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('show_about()'), self.Gui.aboutWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('show_help()'), self.Gui.helpWindow.bringToFront)
+        self.connect(self.MenuBar,QtCore.SIGNAL('quit()'), self.Gui.mainWindow.closeEvent)
         
-        #self.mode = "Basic"
         
-        self.setMinimumWidth(width)
+        self.setWidget(self.holder)
+    
+    def sizeHint(self):
+        return QtCore.QSize(n_DOCKWIDTH,n_DOCKHEIGHT)
 
     def draw(self):
-        self.toolbars =  {}
-        self.toolbars["Basic"] = toolbarbasic.toolbarBasic(self.Gui, self.MainWindow)
-        self.toolbars["Advanced"] = toolbaradvanced.toolbarAdvanced(self.Gui, self.MainWindow)
+        self.toolbar = toolbar.Toolbar(self.Gui, self.MainWindow)
+        self.holder.addWidget(self.toolbar)
 
-        self.tabWidget = QtGui.QTabWidget()
-        self.connect(self.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.changeMode) 
-        
-        self.tabWidget.addTab(self.toolbars["Basic"], "Basic")
-        self.tabWidget.addTab(self.toolbars["Advanced"], "Advanced")
-        
-        self.containerLayout.addWidget(self.tabWidget)
-        
-        self.toolbars["Basic"].draw()
-        self.toolbars["Advanced"].draw()
-        
-        
         self.iconWidget = QtGui.QLabel()
-        
         self.iconWidget.setStyleSheet("QWidget {background-color: white}")
-        self.icon = QtGui.QPixmap(str(IconDir) + 'Logo6BlackGrey.png')
+        self.icon = QtGui.QPixmap(str(IconDir) + BANNERIMAGE)
         #self.icon = self.icon.scaledToWidth(self.width())
+        self.icon = self.icon.scaled(QtCore.QSize(n_DOCKWIDTH,55),QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        
         self.iconWidget.setPixmap(self.icon)
-        self.iconWidget.setGeometry(0, 0, self.width(), 55)
-        
-        self.containerLayout.addWidget(self.iconWidget)
-        self.containerLayout.setAlignment(self.iconWidget, QtCore.Qt.AlignRight)
-        
-#        self.iconWidget2 = QtGui.QLabel()
-#        
-#        self.iconWidget2.setStyleSheet("QWidget {background-color: white}")
-#        self.icon2 = QtGui.QPixmap(str(IconDir) + 'Logo1BlackGrey.png')
-#        #self.icon = self.icon.scaledToWidth(self.width())
-#        self.iconWidget2.setPixmap(self.icon2)
-#        self.iconWidget2.setGeometry(0, 0, self.width(), 55)
-#        
-#        self.containerLayout.addWidget(self.iconWidget2)
-#        self.containerLayout.setAlignment(self.iconWidget2, QtCore.Qt.AlignRight)
-        
-    def currentToolbar(self):
-        printl(globals.Mode)
-        return self.toolbars[globals.Mode]
+        #self.iconWidget.setGeometry(0, 0, n_DOCKWIDTH, 55)
 
-    
-    def changeMode(self,val):
-        globals.Mode = str(self.tabWidget.tabText(val))
-        self.toolbars[globals.Mode].selected()
+        self.iconWidget.setAlignment(BANNERIMAGEALIGN)
+        self.holder.addWidget(self.iconWidget,align= BANNERIMAGEALIGN)
         
-        
-        
-        
-        
+        self.holder.show()

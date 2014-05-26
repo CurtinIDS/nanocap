@@ -1,5 +1,13 @@
 '''
-Created on Aug 29, 2013
+-=-=-=-=-=-=-= NanoCap -=-=-=-=-=-=
+Copyright Marc Robinson  2014
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-@author: Marc Robinson
+Python, C and Fortran libraries
+for the construction, visualisation 
+and output of carbon nanostructures.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 '''
+
+__version__ = "1.0b9"

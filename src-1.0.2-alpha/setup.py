@@ -103,12 +103,13 @@ REQ_DLLS = []
 for DLL in EXTRA_DLLs:
     REQ_DLLS.append(os.path.join(sys.prefix, DLL))
 
-REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgcc_s_dw2-1.dll"))
-REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgfortran-3.dll"))
-REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgmp-10.dll"))
-REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgomp-1.dll"))
-REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libpthread-2.dll"))
-REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libstdc++-6.dll"))
+if(PLATFORM == "win"):
+    REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgcc_s_dw2-1.dll"))
+    REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgfortran-3.dll"))
+    REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgmp-10.dll"))
+    REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libgomp-1.dll"))
+    REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libpthread-2.dll"))
+    REQ_DLLS.append(os.path.join(get_sys_exec_root_or_drive(),"MinGW32-xy","bin","libstdc++-6.dll"))
 
 
 windows_xml = """

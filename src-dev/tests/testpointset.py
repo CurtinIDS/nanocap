@@ -7,18 +7,12 @@ import unittest,copy
 
 from nanocap.core.util import *
 from nanocap.core.globals import *
-from nanocap.core import globals
 from nanocap.core import minimisation
-from nanocap.core import processes
-import nanocap.objects.tube as tube
-import nanocap.objects.cap as cap
-import nanocap.objects.points as points
-import nanocap.objects.fullerene as fullerene
-import nanocap.gui.forms as forms
-import nanocap.gui.dock as dock
+import nanocap.structures.nanotube as nanotube
+import nanocap.structures.cap as cap
+import nanocap.core.points as points
+import nanocap.structures.fullerene as fullerene
 
-print "ROOTDIR",ROOTDIR
-clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
 
 class TestPoints(unittest.TestCase):  
     def testCopy(self):
@@ -34,12 +28,12 @@ class TestPoints(unittest.TestCase):
         print self.p2.pos[0],self.p1.pos[0]
         
         
-        self.f1 = fullerene.fullerene()
+        self.f1 = fullerene.Fullerene()
         
         self.f2 = copy.deepcopy(self.f1)
         
         assert self.f1 is not self.f2
-        assert self.f1.thomsonPoints is not self.f2.thomsonPoints
+        assert self.f1.dual_lattice is not self.f2.dual_lattice
         
         
 if __name__ == "__main__":

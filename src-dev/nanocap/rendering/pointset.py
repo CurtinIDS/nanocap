@@ -28,6 +28,7 @@ class PointSet(object):
         self.LabelActors = [] 
         self.LabelText = []
         self.pos = None
+        self.npoints = 0
         
         #self.PointSetLabel = points.PointSetLabel
         self.showLabels = False
@@ -89,9 +90,11 @@ class PointSet(object):
         self.GlyphSource.SetCenter(Pos)    
           
     def initArrays(self,points):
+        printl("initArrays",points)
         #self.npoints = copy.deepcopy(points.npoints)
         #self.pos = numpy.copy(points.pos)
-        
+        if(points==None):return
+        self.points = points
         self.npoints = points.npoints
         self.pos = points.pos
         
@@ -115,39 +118,56 @@ class PointSet(object):
         self.setupLabels()
         self.setBoundaryActor()
     
-    def addLabels(self,ren):
+    def toggleBoundingBox(self,flag):
+        if(flag):self.addBoundingBox()
+        else:self.removeBoundingBox()
+        
+    def addBoundingBox(self,ren=None):
+        printl("addBoundingBox")
+        self.setBoundaryActor()
+        if(ren==None):self.boundaryActor.addToRenderer(self.ren,False,True)
+        else:self.boundaryActor.addToRenderer(ren,False,True)
+    
+    def removeBoundingBox(self,ren=None):
+        if(ren==None):self.boundaryActor.removeFromRenderer(self.ren)
+        else:self.boundaryActor.removeFromRenderer(ren)
+        
+    def removeLabels(self,ren=None):
+        #printl("removeLabels",self.points.PointSetLabel)#,ren)
+        for actor in self.LabelActors: 
+            if(ren==None):self.ren.RemoveActor(actor)
+            else:ren.RemoveActor(actor)
+        self.showLabels = False
+        #self.ren = ren
+    
+    def addLabels(self,ren=None):
+        #printl("addLabels",self.points.PointSetLabel)
         self.updateLabels()
         self.setBoundaryActor()
         for actor in self.LabelActors:
             actor.SetCamera(ren.GetActiveCamera())
-            ren.AddActor(actor)
+            if(ren==None):self.ren.AddActor(actor)
+            else:
+                ren.AddActor(actor)
+                self.label_ren = ren
         self.showLabels = True
-        self.ren = ren
         
-    
-    def addBoundingBox(self,ren):
-        printl("addBoundingBox")
-        self.setBoundaryActor()
-        self.boundaryActor.addToRenderer(ren,False,True)
-    
-    def removeBoundingBox(self,ren):
-        self.boundaryActor.removeFromRenderer(ren)
-        
-    def removeLabels(self,ren):
-        for actor in self.LabelActors:ren.RemoveActor(actor)        
-        self.showLabels = False
-        self.ren = ren
         
     def setupLabels(self):
+        if(self.pos==None):return
+        if(numpy.ndim(self.pos)==0):return 
+        #print self.points.PointSetLabel,self.pos,self.pos==None
         
         try:self.removeLabels(self.ren)
+        except:pass
+        try:self.removeLabels(self.label_ren)
         except:pass
         
         self.LabelActors = []
         self.LabelText = []
         for i in range(0,self.npoints):
             actor = vtkFollower()
-            actor.SetScale(0.1, 0.1, 0.1)
+            actor.SetScale(0.3, 0.3, 0.3)
             label = vtkVectorText()
             text = (" %d %3.3f %3.3f %3.3f" % (i,self.pos[i*3],self.pos[i*3+1],self.pos[i*3+2]))
             text = (" %d " % (i))
@@ -167,13 +187,18 @@ class PointSet(object):
 #            self.ren = ren        
     
     def getBounds(self):
+        if(self.pos==None):return 0,0,0,0,0,0
         if(self.npoints==0):
             return 0,0,0,0,0,0
+        if(numpy.ndim(self.pos)==0):return 0,0,0,0,0,0
         x,y,z = self.pos[0::3],self.pos[1::3],self.pos[2::3]
         return numpy.min(x),numpy.min(y),numpy.min(z),numpy.max(x),numpy.max(y),numpy.max(z)        
     
     
     def updateLabels(self):
+        if(self.pos==None):return
+        if(numpy.ndim(self.pos)==0):return 
+        
         for i in range(0,self.npoints):
             #printl("updateLabels",self.LabelText[i])
             #self.LabelText[i].SetText(str(i))
@@ -205,10 +230,10 @@ class PointSet(object):
         self.Mapper.SetLookupTable(self.LookupTable)   
     
      
-    def addToRenderer(self,ren,col):
-        #printl("adding to renderer",col)
+    def addToRenderer(self,ren=None,col=None):
+        printl("adding to renderer",self.pos)
         if self.pos == None: return
-        self.col = col
+        if(col!=None):self.col = col
         self.LookupTable.SetTableValue(0,self.col[0],
                                            self.col[1],
                                            self.col[2],1.0)
@@ -232,15 +257,23 @@ class PointSet(object):
         self.VTKPoints.Modified()                
         self.setBoundaryActor()
         printl("AddActor")
-        ren.AddActor(self.Actor) 
+        if(ren==None):
+            try:self.ren.AddActor(self.Actor) 
+            except:printl("Cannot add pointSet without renderer")
+        else:
+            ren.AddActor(self.Actor) 
+            self.ren=ren
    
-    def removeFromRenderer(self,ren):
-        ren.RemoveActor(self.Actor)   
+    def removeFromRenderer(self,ren=None):
+        if(ren==None):
+            try:self.ren.RemoveActor(self.Actor) 
+            except:printl("Cannot remove pointSet without renderer")
+        else:ren.RemoveActor(self.Actor)   
         #for actor in self.LabelActors:
         #    ren.RemoveActor(actor)
           
     def update(self):
-
+        if(self.pos==None):return
         self.PolyData.SetPoints(self.VTKPoints)
         self.PolyData.GetPointData().SetScalars(self.VTKScalars)
         #self.PolyData.GetPointData().SetVectors(self.VTKVectors) 
@@ -259,7 +292,7 @@ class PointSet(object):
         self.Actor.SetMapper(self.Mapper)
         
         
-        printl("Update:",self.rad)
+        printl("Update:",self.rad,self.col)
         self.LookupTable.SetTableValue(0,self.col[0],
                                            self.col[1],
                                            self.col[2],1.0)

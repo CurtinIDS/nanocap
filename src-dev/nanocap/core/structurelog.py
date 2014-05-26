@@ -4,14 +4,14 @@ Created: Oct 3 2013
 Copyright Marc Robinson 2013
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-Storage of structures in a class. Will
-require offline storage.
+The StructureLog holds the currently
+found structures from a structure search
 
+Uses the StructureData to determine the 
+columns to display
 
-#TODO
-Store structures in local && online database
-Can view/load/save to local or online. 
-Will need userID and time
+Has the functionality to compare against 
+the local database 
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
@@ -19,101 +19,15 @@ Will need userID and time
 
 from nanocap.core.globals import *
 import nanocap.core.globals as globals
+from nanocap.structures.structure import Structure
+from nanocap.db import database
 import os,sys,math,copy,random,time,threading,Queue,ctypes,types
  
 import numpy
 from nanocap.core.util import *
+from nanocap.core.structuredata import *
+
 import sqlite3
-
-
-
-class Structure(object):
-    def __init__(self,type,structobject,cap=None,
-                 NCapDualLattice=None,NTubeDualLattice=None,NCapCarbonAtoms=None,
-                 NTubeCarbonAtoms=None,rings=None):
-        
-        self.type = type
-        self.rings = numpy.copy(rings)
-        
-        if(self.type=="Fullerene"):
-            self.fullerene = copy.deepcopy(structobject)
-        
-            printl("added structure checking copies")
-            printl("fullerene", self.fullerene is structobject)  
-            printl("fullerene.thomsonPoints", self.fullerene.thomsonPoints is structobject.thomsonPoints)     
-            printl("fullerene.thomsonPoints.pos", self.fullerene.thomsonPoints.pos is structobject.thomsonPoints.pos)   
-            printl("fullerene.carbonAtoms", self.fullerene.carbonAtoms is structobject.carbonAtoms)     
-            printl("fullerene.carbonAtoms.pos", self.fullerene.carbonAtoms.pos is structobject.carbonAtoms.pos)   
-            printl("fullerene.thomsonPoints.freeflags", self.fullerene.thomsonPoints.freeflags is structobject.thomsonPoints.freeflags)   
-            
-            #self.fullerene.calcInfo()
-            
-            #raw_input()
-            
-            
-        if(self.type=="Nanotube"):    
-            self.cappedNanotube = copy.deepcopy(structobject)
-            #self.cap = copy.deepcopy(cap)
-#            self.NCapDualLattice=NCapDualLattice
-#            self.NTubeDualLattice=NTubeDualLattice
-#            self.NCapCarbonAtoms=NCapCarbonAtoms
-#            self.NTubeCarbonAtoms=NTubeCarbonAtoms
-            
-            printl("added structure checking copies")
-            printl("cappedNanotube ", self.cappedNanotube is structobject)     
-            
-    def getDualLatticeEnergy(self):
-        if(self.type=="Fullerene"):
-            return self.fullerene.thomsonPoints.FinalEnergy
-        if(self.type=="Nanotube"):
-            return self.cappedNanotube.thomsonPoints.FinalEnergy
-    
-    def getCarbonLatticeEnergy(self):
-        try:
-            if(self.type=="Fullerene"):
-                FinalEnergy = self.fullerene.carbonAtoms.FinalEnergy
-                FinalEnergyPerAtom = self.fullerene.carbonAtoms.FinalEnergy/self.fullerene.carbonAtoms.npoints
-                FinalScale = self.fullerene.carbonAtoms.FinalScale
-                FinalScaleEnergy = self.fullerene.carbonAtoms.FinalScaleEnergy
-                return FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy
-            
-            if(self.type=="Nanotube"):
-                FinalEnergy = self.cappedNanotube.carbonAtoms.FinalEnergy
-                FinalEnergyPerAtom = self.cappedNanotube.carbonAtoms.FinalEnergy/self.cappedNanotube.carbonAtoms.npoints
-                FinalScale = self.cappedNanotube.carbonAtoms.FinalScale
-                FinalScaleEnergy = self.cappedNanotube.carbonAtoms.FinalScaleEnergy
-                return FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy
-        
-        except:
-            return "","","",""
-        
-#        if(nanotube!=None):
-#                    self.NDualLatticePoints = NDualLatticePoints
-#        self.NCarbonAtoms = NCarbonAtoms
-#        
-#        self.dualLattice = copy.deepcopy(dualLatticePointSet)
-#        self.carbonLattice = copy.deepcopy(carbonLatticePointSet)
-        
-        
-            
-#            self.n = copy.deepcopy(nanotube)
-#            self.nanotube_n = self.n.n
-#            self.nanotube_m = self.n.m
-#            self.nanotube_u = self.n.u
-#            self.nanotube_mappingAngle = self.n.mappingAngle
-#            self.nanotube_tubeDualLatticeCOM = self.n.thomsonPointsCOM
-            
-        
-        
-        
-#        printl("added structure checking copies")
-#        printl("rings", self.rings is rings)
-#        printl("dualLattice", self.dualLattice is dualLatticePointSet)
-#        printl("carbonLattice", self.carbonLattice is carbonLatticePointSet) 
-#        if(nanotube!=None):
-#            printl("nanotube_n", nanotube.n is self.n.n)     
-#            printl("nanotube_n", self.n is nanotube)  
-#            printl("nanotube_n", self.n.carbonAtoms is nanotube.carbonAtoms)  
         
 class StructureLog(object):
     def __init__(self,type):
@@ -121,246 +35,319 @@ class StructureLog(object):
         self.type = type
         self.lastAdded = None
         self.locklog = False
-        
+        printl("StructureLog",type)
         self.logpad = 4
-        
-        if(self.type=="Nanotube"):
-            self.headers = ["ID","Ch (n,m)","Unit Radius Scale","Uncapped Length",
-                   "N Dual (Cap,Tube)",
-                   "N Carbon (Cap,Tube)"]
-        
-        else:
-            self.headers = ["ID",
-                       "N Dual",
-                       "N Carbon"]
-            
-        self.headers.extend(["3-rings","4-rings","5-rings",  
-                        "6-rings", "7-rings",  "8-rings" ])      
-        
-        self.headers.extend(["Dual Lattice Energy",
-                        "Carbon Lattice: Energy",
-                           "Energy Per Atom",
-                           "Scale Factor",
-                           "Constrained Energy"])
-    
-    
-    #def loadFromDataBase(self):
-        
-    
-    #def saveStructureToDataBase(self):    
-        
-        
+
+        self.general_headers = ["ID",]
+        self.dual_lattice_headers = [ field.tag for field in FIELDS['dual_lattices']]
+        self.carbon_lattice_headers = [ field.tag for field in FIELDS['carbon_lattices']] 
+        self.rings_headers= [ field.tag for field in FIELDS['rings']] 
+
     def reset(self):
         self.structures = []
+    
+    def check_for_uniqueness(self,instructure):
+        unique  = True
+        e2 = instructure.dual_lattice.final_energy
+        for structure in self.structures:
+            e1 = structure.dual_lattice.final_energy
+            if(numpy.abs(e1-e2) < numpy.abs(1e-8)):
+                 unique  = False 
+                 
+        return unique
         
-    def addStructure(self,structobject,cap=None,
+    def add_structure(self,structobject,cap=None,
                      NCapDualLattice=None,NTubeDualLattice=None,NCapCarbonAtoms=None,
                      NTubeCarbonAtoms=None,rings=None):
         
         self.locklog = True
-        
-        if(self.type=="Fullerene"):
-            
-            #Nd = strucobject.npoints
-            #Nc = dualLatticePointSet.npoints*2 - 4
-            structure = Structure(self.type,structobject,rings = rings)
-        
-        if(self.type=="Nanotube"):
-            #Nd = dualLatticePointSet.npoints
-            #Nc = dualLatticePointSet.npoints*2 - 4
-            structure = Structure(self.type,structobject,cap = cap,
-                                  rings = rings)    
-            
+        printl(self.type) 
+        structure = copy.deepcopy(structobject)
+
         self.lastAdded = len(self.structures)
         self.structures.append(structure)
         
-        
         self.locklog = False
+        printl("structure added")
     
+    def compare_dual_lattice_local_database(self,structure):
+        printl("compare_structure_local_database")
+        db = database.Database()
+        db.init()
+        duplicates = db.check_dual_lattice_duplicates(structure)
+        return duplicates
+        
+    def add_dual_lattice_local_database(self,structure):
+        printl("add_structure_local_database")
+        db = database.Database()
+        db.add_dual_lattice_structure(structure)
+    
+    def compare_carbon_lattice_local_database(self,structure):
+        printl("compare_structure_local_database")
+        db = database.Database()
+        db.init()
+        duplicates = db.check_carbon_lattice_duplicates(structure)
+        return duplicates
+        
+    def add_carbon_lattice_local_database(self,structure):
+        printl("add_structure_local_database")
+        db = database.Database()
+        db.init()
+        db.add_carbon_lattice_structure(structure)
+        
     def get_data(self,i):
         while(self.locklog):
             pass
         
-        FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy = self.structures[i].getCarbonLatticeEnergy()
-        
-        if(self.type=="Nanotube"):
-            Nd = str(self.structures[i].cappedNanotube.thomsonPoints.npoints)
-            Nd += " "+str(self.structures[i].cappedNanotube.cap.thomsonPoints.npoints)
-            Nd += " "+str(self.structures[i].cappedNanotube.nanotube.thomsonPoints.npoints)
+        structure =self.structures[i]
+        structure_data = structure.get_structure_data()
+ 
+        data = {}
+        data['general']= [i,]
+        for table in DATA_TABLES:
+            #printl(table,structure_data[table])
+            data[table] = [ structure_data[table][field.tag] for field in FIELDS[table]] 
             
-            try:
-                Nc = str(self.structures[i].cappedNanotube.carbonAtoms.npoints)
-                Nc += " "+str(self.structures[i].cappedNanotube.cap.thomsonPoints.npoints*2 - 2)
-                Nc += " "+str(self.structures[i].cappedNanotube.nanotube.carbonAtoms.npoints)
-            except:
-                Nc = 0
-                printl("log: no carbon atoms found")
-                
-            Ch = str(self.structures[i].cappedNanotube.nanotube.n)+" "
-            Ch += str(self.structures[i].cappedNanotube.nanotube.m)
-            Length =str(self.structures[i].cappedNanotube.nanotube.length)
-            Scale = str(self.structures[i].cappedNanotube.nanotube.scale)
-            data  = [i,Ch,Scale,Length,Nd,Nc,
-            self.structures[i].rings[3],
-            self.structures[i].rings[4],
-            self.structures[i].rings[5],
-            self.structures[i].rings[6],
-            self.structures[i].rings[7],
-            self.structures[i].rings[8],
-            self.structures[i].getDualLatticeEnergy(),
-            FinalEnergy,
-            FinalEnergyPerAtom,
-            FinalScale,
-            FinalScaleEnergy]
-        else:
-            Nd = self.structures[i].fullerene.thomsonPoints.npoints
-            try:
-                Nc = self.structures[i].fullerene.carbonAtoms.npoints
-            except:
-                Nc = 0
-                printl("log: no carbon atoms found")
-                
-            data  = [i,Nd,Nc,
-                    self.structures[i].rings[3],
-                    self.structures[i].rings[4],
-                    self.structures[i].rings[5],
-                    self.structures[i].rings[6],
-                    self.structures[i].rings[7],
-                    self.structures[i].rings[8],
-                    self.structures[i].getDualLatticeEnergy(),
-                    FinalEnergy,
-                    FinalEnergyPerAtom,
-                    FinalScale,
-                    FinalScaleEnergy]
+            #printl("getting data from structure",table,data[table])
             
-            #data = [i,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        
-        printl(len(data),data)
-        return data  
-        
-    def get_data_OLD(self,i):
-        while(self.locklog):
-            pass
-        
-        try:    
-            FinalEnergy = self.structures[i].carbonLattice.FinalEnergy
-            FinalEnergyPerAtom = self.structures[i].carbonLattice.FinalEnergy/self.structures[i].carbonLattice.npoints
-            FinalScale = self.structures[i].carbonLattice.FinalScale
-            FinalScaleEnergy = self.structures[i].carbonLattice.FinalScaleEnergy
-        except:
-            FinalEnergy,FinalEnergyPerAtom,FinalScale,FinalScaleEnergy = "","","",""
-                    
-        if(self.type=="Nanotube"):
-            Nd = str(self.structures[i].dualLattice.npoints)+" "+str(self.structures[i].NCapDualLattice)
-            Nd += " "+str(self.structures[i].NTubeDualLattice)
-            Nc = str(self.structures[i].carbonLattice.npoints)+" "+str(self.structures[i].NCapCarbonAtoms)
-            Nc += " "+str(self.structures[i].NTubeCarbonAtoms)
-            Ch = str(self.structures[i].nanotube_n)+" "
-            Ch += str(self.structures[i].nanotube_m)+" "
-            Ch += str(self.structures[i].nanotube_u)
-            data  = [i,Ch,Nd,Nc,
-            self.structures[i].rings[3],
-            self.structures[i].rings[4],
-            self.structures[i].rings[5],
-            self.structures[i].rings[6],
-            self.structures[i].rings[7],
-            self.structures[i].rings[8],
-            self.structures[i].dualLattice.FinalEnergy,
-            FinalEnergy,
-            FinalEnergyPerAtom,
-            FinalScale,
-            FinalScaleEnergy]
-        else:
-            Nd = self.structures[i].dualLattice.npoints
-            Nc = self.structures[i].carbonLattice.npoints
-            data  = [i,Nd,Nc,
-                    self.structures[i].rings[3],
-                    self.structures[i].rings[4],
-                    self.structures[i].rings[5],
-                    self.structures[i].rings[6],
-                    self.structures[i].rings[7],
-                    self.structures[i].rings[8],
-                    self.structures[i].dualLattice.FinalEnergy,
-                    FinalEnergy,
-                    FinalEnergyPerAtom,
-                    FinalScale,
-                    FinalScaleEnergy]
-            
-            #data = [i,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        
-        printl(len(data),data)
-        return data     
+        #printl(len(data),data)
+        return data    
     
+    def get_structure_at_position(self,index,sorted=False):
+        if(sorted):return self.structures[self.get_sorted_indexes()[index]]
+        else:return self.structures[index]
+        
     def get_sorted_indexes(self):
         while(self.locklog):
             pass
         
         energies = numpy.zeros(len(self.structures))
         for index,structure in enumerate(self.structures):
-            #energies[index] = numpy.sum(structure.dualLattice.energy)
-            energies[index] = structure.getDualLatticeEnergy()
+            #energies[index] = numpy.sum(structure.dual_lattice.energy)
+            energies[index] = structure.get_dual_lattice_energy()
         order = numpy.argsort(energies)
         return order    
     
     def write_log(self,folder,filename="StructureLog.txt"):
-        printl("writing log")
+        printl("writing log",folder,filename)
 #        if os.path.exists(os.path.join(folder,filename)):
-#            f = open(os.path.join(folder,filename),"a")
-#            log = self.get_log_string()
-#            f.write(log)
-#            f.close()
-#        else:
-        f = open(os.path.join(folder,filename),"w")
-        log = self.get_header_string()
-        f.write(log)
-        log = self.get_log_string()
-        f.write(log)
-        f.close()
+        write=False
+        while not write:
+            try:
+                f = open(os.path.join(folder,filename),"w")
+                for (title,headers,table) in [('General',self.general_headers,'general'),
+                                              ('Dual Lattice',self.dual_lattice_headers,'dual_lattices'),
+                                              ('Carbon Lattice',self.carbon_lattice_headers,'carbon_lattices'),
+                                              ('Rings',self.rings_headers,'rings')]:
+                    print title,headers,table
+                    widths = self.get_col_widths(headers, table)
+                    print "widths",widths
+                    log = self.get_header_string(title,headers,widths)
+                    print "get_header_string",log
+                    f.write(log)
+                    log = self.get_log_string(widths,table)
+                    f.write(log)
+                    
+                f.close()
+                write = True                         
+            except:
+                time.sleep(0.5)
     
+    def write_log_old(self,folder,filename="StructureLog.txt",append=False):
+        printl("writing log",folder,filename,append)
+#        if os.path.exists(os.path.join(folder,filename)):
+        write=False
+        while not write:
+            try:
+                if(append):
+                    if os.path.exists(os.path.join(folder,filename)):
+                        f = open(os.path.join(folder,filename),"a")
+                        #log = self.get_log_string()
+                        log = self.get_append_log_string()
+                        f.write(log)
+                        f.close()
+                        write = True
+                    else:
+                        f = open(os.path.join(folder,filename),"w")
+                        log = self.get_header_string()
+                        f.write(log)
+                        log = self.get_log_string()
+                        f.write(log)
+                        f.close()
+                        write = True
+                else:
+                    f = open(os.path.join(folder,filename),"w")
+                    log = self.get_header_string()
+                    f.write(log)
+                    log = self.get_log_string()
+                    f.write(log)
+                    f.close()
+                    write = True                         
+            except:
+                time.sleep(0.5)
     
-    def get_header_string(self):
-        while(self.locklog):
-            pass
+    def get_header_string_old(self):
+        printl("get_header_string")
+        line1 = ""
+
+        l=0
+        for header in self.general_headers:
+            l+=len(header)+self.logpad
         
+        line1+=("{:^"+str(l)+"}").format('General')    
+        
+        l=0
+        for header in self.dual_lattice_headers:
+            l+=len(header)+self.logpad
+        line1+=("{:^"+str(l)+"}").format('Dual Lattice')        
+        l=0
+        for header in self.carbon_lattice_headers:
+            l+=len(header)+self.logpad
+        line1+=("{:^"+str(l)+"}").format('Carbon Lattice')     
+        l=0
+        for header in self.rings_headers:
+            l+=len(header)+self.logpad
+        line1+=("{:^"+str(l)+"}").format('Rings')    
+        printl("line1",line1)
+        
+        
+        line2 = ""
+        for header in self.general_headers:
+            line2+=("{:"+str(len(header)+self.logpad)+"}").format(header)    
         
 
-        headers = tuple(self.headers)
-        format =""
-        tot = 0
-        for h in headers:
-            format+="%"+str(len(h)+self.logpad)+"s"
-            tot +=len(h)+self.logpad
-        
-        printl("headers",headers,len(headers))
-        title = self.type+" Structure Log"
-        log = ("%"+str(int(tot*0.5))+"s\n") %(title)
-        log += "-"*(tot) + "\n"
+        for header in self.dual_lattice_headers:
+            line2+=("{:"+str(len(header)+self.logpad)+"}").format(header)         
 
+        for header in self.carbon_lattice_headers:
+            line2+=("{:"+str(len(header)+self.logpad)+"}").format(header)    
+ 
+        for header in self.rings_headers:
+            line2+=("{:"+str(len(header)+self.logpad)+"}").format(header)   
         
-        printl("format",format)           
-        log += (format+"\n") % headers
-        log += "-"*(tot) + "\n"
+        printl(line2)
+        log = line1+"\n"+line2
+
         
         return log
     
-    def get_log_string(self):
+    def get_col_widths(self,headers,table):
+
+        col_widths = [ len(header) for header in headers] 
+        #print col_widths
+        order = self.get_sorted_indexes()
+        for i in order:
+            data = self.get_data(i)
+            data = data[table] 
+            #print "data",data
+            for j,d in enumerate(data):
+                
+                if len(str(d))>col_widths[j]: col_widths[j] = len(str(d))
+        
+        #print "returning",col_widths
+        
+        return col_widths
+    
+    def get_header_string(self,title,headers,widths):
+        printl("get_header_string",title)
+        line1 = ""
+        
+        
+        l=0
+        for w in widths:
+            l+=w+self.logpad
+        
+        line1+=("{:^"+str(l)+"}").format(title)+"\n"    
+        
+        format =""
+        for w in widths:
+            format +="{:<"+str(w+self.logpad)+"} "  
+        
+        line2 = ""
+        #for w,header in enumerate(headers):
+        line2+= (format+"\n").format(*headers)    
+
+        
+        printl(line2)
+        log = line1+line2
+
+        
+        return log
+    
+
+    def get_log_string(self,widths,table):
         
         order = self.get_sorted_indexes()
-        headers = tuple(self.headers)
+        printl("order",order)
         format =""
-        tot = 0
-        for h in headers:
-            format+="%"+str(len(h)+self.logpad)+"s"
-            tot +=len(h)+self.logpad
-            
+        
+        for w in widths:
+            format +="{:<"+str(w+self.logpad)+"} "   
+        
+        printl("log string format",format)
+
         log=""
         for i in order:
             data = self.get_data(i)
-            printl(format)
-            log+=  (format+"\n") % (tuple(data))
+            data = data[table]
+            data = [ d.strftime("%Y-%m-%d %H:%M:%S")  if isinstance(d, datetime.datetime) else d for d in data]
+                    
+            
+            log+=  (format+"\n").format(*data)
+            printl(log)
+            
+            
+        return log 
+
+    def get_append_log_string(self):
+        format =""
+
+        for header in self.general_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        for header in self.dual_lattice_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        for header in self.carbon_lattice_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        for header in self.rings_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        
+        printl("format",format)
+        log=""
+        data = self.get_data(len(self.structures)-1)
+        data = data['general']+ data['dual_lattices']+ data['carbon_lattices']+ data['rings']
+        log+=  (format+"\n").format(*data)
+        printl(log)
+        return log 
+
+    def get_log_string_old(self):
+        
+        order = self.get_sorted_indexes()
+        printl("order",order)
+        format =""
+
+        for header in self.general_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        for header in self.dual_lattice_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        for header in self.carbon_lattice_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        for header in self.rings_headers:
+            format +="{:"+str(len(header)+self.logpad)+"} "   
+        
+        printl("format",format)
+
+        log=""
+        for i in order:
+            data = self.get_data(i)
+            data = data['general']+ data['dual_lattices']+ data['carbon_lattices']+ data['rings']
+            log+=  (format+"\n").format(*data)
+            printl(log)
+            
+            
         return log    
         
     def print_log(self):
+        return
         log = self.get_header_string()
         log += self.get_log_string()
         print log    

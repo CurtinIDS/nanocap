@@ -12,13 +12,10 @@ Thomson - The 1/r potential for constructing the dual lattices
 Also holds some generic routines 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
-
-from nanocap.core.globals import *
-import nanocap.core.globals as globals
 import os,sys,math,copy,random,time,threading,Queue,ctypes
-
 import numpy
 
+from nanocap.core.globals import *
 from nanocap.core.util import *
 from nanocap.clib import clib_interface
 clib = clib_interface.clib
@@ -31,16 +28,21 @@ ecount = 0
 fcount = 0
 efcount = 0
 
-'''
-parent class
-'''
-
 class ForceField(object):
+    '''
+    The parent class which holds generic functions
+    
+    The most important is get_energy which returns
+    the energy and force for the current 
+    forcefield
+        
+    '''
     def __init__(self,ID,args=None):
         self.ID = ID
         self.args = args
         self.analytical_force = True
-    
+        self.options = ""
+        self.energy_units = ""
     def set_args(self,args):
         self.args = args
         
@@ -97,31 +99,22 @@ class RSSBondForceField(ForceField):
         clib.get_bond_lengths_three(ctypes.c_int(pointSet.npoints),
                                      pointSet.pos.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                                      BondLengths.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
-          
-#        cutoff  = numpy.average(AvBondLength)*1.2
-#        mybonds = numpy.zeros(pointSet.npoints*6*maxbonds, NPF)
-#
-#        clib.calc_carbon_bonds.restype = ctypes.c_int
-#        nbonds=clib.calc_carbon_bonds(ctypes.c_int(pointSet.npoints),
-#                                            pointSet.pos.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-#                                            mybonds.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-#                                            ctypes.c_double(cutoff))
         
         res = numpy.sum(numpy.power(BondLengths - self.args[0],2))
-        
-        
-        print "res",res,BondLengths[0],BondLengths[-1]
              
         pointSet.force = 0.0#*pointSet.freeflagspos 
         pointSet.energy = res
         
-        #printl(self.ID,"force field energy call",sum(energy),magnitude(force))
         return res,0.0 
 
 class EDIPForceField(ForceField):
+    '''
+    The Environmental Dependent Interatomic Potential
+    Binary .so should be in /ext/edip 
+    '''
     def __init__(self):
         ForceField.__init__(self,"EDIP",[50000,50000,50000])      
-
+        self.energy_units = "eV"
     def get_energy(self,pointSet):
         box = numpy.array([self.args[0],
                                 self.args[1],
@@ -145,8 +138,26 @@ class EDIPForceField(ForceField):
         self.args[2] = (bounds[5]-bounds[2])*2000.0
         printl("end setup_force_field")
     
-
+class NullForceField(ForceField):
+    '''
+    A Null force field.
+    '''
+    def __init__(self):
+        ForceField.__init__(self,"NULL")      
+    def get_energy(self,pointSet):
+        return 0,numpy.zeros_like(pointSet.pos)
+        
+            
 class ThomsonForceField(ForceField):
+    '''
+    The dual lattice forcefield.
+    
+        The FF is init with 3 args;
+        1) the exponent in r^-a,
+        2) the neighbour cutoff 
+        3) the cutoff along Z which is only used for capped nanotubes. 
+
+    '''
     def __init__(self):
         ForceField.__init__(self,"Thomson",[1.0,99999999.0,99999999.0])      
     
@@ -174,7 +185,7 @@ class ThomsonForceField(ForceField):
         pointSet.force = force#*pointSet.freeflagspos 
         pointSet.energy = energy
         
-        #printl("force field energy call",sum(energy),magnitude(force),numpy.sum(force[2::3]),self.args)
+        #printd("force field energy call",sum(energy),magnitude(force),numpy.sum(force[2::3]),self.args)
              
         return sum(energy),force    
 
@@ -184,6 +195,7 @@ FFS = {}
 FFS['Thomson'] = ThomsonForceField()        
 FFS['EDIP'] = EDIPForceField()     
 FFS['Scaled Topology'] = RSSBondForceField()    
+FFS['Unit Radius Topology'] = NullForceField()   
 
 def remove_radial_component_of_force(npoints,pos,force):
     clib.remove_radial_component__of_force(ctypes.c_int(npoints),

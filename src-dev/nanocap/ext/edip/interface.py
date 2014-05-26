@@ -20,7 +20,7 @@ else:  lib="edip.so"
 
 #print path_from_file(__file__,path_relative_to_exe)+"/"+lib
 
-relative_lib = os.path.join(get_root(),"ext","edip",lib)
+relative_lib = os.path.join(get_root(),"ext","edip","lib",lib)
 
 print "relative_lib",relative_lib
 edip = ctypes.cdll.LoadLibrary(relative_lib) 
@@ -98,7 +98,7 @@ def get_energy_force(natoms,box,pos):
     edip.getforce(ctypes.byref(ctypes.c_int(len(pos))),
                   force.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                   ctypes.byref(energy))    
-    energy = energy.value
+    energy = float(energy.value)
     
 #    #printl("force 0",force[0],force[1],force[2])
 #    #printl("force 1",force[3],force[4],force[5])

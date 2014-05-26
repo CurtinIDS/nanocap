@@ -9,13 +9,13 @@ if __name__ == "__main__":sys.path.append(os.path.abspath(__file__+"/../../"))
 print sys.path
 from nanocap.core.util import *
 from nanocap.core.globals import *
-import nanocap.core.globals as globals
 from nanocap.core import minimisation
 from nanocap.core import forcefield
-import nanocap.objects.tube as tube
-import nanocap.objects.cap as cap
-import nanocap.objects.points as points
-import nanocap.objects.fullerene as fullerene
+import nanocap.structures.nanotube as nanotube
+import nanocap.structures.cap as cap
+import nanocap.structures.cappednanotube as cappednanotube 
+import nanocap.core.points as points
+import nanocap.structures.fullerene as fullerene
 
 from nanocap.clib import clib_interface
 clib = clib_interface.clib
@@ -41,26 +41,30 @@ class CheckForceField(unittest.TestCase):
 
     def testNanotubeThomsonForceField(self):     
         ncap = 32
+        n,m=5,5
+        l=10.0
+        capEstimate = True
+        seed = 123654
         
-        self.nanotube = tube.nanotube()
-        self.nanotube.setup(5,5,5)
-        self.cap = cap.cap()
-        self.cap.setup(ncap,
-                       seed=123456)
-
-        self.points = points.joinPointSets((self.cap.thomsonPoints,self.nanotube.tubeThomsonPoints))
+        my_nanotube = cappednanotube.CappedNanotube()
+        my_nanotube.setup_nanotube(n,m,l=l)
         
-        self.nanotube.setZcutoff(ncap)
+        if(capEstimate):
+            NCapDual = my_nanotube.get_cap_dual_lattice_estimate(n,m)
+    
+        my_nanotube.construct_dual_lattice(N_cap_dual=NCapDual,seed=seed)
         
-        self.force = numpy.zeros_like(self.points.pos)
+        my_nanotube.set_Z_cutoff(N_cap_dual=NCapDual)
+        
+        self.force = numpy.zeros_like(my_nanotube.dual_lattice.pos)
         
         self.FF = forcefield.ThomsonForceField()
         
-        self.FF.args[2] = self.nanotube.cutoff
+        self.FF.args[2] = my_nanotube.cutoff
 
 
         for i in range(0,10):
-            self.FF.check_numerical_forces(self.points, 0.001)
+            self.FF.check_numerical_forces(my_nanotube.dual_lattice, 0.001)
             
             
             

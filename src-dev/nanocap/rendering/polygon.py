@@ -43,7 +43,7 @@ class polygonSet(object):
         self.EdgeActors = []
         self.MaxVerts = MaxVerts
     
-        
+        self.added=False
         
         self.Actors = [0]*self.MaxVerts
         self.EdgeActors = [0]*self.MaxVerts
@@ -59,7 +59,7 @@ class polygonSet(object):
         self.NumpyCoords = numpy.zeros(pointSet.npoints*3,NPF)
         self.VTKCoords.SetVoidArray(pointSet.pos, len(self.NumpyCoords), 1) 
         self.Points.SetData(self.VTKCoords)
-        #printl("Setting verts")
+        printl("Setting verts")
         
         
         self.Rings = Rings
@@ -136,16 +136,18 @@ class polygonSet(object):
             self.Edges[i].SetRadius(self.EdgeThickness)
              
     def AddToRenderer(self,ren):
+        
         for Actor in self.Actors:
             ren.AddActor(Actor)
         for Actor in self.EdgeActors:
             ren.AddActor(Actor)
-   
+        self.added=True    
     def RemoveFromRenderer(self,ren):
         for Actor in self.Actors:
             ren.RemoveActor(Actor)
         for Actor in self.EdgeActors:
             ren.RemoveActor(Actor)
+        self.added=False
     
     def setPoints(self,pointSet):
         self.NumpyCoords = numpy.zeros(pointSet.npoints*3,NPF)

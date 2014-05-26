@@ -78,4 +78,7 @@ def delaunyTriangulation(points):
                      outcenters.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                      AvBondLength.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
     
+    printd("ntriangles",ntriangles)
+    
+    vertlist = vertlist[0:ntriangles*3]
     return vertlist,ntriangles

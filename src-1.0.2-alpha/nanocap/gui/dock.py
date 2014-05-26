@@ -48,6 +48,7 @@ class dock(QtGui.QDockWidget):
         
         self.setMinimumWidth(width)
 
+    
     def draw(self):
         self.toolbars =  {}
         self.toolbars["Basic"] = toolbarbasic.toolbarBasic(self.Gui, self.MainWindow)

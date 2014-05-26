@@ -10,20 +10,10 @@ util functions
 '''
 
 from nanocap.core.globals import *
-from nanocap.core import globals
 import sys,os,random,math,time,inspect
 from collections import defaultdict
 
 import numpy
-
-try:
-    from nanocap.core.globals import QT
-    QtGui, QtCore, QtOpenGL = QT.QtGui, QT.QtCore, QT.QtOpenGL
-except:pass
-#clib = ctypes.cdll.LoadLibrary(ROOTDIR+"/clib/clib.so") 
-
-#from nanocap.clib import clib_interface
-#clib = clib_interface.clib
 
 uniqueMask = numpy.zeros(9999,int)
 uniqueInputMask = numpy.zeros(9999,int)
@@ -31,52 +21,20 @@ outputWidget = None
 
 def get_root():
     frozen = getattr(sys, 'frozen', '')
-    
     if not frozen:
         # not frozen: in regular python interpreter
         main = os.path.abspath(unicode(__file__, sys.getfilesystemencoding( ))+"/../")
         approot = os.path.dirname(main)
     
     elif frozen in ('dll', 'console_exe', 'windows_exe'):
-        # py2exe:
         approot = os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
     
     elif frozen in ('macosx_app',):
-        # py2app:
-        # Notes on how to find stuff on MAC, by an expert (Bob Ippolito):
-        # http://mail.python.org/pipermail/pythonmac-sig/2004-November/012121.html
         approot = os.environ['RESOURCEPATH']
-        
     return approot
-
-
-def unit_normal(a, b, c):
-    x = numpy.linalg.det([[1,a[1],a[2]],
-         [1,b[1],b[2]],
-         [1,c[1],c[2]]])
-    y = numpy.linalg.det([[a[0],1,a[2]],
-         [b[0],1,b[2]],
-         [c[0],1,c[2]]])
-    z = numpy.linalg.det([[a[0],a[1],1],
-         [b[0],b[1],1],
-         [c[0],c[1],1]])
-    mag = (x**2 + y**2 + z**2)**.5
-    return (x/mag, y/mag, z/mag)
-
-
-def write_xyz(filename,pointSet,constrained=False):
-    f = open(filename,"w")
-    f.write(str(pointSet.npoints)+"\n")
-    f.write("\n")
-    for i in range(0,pointSet.npoints):
-        if not constrained:f.write("C "+str(pointSet.pos[i*3])+" "+str(pointSet.pos[i*3+1])+" "+str(pointSet.pos[i*3+2])+"\n")
-        else:f.write("C "+str(pointSet.constrained_pos[i*3])+" "+str(pointSet.constrained_pos[i*3+1])+" "+str(pointSet.constrained_pos[i*3+2])+"\n")
-    f.close()
-    
 
 def get_relative_path(filename):
     frozen = getattr(sys, 'frozen', '')
-    
     if not frozen:
         # not frozen: in regular python interpreter
         approot = os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
@@ -101,18 +59,42 @@ def path_from_file(filename,path_from_exe=""):
     #print os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
     return os.path.dirname(unicode(filename, sys.getfilesystemencoding( )))
     
-
 def module_path():
     if hasattr(sys, "frozen"):
         return os.path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
     return os.path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
 
-def waitGUIlock():
-    time.sleep(0.1)
-    while(globals.GUIlock):
-        printl("awaiting globals.GUIlock=False",globals.GUIlock)
-        time.sleep(0.1)
-    printl("ending globals.GUIlock=False",globals.GUIlock)    
+def NDual_from_NAtoms(NAtoms,surface=None):
+    if surface==None:printe("must pass surface (sphere, cap, tube) to determine number of dual latice points from number of atoms")
+    
+    if(surface=='sphere'):return (NAtoms + 4)/2
+    if(surface=='cap'):return (NAtoms + 2)/2
+    if(surface=='tube'):return (NAtoms/2) 
+    
+    
+
+def NAtoms_from_NDual(NDual,surface=None):
+    if surface==None:printe("must pass surface (sphere, cap, tube) to determine number of atoms from number of dual lattice points")
+    
+    if(surface=='sphere'):return 2*NDual - 4
+    if(surface=='cap'):return 2*NDual - 2
+    if(surface=='tube'):return 2*NDual 
+    
+    
+def unit_normal(a, b, c):
+    x = numpy.linalg.det([[1,a[1],a[2]],
+         [1,b[1],b[2]],
+         [1,c[1],c[2]]])
+    y = numpy.linalg.det([[a[0],1,a[2]],
+         [b[0],1,b[2]],
+         [c[0],1,c[2]]])
+    z = numpy.linalg.det([[a[0],a[1],1],
+         [b[0],b[1],1],
+         [c[0],c[1],1]])
+    mag = (x**2 + y**2 + z**2)**.5
+    return (x/mag, y/mag, z/mag)
+
+
 
 def get_centered_string(fmt,length,args):
     args = map(str,args)
@@ -123,8 +105,7 @@ def get_centered_string(fmt,length,args):
         return " ".join(args)
     
     pad = int((length-slength)/2.0)
-    
-    #print fmt,pad,args
+
     out = fmt*pad +" "+" ".join(args) + " "+fmt*pad
     d = len(out) - length
     if(d>0):
@@ -134,7 +115,6 @@ def get_centered_string(fmt,length,args):
         
     return out+"\n"
     
-
 def check_undefined(key,dict):
     try:return dict[key]
     except:return "UNDEF"
@@ -143,8 +123,6 @@ def count_entries(seq):
     d = defaultdict(lambda: 0)
     for y in seq: d[y] += 1
     return d
-
-
 
 def gauss(x,p):
      A, mu, sigma,A1, mu1, sigma1 = p
@@ -181,18 +159,9 @@ def printh(*args):
     string+=post    
        
     print string
-    
-#    try:
-#        outputWidget.append(string)
-#        cursor = outputWidget.textCursor()
-#        cursor.movePosition(QtGui.QTextCursor.End)
-#        outputWidget.setTextCursor(cursor)
-#    except:
-#        pass
 
 def printl(*args):
     if(VERBOSE):
-        
         try:
             frm = inspect.stack()[1]
             mod = inspect.getmodule(frm[0])
@@ -205,14 +174,7 @@ def printl(*args):
             string+=str(arg)+" "    
      
         print string
-#        try:
-#            global outputWidget
-#            outputWidget.append(string)
-#            cursor = outputWidget.textCursor()
-#            cursor.movePosition(QtGui.QTextCursor.End)
-#            outputWidget.setTextCursor(cursor)
-#        except:
-#            pass
+
 def printd(*args):
     if(DEBUG):
         try:
@@ -222,6 +184,24 @@ def printd(*args):
             string= mod.__name__+" (line "+str(line)+") : "
         except:
             string="" 
+        for arg in args:
+            string+=str(arg)+" "    
+     
+        print string
+def printe(*args):
+    if(ERROR):
+        try:
+            frm = inspect.stack()[1]
+            mod = inspect.getmodule(frm[0])
+            line = inspect.getsourcelines(frm[0])[1]
+            string= "*NanoCap Error*:"+mod.__name__+" (line "+str(line)+") : "
+        except:
+            string="" 
+        
+        for arg in args:
+            string+=str(arg)+" "    
+     
+        print string
 
 def encodeImages(inputfolder,outputfolder,framerate=25,fileID="image",ffmpeg = "ffmpeg",
                  outfile="output.mpg",imgformat=".jpg",fformat="%04d"):  
@@ -270,7 +250,6 @@ def get_unique_entries(seq, idfun=None):
     return result    
  
 def randvec(v):
-    #numpy.random.seed(int(time.time()))
     vtemp = numpy.random.randn(v.size)
     return vtemp.reshape(v.shape)
 

@@ -53,7 +53,7 @@ class bondSet(vtkActor):
         self.bondGlyphSource.SetPoint2(vector[0],vector[1],vector[2])
         
     
-    def setBonds(self,nbonds,bonds):
+    def setBonds(self,nbonds,bonds,points):
 
         self.nbonds = nbonds
         self.bonds = numpy.copy(bonds)
@@ -69,8 +69,12 @@ class bondSet(vtkActor):
         count = 0    
         #print bonds
         for i in range(0,self.nbonds):
-            self.bondcoords.SetTuple3(count, self.bonds[i*6], self.bonds[i*6+1],self.bonds[i*6+2])
-            self.bondVectors.SetTuple3(count,self.bonds[i*6+3], self.bonds[i*6+4],self.bonds[i*6+5])
+            IDi,IDj = self.bonds[i*2], self.bonds[i*2+1]
+            xi,yi,zi = points.pos[IDi*3],points.pos[IDi*3+1],points.pos[IDi*3+2]
+            xj,yj,zj = points.pos[IDj*3],points.pos[IDj*3+1],points.pos[IDj*3+2]
+            
+            self.bondcoords.SetTuple3(count, xi,yi,zi)
+            self.bondVectors.SetTuple3(count,xj,yj,zj)
             #print  posi,posj
             
             #bondScalars.SetTuple1(count,scalars[i])
