@@ -29,20 +29,20 @@ from nanocap.structures import cappednanotube
 
 from nanocap.core import globals,minimisation,triangulation,minimasearch,structurelog
 
-class NanotubeInputOptions(QtGui.QWidget):
-    def __init__(self,structure=None, gen_buttons=False):        
-        QtGui.QWidget.__init__(self)
+class NanotubeInputOptions(BaseWidget):
+    def __init__(self,structure=None, gen_buttons=False): 
+        BaseWidget.__init__(self)
         self.structure = structure
-        self.contentlayout = QtGui.QVBoxLayout(self)
-        self.contentlayout.setContentsMargins(0,0,0,0)
-        self.contentlayout.setSpacing(0)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-
-        self.setLayout(self.contentlayout)
+#         self.contentlayout = QtGui.QVBoxLayout(self)
+#         self.contentlayout.setContentsMargins(0,0,0,0)
+#         self.contentlayout.setSpacing(0)
+#         self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+# 
+#         self.setLayout(self.contentlayout)
                 
-        self.holder = BaseWidget(group=False,title="",show=True, align = QtCore.Qt.AlignHCenter)
+        self.holder = BaseWidget(group=False,title="",show=False, align = QtCore.Qt.AlignHCenter)
          
-        self.contentlayout.addWidget(self.holder)
+        self.addWidget(self.holder)
         
         grid = self.holder.newGrid(align=QtCore.Qt.AlignTop,spacing=5)
         self.nanotube_n_entry = SpinBox(10)
@@ -112,20 +112,14 @@ class NanotubeInputOptions(QtGui.QWidget):
         self.nanotube_l_entry.setValue(structure.length)
         self.nanotube_u_entry.setValue(structure.unit_cells)
 
-class CappedNanotubeInputOptions(QtGui.QWidget):
-    def __init__(self,structure=None, gen_buttons=False):        
-        QtGui.QWidget.__init__(self)
+class CappedNanotubeInputOptions(BaseWidget):
+    def __init__(self,structure=None, gen_buttons=False): 
+        BaseWidget.__init__(self)
         self.structure = structure
-        self.contentlayout = QtGui.QVBoxLayout(self)
-        self.contentlayout.setContentsMargins(0,0,0,0)
-        self.contentlayout.setSpacing(0)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
 
-        self.holder = BaseWidget(group=False,title="",show=True,align=QtCore.Qt.AlignTop)
+        self.holder = BaseWidget(group=False,show=True,title="",align=QtCore.Qt.AlignTop)
 
-         
-        self.contentlayout.addWidget(self.holder)
+        self.addWidget(self.holder)
         
         grid = self.holder.newGrid()
         self.nanotube_n_entry = SpinBox(10)
@@ -237,26 +231,22 @@ class CappedNanotubeInputOptions(QtGui.QWidget):
         self.nanotube_m_entry.setValue(structure.m)
         self.nanotube_l_entry.setValue(structure.length)
 
-class FullereneInputOptions(QtGui.QWidget):
-    def __init__(self,structure=None, gen_buttons=False):        
-        QtGui.QWidget.__init__(self)
+class FullereneInputOptions(BaseWidget):
+    def __init__(self,structure=None, gen_buttons=False): 
+        BaseWidget.__init__(self)
         self.structure = structure
-        self.contentlayout = QtGui.QVBoxLayout(self)
-        self.contentlayout.setContentsMargins(0,0,0,0)
-        self.contentlayout.setSpacing(0)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
         
-        self.holder = BaseWidget(group=False,title="",show=True,align=QtCore.Qt.AlignCenter)
+        #self.holder = BaseWidget(group=False,title="",show=True,align=QtCore.Qt.AlignCenter)
         
-        self.contentlayout.addWidget(self.holder)
+        #self.addWidget(self.holder)
         
-        grid = self.holder.newGrid()
+        grid = self.newGrid()
 
         self.carbon_atoms_entry = SpinBox()
         self.carbon_atoms_entry.setMaximum(9999999)
         self.carbon_atoms_entry.setValue(60)
         self.carbon_atoms_entry.setSingleStep(2)
+        #self.carbon_atoms_entry.setFixedWidth(60)  
         grid.addWidget(QL("Carbon Atoms"),0,0)#,alignment=QtCore.Qt.AlignRight)
         grid.addWidget(self.carbon_atoms_entry,0,1)#,alignment=QtCore.Qt.AlignLeft)
 
@@ -265,22 +255,22 @@ class FullereneInputOptions(QtGui.QWidget):
         self.dual_lattice_points_entry = SpinBox()
         self.dual_lattice_points_entry.setMaximum(9999999)
         self.dual_lattice_points_entry.setValue(32)
-        self.dual_lattice_points_entry.setFixedWidth(60)  
+        #self.dual_lattice_points_entry.setFixedWidth(60)  
         self.connect(self.dual_lattice_points_entry, QtCore.SIGNAL('valueChanged(int)'), self.dual_lattice_changed)
         self.connect(self.carbon_atoms_entry, QtCore.SIGNAL('valueChanged(int)'), self.carbon_atoms_changed)
         self.dual_lattice_points_entry.setValue(32)
         
-        grid.addWidget(QL("Dual Lattice Points"),0,2)#,alignment=QtCore.Qt.AlignRight)
-        grid.addWidget(self.dual_lattice_points_entry,0,3,alignment=QtCore.Qt.AlignLeft)
+        grid.addWidget(QL("Dual Lattice Points"),1,0)#,alignment=QtCore.Qt.AlignRight)
+        grid.addWidget(self.dual_lattice_points_entry,1,1,alignment=QtCore.Qt.AlignLeft)
         
         lb = QtGui.QLabel("Seed")
         self.dual_lattice_seed_entry = SpinBox()
         self.dual_lattice_seed_entry.setMaximum(9999999)
         self.dual_lattice_random_seed_cb = QtGui.QCheckBox("random")
         self.dual_lattice_random_seed_cb.setChecked(True)    
-        grid.addWidget(QL("Seed"),1,0)#,alignment=QtCore.Qt.AlignRight)
-        grid.addWidget(self.dual_lattice_seed_entry,1,1)       
-        grid.addWidget(self.dual_lattice_random_seed_cb,1,2)
+        grid.addWidget(QL("Seed"),2,0)#,alignment=QtCore.Qt.AlignRight)
+        grid.addWidget(self.dual_lattice_seed_entry,2,1)       
+        grid.addWidget(self.dual_lattice_random_seed_cb,2,2)
 
         lb = QtGui.QLabel("NFixed Equator")
         lb.setFixedWidth(100) 
@@ -288,18 +278,18 @@ class FullereneInputOptions(QtGui.QWidget):
         self.dual_lattice_n_fixed_equator.setMaximum(9999999)
         self.dual_lattice_fix_pole_cb = QtGui.QCheckBox("Fix Pole")
         self.dual_lattice_fix_pole_cb.setChecked(True) 
-        grid.addWidget(lb,2,0)
-        grid.addWidget(self.dual_lattice_n_fixed_equator,2,1)              
-        grid.addWidget(self.dual_lattice_fix_pole_cb,2,2)    
+        grid.addWidget(lb,3,0)
+        grid.addWidget(self.dual_lattice_n_fixed_equator,3,1)              
+        grid.addWidget(self.dual_lattice_fix_pole_cb,3,2)    
         
         if(self.structure!=None):self.set_options_from_structure(self.structure)
         
         if(gen_buttons):
             bt = QtGui.QPushButton("Initialise")
             self.connect(bt, QtCore.SIGNAL('clicked()'), self.initialise_structure)
-            self.holder.addWidget(bt,align=QtCore.Qt.AlignCenter)
+            self.addWidget(bt,align=QtCore.Qt.AlignCenter)
             
-    
+            
     def initialise_structure(self):
         printl("initialise_structure",self.structure)
         NCarbon = self.carbon_atoms_entry.value()

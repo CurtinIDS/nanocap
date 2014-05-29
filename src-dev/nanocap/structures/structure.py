@@ -261,24 +261,25 @@ class Structure(object):
         if(options_holder==None and render_window_holder==None):
             app = QtGui.QApplication(sys.argv)
             
-        if(render_window==None):            
+        if(render_window==None):     
+            self.render_window = QtGui.QTabWidget()       
             self.vtkframe = vtkqtframe.VtkQtFrame(0) 
             self.schlegelframe = vtkqtframe.VtkQtFrame(0)
             self.schlegelframe.move_camera(numpy.array([0,0,10]),numpy.array([0,0,0]),numpy.array([0,1,0]))
-            self.render_window = QtGui.QTabWidget()
             self.render_window.addTab(self.vtkframe,"3D View")
             self.render_window.addTab(self.schlegelframe,"Schlegel View")
-            
             self.render_window.vtkframe = self.vtkframe
             self.render_window.schlegelframe = self.schlegelframe
-            if(show):
-                self.vtkframe.show()
-                self.schlegelframe.show()
+            
+#             if(show):
+#                 self.vtkframe.show()
+#                 self.schlegelframe.show()
                 
         else:self.render_window = render_window
         
         self.structure_actors = structureactors.StructureActors(self)
         self.options_window = structureoptionswindow.StructureOptionsWindow(self)
+        #self.options_window = QtGui.QWidget()
         #self.options_window.hide()
         
         #if(render_window!=None):holder.addWidget(self.render_window)
@@ -295,7 +296,6 @@ class Structure(object):
             child_structure.render_window = self.render_window
             child_structure.structure_actors = structureactors.StructureActors(child_structure)
             child_structure.options_window = structureoptionswindow.StructureOptionsWindow(child_structure)
-            
             self.options_window.points_widgets_holder.addHeader(child_structure.type.label,
                                                                 bold=True,frame=False)
             self.options_window.points_widgets_holder.addWidget(child_structure.options_window.render_points_table)
@@ -317,11 +317,15 @@ class Structure(object):
                 mw.setCentralWidget(self.window)
                 mw.show()
                 self.window.show()
-                sys.exit(app.exec_())
+                app.exec_()
+                #sys.exit(app.exec_())
         else:
             if(show):
-                self.options_window.show()
-                self.render_window.show()
+                pass
+#                 self.options_window.show()
+#                 for child_structure in self.get_child_structures():
+#                     child_structure.options_window.show()
+#                 self.render_window.show()
                 
         printl("end render")       
                 #self.window.show()       
@@ -331,7 +335,10 @@ class Structure(object):
         try:
             from nanocap.gui.settings import QtGui,QtCore 
             self.options_window.emit(QtCore.SIGNAL("update_structure()"))
+            
             self.structure_actors.update_actors()
+            self.vtkframe.center_on_load()
+            self.schlegelframe.center_on_load()
         except:
             pass
        
@@ -496,17 +503,18 @@ class Structure(object):
         todelete  = numpy.where(z>cutoff)[0]
         self.schlegel_dual_lattice.removeIndexes(todelete)
         
-        self.schlegel_ring_info = copy.deepcopy(self.ring_info)
-        
-        for i in range(0,self.ring_info['nrings']):
-            for j in range(0,self.ring_info['VertsPerRingCount'][i]):
-                index = self.ring_info['Rings'][i*self.ring_info['MaxVerts'] + j]
-                if(self.carbon_lattice.pos[index*3+2]>cutoff):
-                    self.schlegel_ring_info['VertsPerRingCount'][i] =0 
-                    break    
-                
-        for i in range(0,self.ring_info['nrings']):
-            printl("Schlegel ring {} verts {} ".format(i,self.schlegel_ring_info['VertsPerRingCount'][i]))
+        if(self.has_carbon_rings):
+            self.schlegel_ring_info = copy.deepcopy(self.ring_info)
+            
+            for i in range(0,self.ring_info['nrings']):
+                for j in range(0,self.ring_info['VertsPerRingCount'][i]):
+                    index = self.ring_info['Rings'][i*self.ring_info['MaxVerts'] + j]
+                    if(self.carbon_lattice.pos[index*3+2]>cutoff):
+                        self.schlegel_ring_info['VertsPerRingCount'][i] =0 
+                        break    
+                    
+            for i in range(0,self.ring_info['nrings']):
+                printl("Schlegel ring {} verts {} ".format(i,self.schlegel_ring_info['VertsPerRingCount'][i]))
                 
         self.has_schlegel = True
     

@@ -16,34 +16,35 @@ Help="NanoCap Guide & Documentation","chm.hhc","chm.hhk","index.html","index.htm
 
 [FILES]
 sect0003.html
-sect0019.html
-sect0021.html
-sect0014.html
-sect0004.html
+sect0005.html
 sect0010.html
-sect0008.html
-sect0016.html
-forcefields.html
-cappednanotubes.html
-sect0011.html
-Optimisation.html
+sect0004.html
 Examples.html
-sect0012.html
+sect0008.html
+Rendering.html
+sect0002.html
+cappednanotubes.html
+forcefields.html
+sect0020.html
+sect0022.html
 index.html
-sect0013.html
 dforcefields.html
+sect0011.html
+sect0016.html
+Optimisation.html
+Code.html
+sect0015.html
+sect0021.html
+sect0009.html
+sect0017.html
+sect0019.html
+sect0013.html
+sect0006.html
 sect0007.html
 sect0018.html
-sect0017.html
-sect0009.html
-Code.html
-sect0020.html
-Rendering.html
+sect0014.html
 sect0001.html
-sect0006.html
-sect0002.html
-sect0015.html
-sect0005.html
+sect0012.html
 
 
 [MERGE FILES]

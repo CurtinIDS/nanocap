@@ -2,7 +2,7 @@
 NanoCap 
 ============
 
-Copyright (c) 2013 M. Robinson
+Copyright (c) 2014 M. Robinson
 
 Introduction
 ============
@@ -39,7 +39,7 @@ Licenses
 
 NanoCap is distributed under the Creative Commons Attribution-NonCommercial 2.5 
 License (http://creativecommons.org/licenses/by-nc/2.5/). For a full description 
-of this license see docs/LICENSE. 
+of this license see LICENSE.txt. 
 
 In addition, if NanoCap is used to produce published work please acknowledge the 
 following papers: 
@@ -60,7 +60,7 @@ modified:
 * PySide - Version 1.1.1 
 * VTK - Version 5.8 
 
-The distribution licenses associated with each of the above are given in the 'docs' 
+The distribution licenses associated with each of the above are given in the 'licenses' 
 folder which is bundled with both the source code and standalone application. 
 
 Each license is compatible with the Creative Commons Attribution-NonCommercial 2.5 

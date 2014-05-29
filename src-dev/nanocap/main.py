@@ -15,10 +15,20 @@ from nanocap.gui.gui import GUI
 
 def start():
     app = QtGui.QApplication(sys.argv)
-
+    app.setStyleSheet(STYLESHEET)
     #if(PLATFORM=="win"):app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
     strdir = QtGui.QApplication.applicationDirPath()
+    
+    splash_pix = QtGui.QPixmap(str(IconDir) + SPLASHIMAGE)
+    splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    app.processEvents()
+    
     MainAppWindow = MainWindow()
+    
+    splash.finish(MainAppWindow)
+
     #ngui = GUI(MainAppWindow)
     #MainAppWindow.setGUI(ngui) 
     #MainAppWindow.show()

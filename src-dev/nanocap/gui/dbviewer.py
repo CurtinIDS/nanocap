@@ -111,11 +111,11 @@ class DataBaseTable(QtGui.QWidget):
         
         self.splitter = QtGui.QSplitter()
         self.splitter.setChildrenCollapsible(False)
-        self.splitter.addWidget(HolderWidget([QL("",font="bold ",align=QtCore.Qt.AlignCenter),self.general_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("User",font="bold ",align=QtCore.Qt.AlignCenter),self.users_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("Dual Lattice",font="bold ",align=QtCore.Qt.AlignCenter),self.dual_lattice_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("Carbon Lattice",font="bold",align=QtCore.Qt.AlignCenter),self.carbon_lattice_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("Rings",font="bold ",align=QtCore.Qt.AlignCenter),self.rings_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("",header=True,align=QtCore.Qt.AlignCenter),self.general_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("User",header=True,align=QtCore.Qt.AlignCenter),self.users_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("Dual Lattice",header=True,align=QtCore.Qt.AlignCenter),self.dual_lattice_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("Carbon Lattice",header=True,align=QtCore.Qt.AlignCenter),self.carbon_lattice_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("Rings",header=True,align=QtCore.Qt.AlignCenter),self.rings_table],stack="V"))
         self.splitter.setHandleWidth(1)
         self.contentlayout.addWidget(self.splitter,0,0)
         
@@ -227,13 +227,12 @@ class DataBaseTable(QtGui.QWidget):
  
         return QtCore.QSize(1200,500)
     
-class DataBaseViewerWindow(QtGui.QWidget):
+class DataBaseViewerWindow(BaseWidget):
     def __init__(self,Gui,MainWindow,ThreadManager):
         self.Gui = Gui
         self.MainWindow = MainWindow
         self.ThreadManager = ThreadManager
-        QtGui.QWidget.__init__(self,self.MainWindow,QtCore.Qt.Window)
-        
+        BaseWidget.__init__(self,self.MainWindow,show=False)
         self.setWindowTitle("Database Viewer")
         
         self.props_defaults = ["users.user_name",
@@ -271,22 +270,18 @@ class DataBaseViewerWindow(QtGui.QWidget):
         
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
         
-        self.contentlayout = QtGui.QVBoxLayout(self)
-        self.contentlayout.setContentsMargins(0,0,0,0)
-        self.contentlayout.setSpacing(0)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
-        
         self.database = database.Database()
         
-        self.banner_holder = BaseWidget(self,group=True,title="",
+        self.banner_holder = BaseWidget(self,group=True,title="Search Properties",name="H1",
                                                         show=True)
         
-        self.table_holder = BaseWidget(self,group=False,title="",
+        self.table_holder = BaseWidget(self,group=True,title="Search Results",name="H1",
                                                         show=True)
         
-        self.contentlayout.addWidget(self.banner_holder)
-        self.contentlayout.addWidget(self.table_holder)
+        #self.addWidget(QL("Search Properties",name="H1"))
+        self.addWidget(self.banner_holder)
+        #self.addWidget(QL("Search Results",name="H1"))
+        self.addWidget(self.table_holder)
         
         self.table = DataBaseTable(self.database)
         self.table_holder.addWidget(self.table)
@@ -301,8 +296,6 @@ class DataBaseViewerWindow(QtGui.QWidget):
         self.table_holder.show()
         
         for table in ['users','dual_lattices','carbon_lattices','rings']:    self.table.tables[table].hide_all_columns()
-        
-        
         
         for key in self.props_defaults:
             table,field = key.split(".")
@@ -347,7 +340,7 @@ class DataBaseViewerWindow(QtGui.QWidget):
         self.props_bt = QtGui.QPushButton("Select Properties")
         
         #self.banner_holder.addWidget(self.search_bt)
-        grid.addWidget(self.props_bt,0,12,10,1)
+        grid.addWidget(self.props_bt,0,1,10,1)
         
         
         self.props_window = BaseWidget(popup=True,title="Structure Properties",w=300,h=400,scroll=True,group=False,show=False)
@@ -384,7 +377,7 @@ class DataBaseViewerWindow(QtGui.QWidget):
         self.entries = {}
         self.labels = {}
         
-        holder = HolderWidget()
+        holder = HolderWidget(spacing=4,margins=(2,2,2,2))
         for table in ['users','dual_lattices','carbon_lattices','rings']:
             
             self.holder[table] = BaseWidget(self,group=True,title=table,show=True,align=QtCore.Qt.AlignTop,stack="H")
@@ -528,7 +521,10 @@ class DataBaseViewerWindow(QtGui.QWidget):
         self.MainWindow.gui.dock.toolbar.structurelist.addStructure(structure) 
             
     def bringToFront(self):
+        #self.raise_()
+        self.setWindowState( (self.windowState() & ~QtCore.Qt.WindowMinimized) | QtCore.Qt.WindowActive)
         self.raise_()
+        self.activateWindow()
         self.show()
         
     def sizeHint(self):

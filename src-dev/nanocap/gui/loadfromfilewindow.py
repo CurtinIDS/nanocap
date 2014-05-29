@@ -31,25 +31,25 @@ from nanocap.gui.widgets import BaseWidget,HolderWidget
 
 from nanocap.core import globals,minimisation,triangulation,minimasearch,structurelog
 
-class LoadFromFileWindow(QtGui.QWidget):
+class LoadFromFileWindow(BaseWidget):
     load_structure = QtCore.Signal()
     def __init__(self):
                 
-        QtGui.QWidget.__init__(self)#,self.main_window,QtCore.Qt.Window)
+        BaseWidget.__init__(self)#,self.main_window,QtCore.Qt.Window)
         
 
         self.setWindowTitle("Load Structure From File")
         
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
         
-        self.contentlayout = QtGui.QGridLayout(self)
-        self.contentlayout.setContentsMargins(5,5,5,5)
-        self.contentlayout.setSpacing(5)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
+#         self.contentlayout = QtGui.QGridLayout(self)
+#         self.contentlayout.setContentsMargins(5,5,5,5)
+#         self.contentlayout.setSpacing(5)
+#         self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+#         self.setLayout(self.contentlayout)
 
         self.type_holder = BaseWidget(show=True,group=True,title="Type",align=QtCore.Qt.AlignLeft)
-        self.contentlayout.addWidget(self.type_holder,0,0)
+        self.addWidget(self.type_holder,0,0)
         
         self.type_group = QtGui.QButtonGroup()
         self.type_group.setExclusive(True)
@@ -63,10 +63,11 @@ class LoadFromFileWindow(QtGui.QWidget):
         
         
         self.dual_lattice_holder = BaseWidget(show=True,group=True,title="Dual Lattice",align=QtCore.Qt.AlignLeft)
-        self.contentlayout.addWidget(self.dual_lattice_holder,1,0)
+        self.addWidget(self.dual_lattice_holder,1,0)
         
         self.dual_lattice_holder.central_widget.setCheckable(True)
         self.dual_lattice_holder.central_widget.setChecked(False)
+        self.dual_lattice_holder.central_widget.setObjectName("check")
         
         self.dual_lattice_file_entry = QtGui.QLineEdit()
         self.dual_lattice_format_cb = QtGui.QComboBox()
@@ -78,10 +79,11 @@ class LoadFromFileWindow(QtGui.QWidget):
         self.dual_lattice_holder.addWidget(self.dual_lattice_file_browse_bt)
         
         self.carbon_lattice_holder = BaseWidget(show=True,group=True,title="Carbon Lattice",align=QtCore.Qt.AlignLeft)
-        self.contentlayout.addWidget(self.carbon_lattice_holder,2,0)
+        self.addWidget(self.carbon_lattice_holder,2,0)
         
         self.carbon_lattice_holder.central_widget.setCheckable(True)
         self.carbon_lattice_holder.central_widget.setChecked(False)
+        self.carbon_lattice_holder.central_widget.setObjectName("check")
         
         self.carbon_lattice_file_entry = QtGui.QLineEdit()
         self.carbon_lattice_format_cb = QtGui.QComboBox()
@@ -93,7 +95,7 @@ class LoadFromFileWindow(QtGui.QWidget):
         self.carbon_lattice_holder.addWidget(self.carbon_lattice_file_browse_bt)
     
         self.button_holder = BaseWidget(show=True,group=False)
-        self.contentlayout.addWidget(self.button_holder,3,0)
+        self.addWidget(self.button_holder,3,0)
         
         self.load_bt = QtGui.QPushButton("Load")
         self.connect(self.load_bt,QtCore.SIGNAL("clicked()"),self.load)

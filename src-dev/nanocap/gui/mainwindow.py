@@ -23,7 +23,7 @@ class MainWindow(QtGui.QMainWindow):
         self.gui = gui.GUI(self)
         
         self.show()
-    
+        self.raise_()
 #     def setGUI(self,gui):
 #         self.gui = gui
     def sizeHint(self):

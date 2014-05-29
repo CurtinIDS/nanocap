@@ -35,9 +35,9 @@ class AboutWindow(BaseWidget):
     def __init__(self,parent=None):
         
         if(parent!=None):
-            BaseWidget.__init__(self,parent=parent,popup=True,align=QtCore.Qt.AlignCenter)
+            BaseWidget.__init__(self,parent=parent,popup=True,align=QtCore.Qt.AlignCenter,show=False)
         else:
-            BaseWidget.__init__(self,align=None)        
+            BaseWidget.__init__(self,align=None,show=False)        
         #QtGui.QWidget.__init__(self)#,self.main_window,QtCore.Qt.Window)
         
         self.setWindowTitle("About NanoCap")

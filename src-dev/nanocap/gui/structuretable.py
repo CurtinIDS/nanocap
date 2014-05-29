@@ -32,8 +32,7 @@ class StructureTable(QtGui.QWidget):
                                              DelegateIcons=[[0,1,'view_1.png'],
                                                             ]
                                              )
-        
-        
+
         self.dual_lattice_table = FrozenTableWidget(NFrozen=2,
                                              DelegateIcons=[[0,3,'question_mark.png','tick_1.png','add_1.png'],
                                                             [1,3,'question_mark.png','tick_1.png','add_1.png']]
@@ -65,10 +64,10 @@ class StructureTable(QtGui.QWidget):
         
 
         self.splitter = QtGui.QSplitter()
-        self.splitter.addWidget(HolderWidget([QL("General",font="bold ",align=QtCore.Qt.AlignCenter),self.general_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("Dual Lattice",font="bold ",align=QtCore.Qt.AlignCenter),self.dual_lattice_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("Carbon Lattice",font="bold",align=QtCore.Qt.AlignCenter),self.carbon_lattice_table],stack="V"))
-        self.splitter.addWidget(HolderWidget([QL("Rings",font="bold ",align=QtCore.Qt.AlignCenter),self.rings_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("General",header=True,align=QtCore.Qt.AlignCenter),self.general_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("Dual Lattice",header=True,align=QtCore.Qt.AlignCenter),self.dual_lattice_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("Carbon Lattice",header=True,align=QtCore.Qt.AlignCenter),self.carbon_lattice_table],stack="V"))
+        self.splitter.addWidget(HolderWidget([QL("Rings",header=True,align=QtCore.Qt.AlignCenter),self.rings_table],stack="V"))
         self.splitter.setHandleWidth(1)
         self.contentlayout.addWidget(self.splitter,0,0)
         

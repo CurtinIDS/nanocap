@@ -9,9 +9,12 @@ Options:
 
 build 
 install
+sdist
 build archive - create tar.gz/bz2
 py2app - create .app
 py2app archive - create dmg + tar.gz/bz2
+py2exe - create .exe
+py2exe archive - create .rar
 
 
 Note to self: 
@@ -19,11 +22,15 @@ must create configure scripts for the clibs
 and ext modules. Use autoreconf using the 
 configure.ac and Makefile.am files.
 
-Need to add capabilities for user to simply
-type 'nanocap' after install from source.
--simple python script like main.py
-or even aliase to main.py
-alias main if sys.argv==install. 
+
+Copies Docs from ../../docs to docs
+
+Bundles:
+    bin
+    example scripts
+    docs
+    
+    
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 '''
 
@@ -40,6 +47,7 @@ try:
     import py2exe
 except:pass   
 
+
 ps = platform.system()
 if(ps=="Darwin"):PLATFORM = "osx"
 if(ps=="Windows"):PLATFORM = "win"
@@ -52,6 +60,8 @@ for arg in sys.argv:
     else:SETUP_TOOLS_ARGS.append(arg)
 sys.argv = SETUP_TOOLS_ARGS        
 
+
+ARGVEMU = False
 PVER = "2.7"
 VER = '1.0b10'
 NAME = 'NanoCap'
@@ -72,6 +82,7 @@ PY2APP_OPTIONS = {}
 PY2EXE_OPTIONS = {}
 SETUP_REQ = []
 DATA_FILES = []
+DATA_FILES = ['docs',]
 
 F_EXTS = ['ext/edip/lib/edip',]
 C_EXTS = ['clib/lib/clib',]
@@ -89,6 +100,9 @@ else:
 
 
 def main():
+    
+    copy_docs()
+    
     set_req_windows_dlls()
     
     setup_package_data(['help',])
@@ -120,6 +134,14 @@ def main():
     if('py2app' in sys.argv):post_build_py2app()
     
     if('archive' in CUSTOM_ARGS):archive()
+
+def copy_docs():
+    try:shutil.rmtree("docs")
+    except:print "old docs not found, copying new docs"
+    shutil.copytree(os.path.abspath("../../docs/html/docs"),os.getcwd()+"/docs/html")
+    shutil.copy(os.path.abspath("../../docs/tex/Doc.pdf"),os.getcwd()+"/docs/NanoCap.pdf")
+    #shutil.move('docstemp',os.path.abspath("../../dev/src-dev/nanocap/help/docs"))
+
 
 def setup_package_data(folders):
     global PACKAGE_DATA
@@ -170,7 +192,8 @@ def pre_build_py2exe():
         
     SETUP_REQ = ["py2exe"]
     PY2EXE_OPTIONS = {"dll_excludes": ["MSVCP90.dll",'w9xpopen.exe'],
-                      'includes': ['scipy.sparse.csgraph._validation'],
+                      'includes': ['scipy.sparse.csgraph._validation',
+                                   'PySide.QtCore', 'PySide.QtGui', 'PySide.QtWebKit', 'PySide.QtNetwork'],
                       "optimize": 2,
                       "compressed":True,
                       "dist_dir":APPNAME,
@@ -182,18 +205,7 @@ def pre_build_py2exe():
                                    'Tkinter', '_tkinter', 'Tkconstants', 'tcl',
                                     '_imagingtk', 'PIL._imagingtk', 'ImageTk',
                                     'PIL.ImageTk', 'FixTk''_gtkagg', '_tkagg',
-                                  'Carbon',
-                                  'PyQt4.QtDesigner',
-                                  'PyQt4.QtHelp',
-                                  'PyQt4.QtNetwork',
-                                  'PyQt4.QtMultimedia',
-                                  'PyQt4.QtScript',
-                                  'PyQt4.QtScriptTools',
-                                  'PyQt4.QtSql',
-                                  'PyQt4.QtTest',
-                                  'PyQt4.QtWebKit',
-                                  'PyQt4.QtXml',
-                                  'PyQt4.QtXmlPatterns'],
+                                  'Carbon'],
                               }
 
 def pre_build_py2app():
@@ -210,22 +222,11 @@ def pre_build_py2app():
                  LSPrefersPPC=True
                  )    
        
-    PY2APP_OPTIONS =   {'argv_emulation': True,
+    PY2APP_OPTIONS =   {'argv_emulation': ARGVEMU,
                  'iconfile': '../../icons/NanoCapIcon.icns',
-                 'includes': [],#'sip', 'PySide','vtk','numpy','scipy.optimize','scipy.special'],
+                 'includes': ['PySide.QtCore', 'PySide.QtGui', 'PySide.QtWebKit', 'PySide.QtNetwork'],#'sip', 'PySide','vtk','numpy','scipy.optimize','scipy.special'],
                  'excludes': ['matplotlib','PyQt4.QtDeclarative','scipy.weave','PyQt4','sympy',"PIL",
-                              'Carbon',
-                              'PyQt4.QtDesigner',
-                              'PyQt4.QtHelp',
-                              'PyQt4.QtNetwork',
-                              'PyQt4.QtMultimedia',
-                              'PyQt4.QtScript',
-                              'PyQt4.QtScriptTools',
-                              'PyQt4.QtSql',
-                              'PyQt4.QtTest',
-                              'PyQt4.QtWebKit',
-                              'PyQt4.QtXml',
-                              'PyQt4.QtXmlPatterns'],
+                              'Carbon'],
                  'packages': [],
                  'plist':    PLIST 
                  }
@@ -316,9 +317,14 @@ def post_build_py2app():
         print "BUNDLELOC",BUNDLELOC
         
         for num,line in enumerate(fileinput.input(BUNDLELOC+'/Resources/__boot__.py', inplace=1)):
-          if num == 29 :
-              print "sys.path = [os.path.join(os.environ['RESOURCEPATH'], 'lib', 'python"+PVER+"', 'lib-dynload')] + [os.environ['RESOURCEPATH'],] + sys.path \n"
-          print line,
+          if not ARGVEMU:
+              if num == 0 :
+                  print "import sys,os \nsys.path = [os.path.join(os.environ['RESOURCEPATH'], 'lib', 'python"+PVER+"', 'lib-dynload')] + [os.environ['RESOURCEPATH'],] + sys.path \n"
+              print line,
+          else:    
+              if num == 29 :
+                  print "sys.path = [os.path.join(os.environ['RESOURCEPATH'], 'lib', 'python"+PVER+"', 'lib-dynload')] + [os.environ['RESOURCEPATH'],] + sys.path \n"
+              print line,
         
         
         
@@ -356,10 +362,10 @@ def post_build_py2app():
     
 def archive():
     if('build' in sys.argv):
-        FOLDERS = ["docs","nanocap","INSTALL","README","setup.py"]#,os.path.abspath("../../user_scripts")]
+        FOLDERS = ["licenses","nanocap","INSTALL.txt","README.txt","setup.py","docs"]#,os.path.abspath("../../user_scripts")]
         print "archiving source ..."
         os.system("tar -cf "+str(APPNAME)+".tar "+" ".join(FOLDERS))
-        os.system("tar -rf "+str(APPNAME)+".tar "+" -C "+os.path.abspath("../../")+" user_scripts")
+        #os.system("tar -rf "+str(APPNAME)+".tar "+" -C "+os.path.abspath("../../")+" user_scripts")
         os.system("gzip < "+str(APPNAME)+".tar > "+str(APPNAME)+".tar.gz")
         os.system("bzip2 "+str(APPNAME)+".tar")
         #os.system("tar -zcf "+str(APPNAME)+".tar.gz "+" ".join(FOLDERS))
@@ -379,11 +385,11 @@ def archive():
         print "creating dmg ..."
         os.system("rm -rf "+APPNAME)
         os.makedirs(APPNAME)
-        DMGFILES = ["docs","README","INSTALL"]
+        DMGFILES = ["licenses","README.txt","INSTALL.txt", "docs"]
         for DF in DMGFILES:
             os.system("cp -rf ../"+DF+" "+APPNAME+"/")
         #os.system("cp -rf ../README "+APPNAME+"/")
-        #os.system("cp -rf ../INSTALL "+APPNAME+"/")
+        #os.system("cp -rf ../INSTALL.txt "+APPNAME+"/")
         os.system("cp -rf "+str(BUNDLENAME)+" "+APPNAME+"/")
         
         os.system("rm -rf "+APPNAME+".dmg*")

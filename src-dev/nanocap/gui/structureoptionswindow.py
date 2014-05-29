@@ -33,56 +33,39 @@ from nanocap.gui.frozencoltablewidget import FrozenTableWidget
 from nanocap.gui.tablebuttondelegate import  TableItemDelegate
 from nanocap.db import database
 
-class StructureOptionsWindow(QtGui.QWidget):
+class StructureOptionsWindow(BaseWidget):
     def __init__(self,structure):
         self.structure = structure
         self.structure_actors = self.structure.structure_actors
         
-        QtGui.QWidget.__init__(self)#,self.MainWindow,QtCore.Qt.Window)
-        
+        BaseWidget.__init__(self,show=False)#,name="NoBorder")#,self.MainWindow,QtCore.Qt.Window)
         self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
-        
-        self.contentlayout = QtGui.QVBoxLayout(self)
-        self.contentlayout.setContentsMargins(0,0,0,0)
-        self.contentlayout.setSpacing(0)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
-        
+
         self.options_tab = QtGui.QTabWidget()
         self.options_tab.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+        self.addWidget(self.options_tab,align=QtCore.Qt.AlignTop)
+        
         #self.connect(self.options_tab,QtCore.SIGNAL('currentChanged ( int  )'),self.tab_changed)
         
         self.setup_render_widgets()
         self.setup_calc_widgets()
         self.setup_info_widgets()
         self.setup_store_widget()
-        
-        self.connect(self,QtCore.SIGNAL("update_structure()"),self.update_info_widgets)
-        
-        self.options_tab.addTab(self.render_widgets_holder,"Rendering")
+#         
+        self.connect(self,QtCore.SIGNAL("update_structure()"),self.structure_update)
+#         
         self.options_tab.addTab(self.calc_widgets_holder,"Calculations")
+        self.options_tab.addTab(self.render_widgets_holder,"Rendering")
         self.options_tab.addTab(self.info_widgets_holder,"Information")
         self.options_tab.addTab(self.store_widgets_holder,"Store")
-        self.contentlayout.addWidget(self.options_tab,align=QtCore.Qt.AlignTop)
         
-    
-#     def hide(self):
-#         super(StructureOptionsWindow, self).hide()    
-#         self.store_widgets_holder.hide()
-#         self.calc_widgets_holder.hide()
-#         self.render_widgets_holder.hide()
-#         self.info_widgets_holder.hide()
-#         
-#         
-#     def show(self):
-#         super(StructureOptionsWindow, self).show()    
-#         self.store_widgets_holder.show()
-#         self.calc_widgets_holder.show()
-#         self.render_widgets_holder.show()
-#         self.info_widgets_holder.show()
+        #self.calc_widgets_holder.show()
+
+    def sizeHint(self):
+        return QtCore.QSize(n_DOCKWIDTH,n_DOCKHEIGHT)
         
     def setup_store_widget(self):        
-        self.store_widgets_holder = BaseWidget(scroll=True,show=True,align=QtCore.Qt.AlignTop)
+        self.store_widgets_holder = BaseWidget(scroll=True,show=True,align=QtCore.Qt.AlignTop,name="NoBorder")
         self.store_widgets_holder.setSizePolicy(QtGui.QSizePolicy.Preferred,
                                                 QtGui.QSizePolicy.Expanding)
         
@@ -93,6 +76,8 @@ class StructureOptionsWindow(QtGui.QWidget):
                                              DelegateIcons=[[0,1,'view_1.png'],
                                                             [1,3,'question_mark.png','tick_1.png','add_1.png']]
                                              )
+        self.local_table.tableView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        
         self.local_table.setHeaders(["View","Exists","Lattice"])        
         self.local_table.addRow(["Dual Lattice",])
         self.local_table.addRow(["Carbon Lattice",])
@@ -119,6 +104,8 @@ class StructureOptionsWindow(QtGui.QWidget):
                                              DelegateIcons=[[0,1,'view_1.png'],
                                                             [1,3,'question_mark.png','tick_1.png','add_1.png']]
                                              )
+        self.online_table.tableView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+
         self.online_table.setHeaders(["View","Exists","Lattice"]) 
         self.online_table.addRow(["Dual Lattice",])
         self.online_table.addRow(["Carbon Lattice",])   
@@ -204,9 +191,11 @@ class StructureOptionsWindow(QtGui.QWidget):
         return exists
         
     def setup_render_widgets(self):
-        self.render_widgets_holder = BaseWidget(scroll=True,group=False,title="",show=True,align=QtCore.Qt.AlignTop)
+        self.render_widgets_holder = BaseWidget(scroll=True,group=False,title="",show=True,align=QtCore.Qt.AlignTop,
+                                                name="NoBorder")
                 
-        self.points_widgets_holder = BaseWidget(group=True,title="Points && Atoms",show=True,align=QtCore.Qt.AlignTop)
+        self.points_widgets_holder = BaseWidget(group=True,title="Points && Atoms",show=True,align=QtCore.Qt.AlignTop,
+                                                name="NoBorder")
         
         if(self.structure.has_child_structures):self.points_widgets_holder.addHeader(self.structure.type.label,
                                                                                      bold=True,frame=False)
@@ -259,6 +248,7 @@ class StructureOptionsWindow(QtGui.QWidget):
             
             call = lambda flag,key=key : self.toggle_points(flag,key)
             self.connect(self.toggle_points_CB[key], QtCore.SIGNAL('toggled(bool)'), call)
+            self.toggle_points_CB[key].setChecked(True)
             call = lambda flag,key=key : self.toggle_labels(flag,key)  
             self.connect(self.toggle_label_CB[key], QtCore.SIGNAL('toggled(bool)'), call)
             call = lambda rad,key=key : self.structure.structure_actors.set_point_radius(rad,key)
@@ -270,14 +260,22 @@ class StructureOptionsWindow(QtGui.QWidget):
   
         
         
-        print self.structure.type.label, self.render_points_table.sizeHint()
-          
-        self.general_widgets_holder = BaseWidget(group=True,title="General",show=True,align=QtCore.Qt.AlignTop)
+        printl(self.structure.type.label, self.render_points_table.sizeHint())
+        self.render_widgets_holder.addWidget(self.points_widgets_holder,align=QtCore.Qt.AlignTop)
+        
+        self.render_points_table.setFixedHeight(self.render_points_table.sizeHint().height())
+        
+#         if not (self.structure.has_child_structures):  
+#             self.render_widgets_holder.update()
+#             return
+            
+        self.general_widgets_holder = BaseWidget(group=True,title="General",show=True,align=QtCore.Qt.AlignTop,
+                                                 name="NoBorder")
         
         #self.general_widgets_holder.addHeader("General")
         
-        self.render_widgets_holder.addWidget(self.points_widgets_holder,align=QtCore.Qt.AlignTop)
-        self.render_widgets_holder.addWidget(self.general_widgets_holder,align=QtCore.Qt.AlignTop)
+        
+        
         
         self.render_general_table = TableWidget(260,90)
         self.render_general_table.verticalHeader().hide()
@@ -322,15 +320,21 @@ class StructureOptionsWindow(QtGui.QWidget):
 
         self.toggle_schlegel_CB = QtGui.QCheckBox()
         
+        self.render_widgets_holder.addWidget(self.general_widgets_holder,align=QtCore.Qt.AlignTop)
+        
         self.render_general_table.update()
         self.render_widgets_holder.update()
         self.general_widgets_holder.update()
         
         
-        self.render_points_table.updateGeometry()
+        #self.render_points_table.updateGeometry()
         
-        self.render_points_table.setFixedHeight(self.render_points_table.sizeHint().height())
-
+        
+        
+        
+        
+        
+        
     def toggle_points(self,flag,key):
         printl("toggle points",flag,key)
         self.structure_actors.toggle_points(flag,key,frame="3D")
@@ -353,13 +357,15 @@ class StructureOptionsWindow(QtGui.QWidget):
         #if(self.toggle_schlegel_CB.isChecked()):
         self.structure.structure_actors.toggle_point_box(flag,key+'_S',frame="Schlegel")
 
-    def select_calc_widget(self,index):
+    def select_calc_widget(self,row):
         for option in self.calc_options:
             self.calc_holders[option].hide()
-        self.calc_holders[self.calc_options[index.row()]].show()
+            
+        self.calc_holders[self.calc_options[row]].show()
+        
         
     def setup_calc_widgets(self):    
-        self.calc_widgets_holder = BaseWidget(scroll=True,group=False,title="",show=True,align=QtCore.Qt.AlignTop)#,w=100,h=40) 
+        self.calc_widgets_holder = BaseWidget(scroll=True,group=False,title="",show=False,align=QtCore.Qt.AlignTop)#,w=100,h=40) 
         self.calc_widgets_holder.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Maximum)
  
         
@@ -368,8 +374,9 @@ class StructureOptionsWindow(QtGui.QWidget):
         self.calc_list.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Fixed)
         self.calc_widgets_holder.addWidget(self.calc_list,align=QtCore.Qt.AlignTop)
            
-        self.connect(self.calc_list,QtCore.SIGNAL('clicked (QModelIndex)'), self.select_calc_widget) 
-    
+        #self.connect(self.calc_list,QtCore.SIGNAL('clicked (QModelIndex)'), self.select_calc_widget) 
+        self.connect(self.calc_list,QtCore.SIGNAL('currentRowChanged   (int)'), self.select_calc_widget) 
+        
         if(self.structure.type==CAPPEDNANOTUBE or self.structure.type==FULLERENE):
             self.calc_options = ['Input','Dual Lattice','Carbon Lattice','Bonds','Rings','Schlegel']
         else:
@@ -380,20 +387,23 @@ class StructureOptionsWindow(QtGui.QWidget):
         for option in self.calc_options:
             item = QtGui.QListWidgetItem(option)
             self.calc_list.addItem(item)
-            self.calc_holders[option] = BaseWidget(group=True,title=option,show=True,align=QtCore.Qt.AlignTop)#,w=n_DOCKWIDTH,h=50)
+            self.calc_holders[option] = BaseWidget(group=True,title=option,show=False,align=QtCore.Qt.AlignTop)#,w=n_DOCKWIDTH,h=50)
             self.calc_holders[option].setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
             self.calc_widgets_holder.addWidget(self.calc_holders[option],align=QtCore.Qt.AlignTop)
 
         if(self.structure.type==FULLERENE):
             self.InputWidgets = structureinputoptions.FullereneInputOptions(structure=self.structure,gen_buttons=True)
+            #self.InputWidgets.show()
             self.calc_holders['Input'].addWidget(self.InputWidgets,align=QtCore.Qt.AlignHCenter)
         
         if(self.structure.type==CAPPEDNANOTUBE):
             self.InputWidgets = structureinputoptions.CappedNanotubeInputOptions(structure=self.structure,gen_buttons=True)
+            #self.InputWidgets.show()
             self.calc_holders['Input'].addWidget(self.InputWidgets,align=QtCore.Qt.AlignHCenter)  
         
         if(self.structure.type==NANOTUBE):
             self.InputWidgets = structureinputoptions.NanotubeInputOptions(structure=self.structure,gen_buttons=True)
+            #self.InputWidgets.show()
             self.calc_holders['Input'].addWidget(self.InputWidgets,align=QtCore.Qt.AlignHCenter)      
 
         
@@ -446,7 +456,7 @@ class StructureOptionsWindow(QtGui.QWidget):
         for option in self.calc_options:
             self.calc_holders[option].hide()
         
-        
+        #raw_input()
         
     def construct_carbon_lattice(self):
         self.structure.construct_carbon_lattice()
@@ -468,7 +478,13 @@ class StructureOptionsWindow(QtGui.QWidget):
         #self.structure_actors.update_actors()
         self.structure.render_update()
         
+    def structure_update(self):
+        
+        self.update_info_widgets()
+        
     
+        
+        
     def update_info_widgets(self):
         if(self.structure.parent_structure!=None):
             #we do not want to update child structure info, it should be part

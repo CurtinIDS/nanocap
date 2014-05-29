@@ -18,6 +18,8 @@ from nanocap.gui import preferenceswindow
 from nanocap.gui import helpwindow 
 from nanocap.gui import aboutwindow
 from nanocap.gui import dbviewer 
+from nanocap.gui import widgets 
+from nanocap.gui import common 
 from nanocap.rendering import vtkqtrenderwidgets
 from nanocap.gui import bottomdock
 
@@ -44,28 +46,34 @@ class GUI():
         self.threadManager = threadmanager.QThreadManager()
         
         self.structureGenWindow = structuregenwindow.StructureGenWindow(self,self.mainWindow,self.threadManager)
-        #self.structureGenWindow.show()
+        self.structureGenWindow.hide()
         
         self.singleStructureGenWindow = singlestructuregenwindow.SingleStructureGenWindow(self,self.mainWindow)
-        #self.singleStructureGenWindow.show()
+        self.singleStructureGenWindow.hide()
         
         self.dataBaseViewerWindow = dbviewer.DataBaseViewerWindow(self,self.mainWindow,self.threadManager)
-        #self.dataBaseViewerWindow.show()
+        self.dataBaseViewerWindow.hide()
         
         self.exportStructureWindow = exportstructurewindow.ExportStructureWindow()#self,self.mainWindow)
-        #self.exportStructureWindow.show()
+        self.exportStructureWindow.hide()
         
         self.preferencesWindow = preferenceswindow.PreferencesWindow()#self,self.mainWindow)
-        #self.preferencesWindow.show()
+        self.preferencesWindow.hide()
         
         self.loadFromFileWindow =loadfromfilewindow.LoadFromFileWindow()#self,self.mainWindow)
-        #self.loadFromFileWindow.show()
+        self.loadFromFileWindow.hide()
         
         self.aboutWindow =aboutwindow.AboutWindow(self.mainWindow)#self,self.mainWindow)
-        #self.aboutWindow.show()
+        self.aboutWindow.hide()
         
         self.helpWindow =helpwindow.HelpWindow()#self,self.mainWindow)
-        #self.helpWindow.show()
+        self.helpWindow.hide()
+        
+#         self.t = widgets.BaseWidget(group=True,title="Points && Atoms",show=True,align=QtCore.Qt.AlignTop,
+#                                                 name="NoBorder",w=100,h=200)
+#         
+#         self.t.addWidget(common.QL("TEST "))
+#         self.t.show()
         
         self.dock = dock.Dock(self,self.mainWindow,self.dockWidth, self.dockHeight,"Toolbar") 
         
