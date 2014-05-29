@@ -32,15 +32,7 @@ except:
 
 IconDir = ":Icons/"
 IconDir = ":"
-   
-menubarcol = "rgb(60,60,60)"
-menubarcol = "rgb(200,200,200)"
-toolbarcol = "rgb(180,180,180)"
-menufontcol = "rgb(255,255,255)"
-menufontcol = "rgb(0,0,0)"
 
-statusbarcol = "rgb(60,60,60)"
-statusbarfontcol = "rgb(255,255,255)"
 
 if(PLATFORM=='osx'):
     font_size = 11
@@ -52,8 +44,8 @@ if(PLATFORM=='linux'):
 
 n_DOCKWIDTH = 350
 n_DOCKHEIGHT = 500 
-SCREENWIDTH = 900
-SCREENHEIGHT = 600
+SCREENWIDTH = 950
+SCREENHEIGHT = 650
 
 
 BANNERIMAGE = 'NanoCapBanner22514.png'
@@ -61,50 +53,141 @@ BANNERIMAGE = 'NanoCapWithLogo22514.png'
 BANNERIMAGE = 'NanoCapBannerRight22514w350.png'
 BANNERIMAGEALIGN = QtCore.Qt.AlignRight
 LOGOIMAGE = 'NanoCapWithLogo22514.png'
+SPLASHIMAGE = 'splash19.png'
+
+
+   
+# menubarcol = "rgb(60,60,60)"
+# menubarcol = "rgb(200,200,200)"
+# toolbarcol = "rgb(180,180,180)"
+# menufontcol = "rgb(255,255,255)"
+# menufontcol = "rgb(0,0,0)"
+# 
+# statusbarcol = "rgb(60,60,60)"
+# statusbarfontcol = "rgb(255,255,255)"
+# menubarcol = "rgb(60,60,60)"
+# menubarfontcol = "rgb(255,255,255)"
+# menubarsepcol = "rgb(200,200,200)"
+# 
+# #1
+# statusbarcol = "rgb(100,100,100)"
+# statusbarfontcol = "rgb(255,255,255)"
+# menubarcol = "rgb(100,100,100)"
+# menubarcol = '''qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+#                                 stop: 0 rgb(60,60,60), stop: 1 rgb(100,100,100));'''
+#                                                         
+# menubarfontcol = "rgb(255,255,255)"
+# menubarsepcol = "rgb(200,200,200)"
+#1
+
+
+menubarcol = '''qlineargradient(x1: 0, y1: 0.2, x2: 0, y2: 1,
+                                stop: 1 rgb(60,60,60), stop: 0 rgb(100,100,100));'''                                
+statusbarcol = '''qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 1 rgb(60,60,60), stop: 0 rgb(100,100,100));''' 
+                                
+dropdownmenubarcol = '''qlineargradient(x1: 0, y1: 0.5, x2: 0, y2: 1,
+                                stop: 0 rgb(240,240,240), stop: 1 rgb(230,230,230));'''                               
+                                
+                          
+menubarfontcol = "rgb(255,255,255)"
+menubaritemfontcol = "rgb(10,10,10)"
+menubaritemselectedfontcol = "rgb(220,220,220)"    
+menubaritemselectedcol = "rgb(60,60,60)"
+menubarsepcol = "rgb(150,150,150)"
+statusbarfontcol = "rgb(235,235,235)"
  
 STYLESHEET = '''
+
+            
+            
+            
             QWidget {
             font-size: '''+str(font_size)+'''pt;
+            
             }
             
             QCheckBox {
             font-size: '''+str(font_size)+'''pt;
             }
-                
-                    
-            QMenuBar {
-            font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
+            
+            QTableView { border-style: outset; 
+                        border-width: 1px; 
+                        border-color: grey;
+                        }
+                        
+            QTableView#frozenTableView { 
+                            border: none;
+                            background-color: #E0E0E0;
+                            }
+            
+            
+            
+            
+            QCheckBox {
+            font-size: '''+str(font_size)+'''pt;
+            }
+            
+            
+            QCheckBox {
+            font-size: '''+str(font_size)+'''pt;
+            }
+
+            QToolBar#Main {
+            font-size:: '''+str(font_size)+'''pt;
+            background: '''+menubarcol+'''; 
             border-style: ridge;
+            spacing: 3px;
             }
             
-            QMenu#edit_menu {
-            font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
-            }
-            QMenu#help_menu {
-            font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
-            }
-            QMenu#about_menu {
-            font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
+            QToolButton{
+            font: '''+str(font_size)+'''pt;
+            color:'''+menubarfontcol+''';
             }
             
-            QMenu#file_menu {
+            QMenu {
             font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
-            }
-            
-            QMenu#view_menu {
-            font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
+            color:'''+menubarfontcol+''';
+            background-color: '''+dropdownmenubarcol+'''; 
             }
                         
             QMenu::item {
             font: '''+str(font_size+2)+'''pt;
-            color:'''+menufontcol+''';
+            color:'''+menubaritemfontcol+''';
+            background-color: transparent; 
             }
+            
+            
+            QMenu::item:selected {
+            font: '''+str(font_size+2)+'''pt;
+            color:'''+menubaritemselectedfontcol+''';
+            background-color: '''+menubaritemselectedcol+'''; 
+            }
+                        
+            QMenu::separator {
+                 height: 1px;
+                 margin: 8px 15px 8px 15px;
+                 background: '''+menubarsepcol+'''; 
+             }
+            
+             QMenu::indicator {
+                 width: 23px;
+                 height: 23px;
+                 background-color: '''+menubarfontcol+'''; 
+                 color: '''+menubarfontcol+'''; 
+             }
+            
+            
+            QLabel#Header{
+                font: bold '''+str(font_size)+'''pt;
+            }
+            
+            QLabel#H1{
+                font: bold '''+str(font_size+2)+'''pt;
+            }
+            
+            
+            
             
             QStatusBar {
             background: '''+statusbarcol+'''; 
@@ -119,21 +202,81 @@ STYLESHEET = '''
             font-weight: bold ;
             }
             
-            QToolBar {
-            spacing: 3px;
-             }
-             
-             QGroupBox:{
-            font: '''+str(font_size)+'''pt,  ;  
+            
+            QGroupBox#check:title {
+                subcontrol-origin: margin; 
+                subcontrol-position: top left ; 
+                font: bold '''+str(font_size)+'''pt,  ;  
+                padding: 2 15px;
+            }  
+            QGroupBox#check{
+            font: bold '''+str(font_size)+'''pt,  ;
+            border-width: 2px;  
+            
+            }
+            
+            QGroupBox#CenterGroup:title {
+                subcontrol-origin: margin; 
+                subcontrol-position: top center ; 
+                font: bold '''+str(font_size+2)+'''pt,  ;  
+                padding: 2 8px;
+                background-color: transparent; 
+            } 
+            
+             QGroupBox#CenterGroup{
+             margin-top: 18px;
+            font: bold '''+str(font_size+2)+'''pt,  ; 
+            
+            } 
+            
+            QGroupBox#H1:title {
+                subcontrol-origin: margin; 
+                subcontrol-position: top center ; 
+                font: bold '''+str(font_size+2)+'''pt,  ;  
+                padding: 2 8px;
+                background-color: transparent; 
+            } 
+            
+             QGroupBox#H1{
+             margin-top: 18px;
+            font: bold '''+str(font_size+2)+'''pt,  ; 
+            
             } 
             
             QGroupBox:title {
-            subcontrol-origin: margin; 
-            subcontrol-position: top left ; 
-            font: '''+str(font_size)+'''pt,  ;  
-            padding: 2 8px;
+                subcontrol-origin: margin; 
+                subcontrol-position: top left ; 
+                font: bold '''+str(font_size)+'''pt,  ;  
+                padding: 2 8px;
+                background-color: transparent; 
             } 
             
+            
+             
+            
+             QGroupBox{
+             margin-top: 18px;
+            font: bold '''+str(font_size)+'''pt,  ; 
+            
+            } 
+            
+            
+            
+            QGroupBox::indicator {
+                 width: 13px;
+                 height: 5px;
+                  padding: 2 2px;
+             }
+            
+             
+            
+            QWidget#NoBorder {
+                
+                border-width: 0px; 
+                border-style: solid;
+                
+            
+            }
              
              
              

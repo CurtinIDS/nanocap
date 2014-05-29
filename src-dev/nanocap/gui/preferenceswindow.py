@@ -31,21 +31,22 @@ from nanocap.structures import cappednanotube
 
 
 
-class PreferencesWindow(QtGui.QWidget):
+class PreferencesWindow(BaseWidget):
     def __init__(self):
-        QtGui.QWidget.__init__(self)
+        BaseWidget.__init__(self,show=False)
 
         self.setWindowTitle("Preferences")
         
-        self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
         
-        self.contentlayout = QtGui.QGridLayout(self)
-        self.contentlayout.setContentsMargins(5,5,5,5)
-        self.contentlayout.setSpacing(5)
-        #self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignLeft)
-        self.setLayout(self.contentlayout)
-        
+#         self.contentlayout = QtGui.QGridLayout(self)
+        self.layout.setContentsMargins(5,5,5,5)
+        self.layout.setSpacing(5)
+#         #self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+        self.layout.setAlignment(QtCore.Qt.AlignLeft)
+#         self.setLayout(self.contentlayout)
+        #self.setBackgroundColour('red')
+
         
         self.options_list = QtGui.QListWidget()
         self.options_list.addItem("User")
@@ -53,10 +54,14 @@ class PreferencesWindow(QtGui.QWidget):
         self.options_list.setFixedWidth(140)
         self.connect(self.options_list,QtCore.SIGNAL('clicked (QModelIndex)'), self.option_changed) 
         
-        self.options_holder = BaseWidget(w=300,h=400,align = QtCore.Qt.AlignTop,spacing=5,margins=[5,5,5,5])
+        self.options_holder = BaseWidget(w=800,h=400,align = QtCore.Qt.AlignTop,spacing=5,margins=[5,5,5,5])
+        self.options_holder.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
+        #self.options_holder.setBackgroundColour('blue')
         
-        self.contentlayout.addWidget(self.options_list,0,0)
-        self.contentlayout.addWidget(self.options_holder,0,1)
+        #self.options_holder = HolderWidget(stack="H")
+        
+        self.addWidgets((self.options_list,self.options_holder))
+        #self.addWidget(self.options_holder,0,1)
         
         self.options = {}
         self.options["User"] = BaseWidget(self,group=False,show=True,align = QtCore.Qt.AlignTop)
@@ -82,8 +87,8 @@ class PreferencesWindow(QtGui.QWidget):
         
         #self.contentlayout.addWidget(self.save_bt,1,1)
         
-        self.contentlayout.addWidget(Frame(),1,0,1,3)
-        self.contentlayout.addWidget(HolderWidget([self.save_bt,self.cancel_bt]),3,1,1,2,QtCore.Qt.AlignRight)
+        self.addWidget(Frame(),align=None)
+        self.addWidgets((self.save_bt,self.cancel_bt),align=QtCore.Qt.AlignRight)
         
         self.connect(self.save_bt,QtCore.SIGNAL("clicked()"),self.save)
         self.connect(self.cancel_bt,QtCore.SIGNAL("clicked()"),self.hide)

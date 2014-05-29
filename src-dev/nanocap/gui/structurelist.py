@@ -21,7 +21,7 @@ from nanocap.rendering import vtkqtrenderwidgets
 class StructureList(QtGui.QListView):
     def __init__(self,gui):
         QtGui.QListView.__init__(self)
-        self.setStyleSheet("font: "+str(font_size+2)+"pt")
+        #self.setStyleSheet("font: "+str(font_size+2)+"pt")
         self.gui = gui
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
         
@@ -38,7 +38,13 @@ class StructureList(QtGui.QListView):
 
         self.connect(self.itemDelegate,QtCore.SIGNAL('buttonPressed (QModelIndex,int)'), self.list_clicked) 
         self.connect(self.itemDelegate,QtCore.SIGNAL('noButtonPressed (QModelIndex)'), self.selectStructure) 
+        #self.connect(self,QtCore.SIGNAL('noButtonPressed (QModelIndex)'), self.selectStructure) 
+        self.connect(self.selectionModel(),QtCore.SIGNAL('selectionChanged(QItemSelection,QItemSelection)'), self.selectionChanged) 
     
+    def selectionChanged(self,to_index,from_index):
+        if(len(to_index.indexes())==0):return
+        self.selectStructure(to_index.indexes()[0])
+        
     def list_clicked(self,index,buttonid):
         if(buttonid==0):
             self.removeStructure(index.row())

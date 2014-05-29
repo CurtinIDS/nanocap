@@ -3,22 +3,22 @@
   "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
 <tocitem text="NanoCap Guide &amp; Documentation">
-    <tocitem target="a0000000203" text="Installation">
-        <tocitem target="a0000000204" text="Requirements" /><tocitem target="a0000000205" text="Installing from source" />
-    </tocitem><tocitem target="a0000000206" text="Generating a Single Structure">
-        <tocitem target="a0000000207" text="Fullerenes" /><tocitem target="a0000000208" text="Nanotubes" /><tocitem target="cappednanotubes" text="Capped Nanotubes" />
-    </tocitem><tocitem target="a0000000209" text="Generating Multiple Structures">
-        <tocitem target="a0000000210" text="Structure Search" />
+    <tocitem target="a0000000239" text="Installation">
+        <tocitem target="a0000000240" text="Requirements" /><tocitem target="a0000000241" text="Installing from source" />
+    </tocitem><tocitem target="a0000000242" text="Generating a Single Structure">
+        <tocitem target="a0000000243" text="Fullerenes" /><tocitem target="a0000000244" text="Nanotubes" /><tocitem target="cappednanotubes" text="Capped Nanotubes" />
+    </tocitem><tocitem target="a0000000245" text="Generating Multiple Structures">
+        <tocitem target="a0000000246" text="Structure Search" />
     </tocitem><tocitem target="forcefields" text="Force Fields">
-        <tocitem target="dforcefields" text="Dual Lattice Force Fields" /><tocitem target="a0000000211" text="Carbon Lattice Force Fields" />
-    </tocitem><tocitem target="Optimisation" text="Optimisation" /><tocitem target="a0000000212" text="Storing, Loading and Exporting">
-        <tocitem target="a0000000213" text="The Local NanoCap Database" /><tocitem target="a0000000214" text="The Online NanoCap Database" /><tocitem target="a0000000215" text="Exporting" />
+        <tocitem target="dforcefields" text="Dual Lattice Force Fields" /><tocitem target="a0000000247" text="Carbon Lattice Force Fields" />
+    </tocitem><tocitem target="Optimisation" text="Optimisation" /><tocitem target="a0000000248" text="Storing, Loading and Exporting">
+        <tocitem target="a0000000249" text="The Local NanoCap Database" /><tocitem target="a0000000250" text="The Online NanoCap Database" /><tocitem target="a0000000251" text="Exporting" />
     </tocitem><tocitem target="Rendering" text="Rendering">
-        <tocitem target="a0000000216" text="Schlegel View" />
-    </tocitem><tocitem target="a0000000217" text="Scientific Publications" /><tocitem target="Code" text="Code">
-        <tocitem target="a0000000218" text="Non-GUI Class Structure" /><tocitem target="a0000000219" text="GUI Class Structure" />
+        <tocitem target="a0000000252" text="Schlegel View" />
+    </tocitem><tocitem target="a0000000253" text="Scientific Publications" /><tocitem target="Code" text="Code">
+        <tocitem target="a0000000254" text="Non-GUI Class Structure" /><tocitem target="a0000000255" text="GUI Class Structure" />
     </tocitem><tocitem target="Examples" text="Examples">
-        <tocitem target="a0000000220" text="Nanotube Construction" /><tocitem target="a0000000221" text="Fullerenes" /><tocitem target="a0000000222" text="Capped Nanotube Construction" /><tocitem target="a0000000223" text="Database Operations" />
+        <tocitem target="a0000000256" text="Nanotube Construction" /><tocitem target="a0000000257" text="Fullerenes" /><tocitem target="a0000000258" text="Capped Nanotube Construction" /><tocitem target="a0000000259" text="Database Operations" /><tocitem target="a0000000260" text="Visualisation" />
     </tocitem>
 </tocitem>
 </toc>

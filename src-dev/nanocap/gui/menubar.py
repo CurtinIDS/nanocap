@@ -25,6 +25,7 @@ class MenuBar(QtGui.QToolBar):
         self.set_view_menu()
         self.set_help_menu()
         self.set_about_menu()
+        self.setObjectName("Main")
     
     def set_about_menu(self):
         self.about_menu = QtGui.QMenu(self)
@@ -112,7 +113,9 @@ class MenuBar(QtGui.QToolBar):
         self.file_menu.setObjectName('file_menu')
         
         self.new_structure_menu = QtGui.QMenu("New Structure")
+        self.new_structure_menu.setObjectName('file_menu')
         self.load_structure_menu = QtGui.QMenu("Load Structure")
+        self.load_structure_menu.setObjectName('file_menu')
         
         new_single_structure = QtGui.QAction( 'Single Structure', self)
         new_single_structure.setStatusTip('Create Single Structure')

@@ -16,7 +16,7 @@ Changes
 	- Added unified data model such that the SQL database and session structure logs work 
 	with a consistent data format. 
 	
-	- Tests and User scripts are now release dependent, and are bundled with the src.
+	- Tests and Example scripts are now release dependent, and are bundled with the src.
 
 
 1.0.2-alpha , 19/12/13

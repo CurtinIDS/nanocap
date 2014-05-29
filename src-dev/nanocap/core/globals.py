@@ -34,7 +34,7 @@ NPF32 = numpy.float32
 NPI = numpy.int32
 use_clib= True
 DEBUG   = False
-VERBOSE = True
+VERBOSE = False
 ERROR   = False
 
 NANOCAP_META = {"info":"Software for the generation of carbon nanostructures",

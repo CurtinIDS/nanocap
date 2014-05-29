@@ -1,5 +1,5 @@
 NanoCap
-Copyright (c) 2013 M. Robinson
+Copyright (c) 2014 M. Robinson
 All rights reserved.
 
 You may use, distribute and copy NanoCap under the terms of the Creative Commons 

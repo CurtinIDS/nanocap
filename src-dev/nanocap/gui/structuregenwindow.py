@@ -27,7 +27,7 @@ from nanocap.structures import cappednanotube
 
 from nanocap.core import globals,minimisation,triangulation,minimasearch,structurelog
 
-class StructureGenWindow(QtGui.QWidget):
+class StructureGenWindow(BaseWidget):
     def __init__(self,Gui,MainWindow,ThreadManager):
         self.Gui = Gui
         self.MainWindow = MainWindow
@@ -37,26 +37,18 @@ class StructureGenWindow(QtGui.QWidget):
         self.NanotubeWidgets = []
         self.FullereneWidgets = []
         
-        QtGui.QWidget.__init__(self,self.MainWindow,QtCore.Qt.Window)
+        BaseWidget.__init__(self,self.MainWindow,show=False,align = QtCore.Qt.AlignTop)#,QtCore.Qt.Window)
         
         self.setWindowTitle("Structure Search ")
         
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
-        
-        self.contentlayout = QtGui.QGridLayout(self)
-        self.contentlayout.setContentsMargins(0,0,0,0)
-        self.contentlayout.setSpacing(0)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
-        
-        #self.setStyleSheet("QWidget {background-color: green;}")
-        
-        self.ButtonsHolder = BaseWidget(self,group=False,show=True,align = QtCore.Qt.AlignTop)
-        self.ButtonsHolder.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
-        
-        self.contentlayout.addWidget(self.ButtonsHolder,0,0)
 
+        #self.grid = self.newGrid()
         
+        self.ButtonsHolder = BaseWidget(self,group=False,show=True,align = QtCore.Qt.AlignTop,w=300,h=200)
+        self.ButtonsHolder.setSizePolicy(QtGui.QSizePolicy.Fixed,QtGui.QSizePolicy.Preferred)
+        #self.ButtonsHolder.setBackgroundColour('red')
+                
         self.GenTypeBTGroup = QtGui.QButtonGroup()
         self.GenTypeBTGroup.setExclusive(True)
         self.GenFullerenceRB = QtGui.QRadioButton('Fullerene')
@@ -87,11 +79,12 @@ class StructureGenWindow(QtGui.QWidget):
         self.MinSearchStartBT.setMaximumWidth(100)
         self.ResetSearchBT.setMaximumWidth(100)
         self.CompareLocalBT.setMaximumWidth(130)
-        self.contentlayout.addWidget(self.MinSearchStartBT)
+        self.addWidget(self.MinSearchStartBT)
         
         self.ButtonsHolder.addSeparator(dummy=True)
         
-        self.contentlayout.addWidget(HolderWidget((self.MinSearchStartBT,self.ResetSearchBT,self.CompareLocalBT)),1,0,1,2)
+        #self.grid.addWidget(HolderWidget((self.MinSearchStartBT,self.ResetSearchBT,self.CompareLocalBT)),1,0,1,2)
+        
         
         self.connect(self.MinSearchStartBT, QtCore.SIGNAL('clicked()'), self.StartMinSearch)
         self.connect(self.ResetSearchBT, QtCore.SIGNAL('clicked()'), self.ResetSearch)
@@ -115,8 +108,15 @@ class StructureGenWindow(QtGui.QWidget):
         self.NanotubeWidgets.append(self.structureTables[CAPPEDNANOTUBE])
         self.FullereneWidgets.append(self.structureTables[FULLERENE])
         
-        self.contentlayout.addWidget(self.structureTables[CAPPEDNANOTUBE],0,1)
-        self.contentlayout.addWidget(self.structureTables[FULLERENE],0,1)
+        holder = HolderWidget([self.ButtonsHolder,
+                                     self.structureTables[CAPPEDNANOTUBE],
+                                     self.structureTables[FULLERENE]])
+        
+        holder.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+        self.addWidget(holder)
+        
+        #self.grid.addWidget(self.structureTables[CAPPEDNANOTUBE],0,1)
+        #self.grid.addWidget(self.structureTables[FULLERENE],0,1)
         
         self.connect(self, QtCore.SIGNAL('updateStructureTable()'), self.structureTables[FULLERENE].updateStructureTable)
         self.connect(self, QtCore.SIGNAL('updateStructureTable()'), self.structureTables[CAPPEDNANOTUBE].updateStructureTable)
@@ -126,7 +126,9 @@ class StructureGenWindow(QtGui.QWidget):
         self.connect(self.structureTables[FULLERENE], QtCore.SIGNAL('viewStructure(int)'), self.viewStructure)
         self.connect(self.structureTables[CAPPEDNANOTUBE], QtCore.SIGNAL('viewStructure(int)'), self.viewStructure)
 
-        self.contentlayout.addWidget(self.SearchProgressbar,1,0,1,2)
+        #self.grid.addWidget(self.SearchProgressbar,1,0,1,2)
+        self.addWidget(HolderWidget((self.MinSearchStartBT,self.ResetSearchBT,self.CompareLocalBT)))
+        self.addWidget(self.SearchProgressbar)
         
         self.GenTypeChanged()
     def bringToFront(self):
@@ -163,7 +165,7 @@ class StructureGenWindow(QtGui.QWidget):
         self.CompareLocalBT.hide()
         
         self.ThreadManager.submit_to_queue(self.MinSearch)
-        
+        #self.resize(self.sizeHint())     
     
     def ResetSearch(self):
         #self.structureLogs = {}
@@ -181,6 +183,7 @@ class StructureGenWindow(QtGui.QWidget):
         self.ResetSearchBT.show()
         self.CompareLocalBT.show()
         self.SearchProgressbar.hide()
+        #self.resize(self.sizeHint())     
     
     def DualLatticeMinimiserCallback(self):
         printl(self.Dminimiser.__repr__())
@@ -313,6 +316,10 @@ class StructureGenWindow(QtGui.QWidget):
     def setup_fullerene_widgets(self):    
         self.FullereneWidgetsHolder = BaseWidget(group=True,title="Input Options",
                                                         show=True,align=QtCore.Qt.AlignTop)
+        
+        self.FullereneWidgetsHolder.setSizePolicy(QtGui.QSizePolicy.Expanding,
+                                                  QtGui.QSizePolicy.Preferred)
+
         self.FullereneWidgets.append(self.FullereneWidgetsHolder)
         self.ButtonsHolder.addWidget(self.FullereneWidgetsHolder)
         
@@ -336,8 +343,8 @@ class StructureGenWindow(QtGui.QWidget):
             for widget in self.NanotubeWidgets:
                 widget.show()
         
-        self.resize(self.sizeHint())     
-        
+        #self.resize(self.sizeHint())     
+        self.updateGeometry()
     def sizeHint(self):
 
         return QtCore.QSize(1100,500)     

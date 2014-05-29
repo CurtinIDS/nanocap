@@ -63,7 +63,7 @@ class PointSet(object):
         self.Mapper.SetInputConnection(self.Glyph3D.GetOutputPort())
         
         self.Actor = vtkActor()
-        self.Actor.SetMapper(self.Mapper)
+        
     
         self.boundaryActor = renderwidgets.CellMatrixActor()
         #self.boundaryActor.set(cellMatrix, origin, 0,0,0)
@@ -97,6 +97,7 @@ class PointSet(object):
         self.points = points
         self.npoints = points.npoints
         self.pos = points.pos
+        #if(self.npoints==0):return
         
         self.NumpyScalars = numpy.zeros(self.npoints,NPF)
         if(self.Alt): self.NumpyScalars[1::2] = 1
@@ -231,8 +232,22 @@ class PointSet(object):
     
      
     def addToRenderer(self,ren=None,col=None):
-        printl("adding to renderer",self.pos)
+        '''
+        add the actor to the given renderer first
+        before assigning the mapper. This associates the
+        renderer with the actor for updates etc.
+        '''
+        #print("adding to renderer",self.pos)
+        if(ren==None):
+            try:self.ren.AddActor(self.Actor) 
+            except:printl("Cannot add pointSet without renderer")
+        else:
+            ren.AddActor(self.Actor) 
+            self.ren=ren
+                
         if self.pos == None: return
+        if len(self.pos) == 0:return
+        
         if(col!=None):self.col = col
         self.LookupTable.SetTableValue(0,self.col[0],
                                            self.col[1],
@@ -256,13 +271,14 @@ class PointSet(object):
         printl("set Glyph3D")
         self.VTKPoints.Modified()                
         self.setBoundaryActor()
+        self.Actor.SetMapper(self.Mapper)
         printl("AddActor")
-        if(ren==None):
-            try:self.ren.AddActor(self.Actor) 
-            except:printl("Cannot add pointSet without renderer")
-        else:
-            ren.AddActor(self.Actor) 
-            self.ren=ren
+#         if(ren==None):
+#             try:self.ren.AddActor(self.Actor) 
+#             except:printl("Cannot add pointSet without renderer")
+#         else:
+#             ren.AddActor(self.Actor) 
+#             self.ren=ren
    
     def removeFromRenderer(self,ren=None):
         if(ren==None):
@@ -274,6 +290,7 @@ class PointSet(object):
           
     def update(self):
         if(self.pos==None):return
+        if(len(self.pos)==0):return
         self.PolyData.SetPoints(self.VTKPoints)
         self.PolyData.GetPointData().SetScalars(self.VTKScalars)
         #self.PolyData.GetPointData().SetVectors(self.VTKVectors) 

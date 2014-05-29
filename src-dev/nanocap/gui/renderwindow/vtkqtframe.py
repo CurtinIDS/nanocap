@@ -39,6 +39,9 @@ class VtkQtFrame(QtGui.QWidget):
         self.MouseLeftDrag = 0
         self.AAFrames = 0
         self.mutex = QtCore.QMutex()
+        self.initial_load=0
+        
+        #self.hide()
         
         self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
 
@@ -62,7 +65,7 @@ class VtkQtFrame(QtGui.QWidget):
         self.RotateButton.setCheckable(1)
         self.RotateButton.setChecked(0)
         self.connect(self.RotateButton, QtCore.SIGNAL('triggered()'), self.toggleRotate)
-        self.topToolbar.addAction(self.RotateButton)
+        #self.topToolbar.addAction(self.RotateButton)
         
         self.perspectiveButton = QtGui.QAction(QtGui.QIcon(str(IconDir) + 'perspective-ava.png'), 'Perspective Camera', self)
         self.perspectiveButton.setStatusTip('Toggle perspective view')
@@ -199,6 +202,12 @@ class VtkQtFrame(QtGui.QWidget):
         self.VTKCamera.Azimuth(90)
         
         self.setLayout(self.layout)
+    
+    def center_on_load(self):
+        if(self.VTKRenderer.GetActors().GetNumberOfItems()>0):
+            if(self.initial_load==0):
+                self.resetCamera()
+                self.initial_load=1
         
     def makeRotationImages(self,folder,degPerRotation=1,prefix="rotation_images"):   
         numberRotations = int(360/degPerRotation)

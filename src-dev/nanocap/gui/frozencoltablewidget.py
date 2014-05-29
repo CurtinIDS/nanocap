@@ -51,9 +51,12 @@ class FrozenTableWidget(QtGui.QWidget):
         
         #self.tableView.setSizeGripEnabled(True)
         
-        self.frozenTableView.setStyleSheet("QTableView { border-style: outset; border-width: 1px; border-color: grey;}")
-        self.tableView.setStyleSheet("QTableView { border-style: outset; border-width: 1px; border-color: grey;}")
+        #self.frozenTableView.setStyleSheet("QTableView { border-style: outset; border-width: 1px; border-color: grey;}")
+        #self.tableView.setStyleSheet("QTableView { border-style: outset; border-width: 1px; border-color: grey;}")
         
+        self.frozenTableView.setObjectName("frozenTableView")
+        self.tableView.setObjectName("tableView")
+
 
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Expanding)
 
@@ -75,8 +78,8 @@ class FrozenTableWidget(QtGui.QWidget):
                 
         self.tableView.viewport().stackUnder(self.frozenTableView)
         
-        self.frozenTableView.setStyleSheet("QTableView { border: none;"
-                                            "background-color: #E0E0E0;}")
+        #self.frozenTableView.setStyleSheet("QTableView { border: none;"
+        #                                    "background-color: #E0E0E0;}")
                                            #"selection-background-color: #999}") 
         
                                        
@@ -120,6 +123,9 @@ class FrozenTableWidget(QtGui.QWidget):
         #self.tableView.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         
         self.setStretchLastSection(True)
+        
+        #self.frozenTableView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.tableView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
     
     
     def hide_all_columns(self):
@@ -160,8 +166,8 @@ class FrozenTableWidget(QtGui.QWidget):
         self.emit(QtCore.SIGNAL("delegatePressed(QModelIndex)"),index)
     
     def setBackgroundColour(self,colourstring):
-        self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
-    
+        #self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
+        pass
     
     def set_all_delegates_to_mode(self,mode):
         for key,delegate in self.ButtonDelegates.items():

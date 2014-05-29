@@ -1,7 +1,30 @@
 =======
 NanoCap 
 =======
-Copyright (c) 2013 M. Robinson
+Copyright (c) 2014 M. Robinson
+
+
+==========
+Installing
+==========
+
+Standalone Application
+----------------------
+
+OSX
+
+Simply mount the NanoCap.dmg and drag the NanoCap.app into the Applications folder. Run by double clicking
+the NanoCap icon. 
+
+Windows
+
+The Microsoft Visual C++ 2008 Redistributable Package must downloaded and installed:
+
+	http://www.microsoft.com/en-au/download/details.aspx?id=29
+
+Unzip the NanoCap.rar archive and copy the NanoCap.exe to desired location. Run by double clicking
+the .exe file.
+
 
 
 Source
@@ -99,11 +122,26 @@ Alternatively, the user_scripts can be ran from any location:
 	python user_scripts/bulk_capped_nanotubes.py
 
 
-- Standalone (exe):
+=======
+Running
+=======
 
-User must download and install the Microsoft Visual C++ 2008 Redistributable Package:
+Standalone Application
+----------------------
 
-	http://www.microsoft.com/en-au/download/details.aspx?id=29
+Simply load the NanoCap.app or NanoCap.exe application.
+
+Source
+------
+
+A python script will be installed which calles nanocap/main.py. This will be loaded into your path during
+'python setup.py install'. To run type:
+
+nanocap
+
+into the command line.
+
+
 
 
 

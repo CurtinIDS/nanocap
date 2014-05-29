@@ -26,7 +26,10 @@ class HolderWidget(QtGui.QWidget):
     '''
     def __init__(self,widgets=[],stack="H",align=QtCore.Qt.AlignHCenter,spacing=0,margins=[0,0,0,0]):
         QtGui.QWidget.__init__(self, None)
+        #self.setObjectName("HolderWidget")
         self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
+        self.setStyleSheet(STYLESHEET)
+        
         if(stack=="H"):self.containerLayout = QtGui.QHBoxLayout()
         else:self.containerLayout = QtGui.QVBoxLayout()
         self.setLayout(self.containerLayout)
@@ -40,11 +43,13 @@ class HolderWidget(QtGui.QWidget):
                 
         self.containerLayout.setContentsMargins(*margins)
         self.containerLayout.setSpacing(spacing)
-        self.containerLayout.setAlignment(align)
-        #self.hide()
+        if(align!=None):self.containerLayout.setAlignment(align)
+        
+
     
     def setBackgroundColour(self,colourstring):
-        self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
+        #self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
+        pass
         
     def addWidget(self,widget,align=QtCore.Qt.AlignHCenter):
         self.containerLayout.addWidget(widget)
@@ -61,10 +66,12 @@ class BaseWidget(QtGui.QWidget):
     
     then add widgets to widget2
     
+    if align=None, widgets will stretch... 
+    
     '''
     def __init__(self,parent=None,popup=False,w=None,h=None,spacing=0,margins=[0,0,0,0],
                  align=QtCore.Qt.AlignHCenter,show=True,group=False,scroll=False,
-                 title="",stack="V"):
+                 title="",stack="V",name=None):
             
         if(popup):
             QtGui.QWidget.__init__(self,parent,QtCore.Qt.Tool)
@@ -72,6 +79,11 @@ class BaseWidget(QtGui.QWidget):
             self.setParent(parent)
         else:
             QtGui.QWidget.__init__(self, None)
+        
+        if(name!=None):self.setObjectName(name)
+        
+        #self.setObjectName("NoBorder")
+        #self.setStyleSheet(STYLESHEET)
         
         self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
 
@@ -99,6 +111,7 @@ class BaseWidget(QtGui.QWidget):
                 self.scroll_view.setWidgetResizable(True)
                 self.scroll_view.setEnabled(True)
                 self.scroll_view.setWidget(self.central_widget)
+                if(name!=None):self.scroll_view.setObjectName(name)
                 self.form_layout.addWidget(self.scroll_view)
             else:
                 self.form_layout.addWidget(self.central_widget)
@@ -114,6 +127,7 @@ class BaseWidget(QtGui.QWidget):
                 self.central_widget.setLayout(self.layout)
                 
                 self.scroll_view = QtGui.QScrollArea(self)
+                if(name!=None):self.scroll_view.setObjectName(name)
                 #self.scroll_view.setMinimumWidth(w)
                 self.scroll_view.setWidgetResizable(True)
                 self.scroll_view.setEnabled(True)
@@ -122,11 +136,9 @@ class BaseWidget(QtGui.QWidget):
             else:
                 self.central_widget = self
                 self.layout = self.form_layout
-                   
-        #self.setBackgroundColour("white")
-        #self.central_widget.setStyleSheet("QWidget {background-color: white;}")
         
         self.setLayout(self.form_layout)
+        if(name!=None):self.central_widget.setObjectName(name)
         
         #self.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
         #self.setWidgetResizable(True)
@@ -136,20 +148,23 @@ class BaseWidget(QtGui.QWidget):
         self.w=w
         self.h=h 
   
-        if(show):self.show()
-        else:self.hide()
+#         if(show):self.show()
+#         else:self.hide()
     
     def bringToFront(self):
+        self.setWindowState( (self.windowState() & ~QtCore.Qt.WindowMinimized) | QtCore.Qt.WindowActive)
         self.raise_()
-        self.show()  
-    
+        self.activateWindow()
+        self.show()
+        
     def show(self):
+        
         super(BaseWidget, self).show()
-        for widget in self.my_widgets:widget.show()
+        #for widget in self.my_widgets:widget.show()
     
     def hide(self):
         super(BaseWidget, self).hide()
-        for widget in self.my_widgets:widget.hide()
+        #for widget in self.my_widgets:widget.hide()
     
     def newStack(self,spacing=0,margins=[0,0,0,0],align=QtCore.Qt.AlignCenter):
         
@@ -165,6 +180,10 @@ class BaseWidget(QtGui.QWidget):
     
     def newGrid(self,spacing=0,margins=[0,0,0,0],align=QtCore.Qt.AlignCenter):
         self.holder = QtGui.QWidget()
+        #self.holder.setObjectName("BaseWidget")
+        #self.holder.setStyleSheet("QWidget {font-size: 7 pt;}")
+        #colourstring="green"
+        #self.holder.setStyleSheet("QWidget {background-color: "+colourstring+";}")
         self.holder.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setSpacing(spacing)
@@ -173,6 +192,7 @@ class BaseWidget(QtGui.QWidget):
         self.holder.setLayout(self.gridLayout)
         self.layout.addWidget(self.holder)
         self.layout.setAlignment(self.holder, align)
+        #self.holder.show()
         return self.gridLayout
     
     def addWidgets_dep(self,widgets,align=QtCore.Qt.AlignHCenter):
@@ -190,6 +210,9 @@ class BaseWidget(QtGui.QWidget):
         widget = HolderWidget(widgets=widgets,stack=stack,align=align,margins=margins,
                                            spacing=spacing)
         self.my_widgets.append(widget)
+        try:self.my_widgets.extend(widgets)
+        except:self.my_widgets.append(widgets)
+        
         if(add):self.layout.addWidget(widget,align=align)
         return widget
     
@@ -231,8 +254,9 @@ class BaseWidget(QtGui.QWidget):
         f = lb.font()
         f.setBold(True)
         lb.setFont(f)
-        lb.setStyleSheet("QWidget {font: "+str(font_size)+"pt }")
-        if(bold):lb.setStyleSheet("QWidget {font: bold "+str(font_size)+"pt }")
+        #lb.setStyleSheet("QWidget {font: "+str(font_size)+"pt }")
+        #if(bold):lb.setStyleSheet("QWidget {font: bold "+str(font_size)+"pt }")
+        lb.setObjectName("Header")
         
         layout.addWidget(lb)
         if(frame):layout.addWidget(frame2)
@@ -259,7 +283,8 @@ class BaseWidget(QtGui.QWidget):
     
     def setBackgroundColour(self,colourstring):
         self.setStyleSheet("QWidget {background-color: "+colourstring+";}")
-        self.central_widget.setStyleSheet("QWidget {background-color: "+colourstring+";}")    
+        self.central_widget.setStyleSheet("QWidget {background-color: "+colourstring+";}") 
+        pass   
                 
     def sizeHint(self):
         if self.w==None and self.h==None:
@@ -338,16 +363,16 @@ class GenericButton(QtGui.QWidget):
         self.containerLayout.setSpacing(4)
         self.containerLayout.setAlignment(QtCore.Qt.AlignCenter)
         
-        self.setStyleSheet("QWidget { border: none}")
-        
-        self.button.setStyleSheet(
-        "QPushButton { \
-            border: none;\
-        }\
-            QPushButton:pressed {\
-            background: rgb(105, 105, 105);\
-        }\
-        ")
+#         self.setStyleSheet("QWidget { border: none}")
+#         
+#         self.button.setStyleSheet(
+#         "QPushButton { \
+#             border: none;\
+#         }\
+#             QPushButton:pressed {\
+#             background: rgb(105, 105, 105);\
+#         }\
+#         ")
         
         self.connect(self.button,QtCore.SIGNAL("clicked()"),self.clicked)
 
@@ -368,6 +393,9 @@ class TableWidget(QtGui.QTableWidget):
         self.scaleCols = scaleCols
     
     def setupHeaders(self,headers,widths):
+        
+       # self.horizontalHeader().setResizeMode(0,QtGui.QHeaderView.Stretch)
+        
         self.setColumnCount(len(headers))
         self.setHorizontalHeaderLabels(headers)
         for index,header in enumerate(headers):
@@ -376,8 +404,9 @@ class TableWidget(QtGui.QTableWidget):
         printl("headers setup",headers,widths)
         
         self.col_widths=widths
-        self.horizontalHeader().setResizeMode(0,QtGui.QHeaderView.Stretch)
         
+        
+        self.resize(QtCore.QSize(self.w,self.h+4))  
         
     def resizeEvent (self,event):
         #printl("resizeEvent",self.width())

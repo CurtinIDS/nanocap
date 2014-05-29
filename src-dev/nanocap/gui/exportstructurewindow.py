@@ -28,22 +28,24 @@ from nanocap.gui.widgets import BaseWidget,HolderWidget
 
 from nanocap.core import globals,minimisation,triangulation,minimasearch,structurelog
 
-class ExportStructureWindow(QtGui.QWidget):
+
+
+class ExportStructureWindow(BaseWidget):
     export_structure = QtCore.Signal(dict)
     def __init__(self):
                 
-        QtGui.QWidget.__init__(self)#,self.main_window,QtCore.Qt.Window)
+        BaseWidget.__init__(self,show=False)#,self.main_window,QtCore.Qt.Window)
         
 
         self.setWindowTitle("Export Structure")
         
         self.setSizePolicy(QtGui.QSizePolicy.Preferred,QtGui.QSizePolicy.Preferred)
         
-        self.contentlayout = QtGui.QGridLayout(self)
-        self.contentlayout.setContentsMargins(5,5,5,5)
-        self.contentlayout.setSpacing(5)
-        self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.setLayout(self.contentlayout)
+#         self.contentlayout = QtGui.QGridLayout(self)
+#         self.contentlayout.setContentsMargins(5,5,5,5)
+#         self.contentlayout.setSpacing(5)
+#         self.contentlayout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+#         self.setLayout(self.contentlayout)
 
         self.points_holder = BaseWidget(show=True,group=True,title="Points",align=QtCore.Qt.AlignLeft)
         
@@ -96,11 +98,11 @@ class ExportStructureWindow(QtGui.QWidget):
         self.export_bt= QtGui.QPushButton("Export")        
         self.connect(self.export_bt,QtCore.SIGNAL("clicked()"),self.export)
         
-        self.contentlayout.addWidget(self.points_holder,0,0)
-        self.contentlayout.addWidget(self.formats_holder,1,0) 
-        self.contentlayout.addWidget(self.info_holder,2,0) 
-        self.contentlayout.addWidget(self.output_holder,3,0) 
-        self.contentlayout.addWidget(HolderWidget(self.export_bt),6,0) 
+        self.addWidget(self.points_holder,0,0)
+        self.addWidget(self.formats_holder,1,0) 
+        self.addWidget(self.info_holder,2,0) 
+        self.addWidget(self.output_holder,3,0) 
+        self.addWidget(HolderWidget(self.export_bt),6,0) 
         
     def browse(self):
         folder  = browse_to_dir()

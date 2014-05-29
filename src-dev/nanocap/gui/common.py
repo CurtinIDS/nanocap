@@ -25,9 +25,19 @@ def QL(*args,**kwargs):
         l = QtGui.QLabel('<qt> <a href = "'+kwargs["link"]+'">'+" ".join(*args)+'</a></qt>')
     
     #print kwargs,kwargs['font']
+    if "header" in kwargs.keys():
+        if( kwargs['header']):
+            l.setObjectName("Header")
+    if "name" in kwargs.keys():
+        l.setObjectName(kwargs['name'])        
+            
+        
     if "font" in kwargs.keys():
         fs = kwargs['font']
-        l.setStyleSheet("QLabel{font: "+str(fs)+";}")
+        #l.setStyleSheet("QLabel{font: "+str(fs)+" "+str(font_size)+"pt;}")
+    else:
+        #l.setStyleSheet("QLabel{font: "+str(font_size)+"pt;}")
+        pass
         #print kwargs['font']
     if "align" in kwargs.keys():
         l.setAlignment(kwargs['align'])
