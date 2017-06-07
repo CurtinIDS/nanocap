@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<center><title>Fullerenes</title></center>
+<link href="sect0021.html" title="Capped Nanotube Construction" rel="next" />
+<link href="sect0019.html" title="Nanotube Construction" rel="prev" />
+<link href="Examples.html" title="Examples" rel="up" />
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/default_style.css" />
+
+</head>
+<body>
+
+<div class="navigation">
+<span>Previous: <a href="sect0019.html">Nanotube Construction</a></span>
+<span>Next: <a href="sect0021.html">Capped Nanotube Construction</a></span>
+<span>Up: <a href="Examples.html">Examples</a></span>
+</div>
+<hr />
+<div><h2 id="a0000000258">10.2 Fullerenes</h2>
+<h3 id="a0000000271">Single Fullerene Construction</h3>
+<p><tt>nanocap_single_fullerene.py</tt> is an example script to construct and save a fullerene. The code is shown below. </p><p>
+<div class="highlight" style="background: #ffffff"><pre style="color: #000000; border:1px solid #E2E2E2; background-color:#FFF8E2;; line-height: 125%"><span style="color: #009900; font-style: italic">&#39;&#39;&#39;</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=NanoCap=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+<span style="color: #009900; font-style: italic">Copyright Marc Robinson  2014</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+
+<span style="color: #009900; font-style: italic">A script to construct a fullerene</span>
+
+<span style="color: #009900; font-style: italic">Input: </span>
+<span style="color: #009900; font-style: italic">    N_carbon = Number of carbon atoms</span>
+<span style="color: #009900; font-style: italic">    dual_lattice_force_field = force field </span>
+<span style="color: #009900; font-style: italic">                               for dual lattice</span>
+<span style="color: #009900; font-style: italic">    carbon_force_field = force field </span>
+<span style="color: #009900; font-style: italic">                        for carbon lattice</span>
+<span style="color: #009900; font-style: italic">    dual_lattice_mintol= energy tolerance for</span>
+<span style="color: #009900; font-style: italic">                         dual lattice optimisation</span>
+<span style="color: #009900; font-style: italic">    dual_lattice_minsteps= steps for dual lattice </span>
+<span style="color: #009900; font-style: italic">                            optimisation</span>
+<span style="color: #009900; font-style: italic">    carbon_lattice_mintol=as above for carbon lattice</span>
+<span style="color: #009900; font-style: italic">    carbon_lattice_minsteps=as above for carbon lattice</span>
+<span style="color: #009900; font-style: italic">    optimiser=optimsation algorithm</span>
+<span style="color: #009900; font-style: italic">    seed = seed for initial cap generation</span>
+<span style="color: #009900; font-style: italic">                   </span>
+<span style="color: #009900; font-style: italic">Output:</span>
+<span style="color: #009900; font-style: italic">    xyz files containing dual lattice</span>
+<span style="color: #009900; font-style: italic">    and carbon lattice </span>
+<span style="color: #009900; font-style: italic">    </span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+<span style="color: #009900; font-style: italic">&#39;&#39;&#39;</span>
+
+<span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">sys,os,random,numpy</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.core.minimisation</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">DualLatticeMinimiser,</span> \
+                                      <span style="color: #000000">CarbonLatticeMinimiser</span>  
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.structures.fullerene</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">Fullerene</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.core.output</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">write_xyz</span>
+
+<span style="color: #000000">N_carbon</span> <span style="color: #000000">=</span> <span style="color: #000000">200</span> 
+
+<span style="color: #000000">dual_force_field</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;Thomson&quot;</span>
+<span style="color: #000000">carbon_force_field</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;EDIP&quot;</span>
+<span style="color: #000000">dual_lattice_mintol=1e-10</span>
+<span style="color: #000000">dual_lattice_minsteps=100</span>
+<span style="color: #000000">carbon_lattice_mintol=1e-10</span>
+<span style="color: #000000">carbon_lattice_minsteps=100</span>
+<span style="color: #000000">optimiser=</span><span style="color: #007F00">&quot;LBFGS&quot;</span>
+<span style="color: #000000">seed</span> <span style="color: #000000">=</span> <span style="color: #000000">12345</span>
+
+<span style="color: #000000">my_fullerene</span> <span style="color: #000000">=</span> <span style="color: #000000">Fullerene()</span>
+<span style="color: #000000">my_fullerene.construct_dual_lattice(N_carbon=N_carbon,seed=seed)</span>
+<span style="color: #000000">my_fullerene.set_fix_pole(</span><span style="color: #0000FF; font-weight: bold">False</span><span style="color: #000000">)</span>
+<span style="color: #000000">my_fullerene.set_nfixed_to_equator(0)</span>
+
+
+<span style="color: #000000">Dminimiser</span> <span style="color: #000000">=</span> <span style="color: #000000">DualLatticeMinimiser(FFID=dual_force_field,</span>
+                                  <span style="color: #000000">structure</span> <span style="color: #000000">=</span> <span style="color: #000000">my_fullerene)</span>
+<span style="color: #000000">Dminimiser.minimise(my_fullerene.dual_lattice,</span>
+                    <span style="color: #000000">min_type=optimiser,</span>
+                    <span style="color: #000000">ftol=dual_lattice_mintol,</span>
+                    <span style="color: #000000">min_steps=dual_lattice_minsteps)</span>
+
+<span style="color: #000000">outfilename</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;C{}_dual_lattice.xyz&quot;</span><span style="color: #000000">.format(N_carbon)</span>
+<span style="color: #000000">write_xyz(outfilename,my_fullerene.dual_lattice)</span>
+
+<span style="color: #000000">my_fullerene.construct_carbon_lattice()</span>
+
+<span style="color: #000000">Cminimiser</span> <span style="color: #000000">=</span> <span style="color: #000000">CarbonLatticeMinimiser(FFID=carbon_force_field,</span>
+                                    <span style="color: #000000">structure</span> <span style="color: #000000">=</span> <span style="color: #000000">my_fullerene)</span>
+
+<span style="color: #000000">Cminimiser.minimise_scale(my_fullerene.carbon_lattice)</span>
+<span style="color: #000000">Cminimiser.minimise(my_fullerene.carbon_lattice,</span>
+                    <span style="color: #000000">min_type=optimiser,</span>
+                    <span style="color: #000000">ftol=carbon_lattice_mintol,</span>
+                    <span style="color: #000000">min_steps=carbon_lattice_minsteps)</span>
+
+<span style="color: #000000">outfilename</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;C{}_carbon_atoms.xyz&quot;</span><span style="color: #000000">.format(N_carbon)</span>
+<span style="color: #000000">write_xyz(outfilename,my_fullerene.carbon_lattice)</span>
+<span style="color: #000000">outfilename</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;C{}_carbon_atoms_constrained.xyz&quot;</span><span style="color: #000000">.format(N_carbon)</span>
+<span style="color: #000000">write_xyz(outfilename,my_fullerene.carbon_lattice,constrained=</span><span style="color: #0000FF; font-weight: bold">True</span><span style="color: #000000">)</span>
+</pre></div>
+
+ </p><h3 id="a0000000272">Constructing Multiple Fullerenes </h3>
+<p><tt>nanocap_bulk_fullerenes.py</tt> is an example script to perform a structure search to construct and save multiple fullerenes. The code is shown below. </p><p>
+<div class="highlight" style="background: #ffffff"><pre style="color: #000000; border:1px solid #E2E2E2; background-color:#FFF8E2;; line-height: 125%"><span style="color: #009900; font-style: italic">&#39;&#39;&#39;</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=NanoCap=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+<span style="color: #009900; font-style: italic">Copyright Marc Robinson  2014</span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+
+<span style="color: #009900; font-style: italic">A script to construct a series of </span>
+<span style="color: #009900; font-style: italic">fullerenes</span>
+
+<span style="color: #009900; font-style: italic">Input: </span>
+<span style="color: #009900; font-style: italic">    N_carbon = number of carbon atoms</span>
+<span style="color: #009900; font-style: italic">                in the fullerene</span>
+<span style="color: #009900; font-style: italic">    dual_lattice_force_field = force field </span>
+<span style="color: #009900; font-style: italic">                               for dual lattice</span>
+<span style="color: #009900; font-style: italic">    carbon_force_field = force field </span>
+<span style="color: #009900; font-style: italic">                        for carbon lattice</span>
+<span style="color: #009900; font-style: italic">    dual_lattice_mintol= energy tolerance for</span>
+<span style="color: #009900; font-style: italic">                         dual lattice optimisation</span>
+<span style="color: #009900; font-style: italic">    dual_lattice_minsteps= steps for dual lattice </span>
+<span style="color: #009900; font-style: italic">                            optimisation</span>
+<span style="color: #009900; font-style: italic">    carbon_lattice_mintol=as above for carbon lattice</span>
+<span style="color: #009900; font-style: italic">    carbon_lattice_minsteps=as above for carbon lattice</span>
+<span style="color: #009900; font-style: italic">    optimiser=optimsation algorithm</span>
+<span style="color: #009900; font-style: italic">    seed = seed for initial cap generation</span>
+<span style="color: #009900; font-style: italic">    N_nanotubes = required number of structures </span>
+<span style="color: #009900; font-style: italic">    N_max_structures = maximum number of possible </span>
+<span style="color: #009900; font-style: italic">                        structures to search through</span>
+<span style="color: #009900; font-style: italic">    basin_climb = True/False - climb out of </span>
+<span style="color: #009900; font-style: italic">                  minima  </span>
+<span style="color: #009900; font-style: italic">    calc_rings = True/False - calculate rings for </span>
+<span style="color: #009900; font-style: italic">                  each structure</span>
+<span style="color: #009900; font-style: italic">                   </span>
+<span style="color: #009900; font-style: italic">Output:</span>
+<span style="color: #009900; font-style: italic">    -A structure log in myStructures.out</span>
+<span style="color: #009900; font-style: italic">    </span>
+<span style="color: #009900; font-style: italic">    -xyz files containing the carbon lattices </span>
+<span style="color: #009900; font-style: italic">    </span>
+<span style="color: #009900; font-style: italic">-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-</span>
+<span style="color: #009900; font-style: italic">&#39;&#39;&#39;</span>
+
+<span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">sys,os,random,numpy</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.core.minimisation</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">DualLatticeMinimiser,</span> \
+                                      <span style="color: #000000">CarbonLatticeMinimiser</span>  
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.core.minimasearch</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">MinimaSearch</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.structures.fullerene</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">Fullerene</span>
+<span style="color: #0000FF; font-weight: bold">from</span> <span style="color: #000000">nanocap.core.output</span> <span style="color: #0000FF; font-weight: bold">import</span> <span style="color: #000000">write_points</span>
+
+<span style="color: #000000">N_carbon</span> <span style="color: #000000">=</span> <span style="color: #000000">200</span> 
+<span style="color: #000000">dual_lattice_minimiser</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;Thomson&quot;</span>
+<span style="color: #000000">carbon_lattice_minimiser</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;EDIP&quot;</span>
+<span style="color: #000000">seed</span> <span style="color: #000000">=</span> <span style="color: #000000">12345</span>
+
+<span style="color: #000000">N_fullerenes</span> <span style="color: #000000">=</span> <span style="color: #000000">5</span>
+<span style="color: #000000">N_max_structures</span> <span style="color: #000000">=</span> <span style="color: #000000">20</span>
+<span style="color: #000000">basin_climb</span> <span style="color: #000000">=</span> <span style="color: #0000FF; font-weight: bold">True</span>
+<span style="color: #000000">calc_rings</span> <span style="color: #000000">=</span> <span style="color: #0000FF; font-weight: bold">True</span>
+
+<span style="color: #000000">dual_lattice_minimiser</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;Thomson&quot;</span>
+<span style="color: #000000">carbon_lattice_minimiser</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;EDIP&quot;</span>
+<span style="color: #000000">dual_lattice_mintol=1e-10</span>
+<span style="color: #000000">dual_lattice_minsteps=100</span>
+<span style="color: #000000">carbon_lattice_mintol=1e-10</span>
+<span style="color: #000000">carbon_lattice_minsteps=100</span>
+<span style="color: #000000">optimiser=</span><span style="color: #007F00">&quot;LBFGS&quot;</span>
+<span style="color: #000000">seed</span> <span style="color: #000000">=</span> <span style="color: #000000">12345</span>
+
+<span style="color: #000000">my_fullerene</span> <span style="color: #000000">=</span> <span style="color: #000000">Fullerene()</span>
+<span style="color: #000000">my_fullerene.construct_dual_lattice(N_carbon=N_carbon,seed=seed)</span>
+<span style="color: #000000">my_fullerene.construct_carbon_lattice()</span>
+<span style="color: #000000">my_fullerene.set_fix_pole(</span><span style="color: #0000FF; font-weight: bold">False</span><span style="color: #000000">)</span>
+<span style="color: #000000">my_fullerene.set_nfixed_to_equator(0)</span>
+
+<span style="color: #000000">Dminimiser</span> <span style="color: #000000">=</span> <span style="color: #000000">DualLatticeMinimiser(FFID=dual_lattice_minimiser,</span>
+                                  <span style="color: #000000">structure</span> <span style="color: #000000">=</span> <span style="color: #000000">my_fullerene,</span>
+                                  <span style="color: #000000">min_type=</span> <span style="color: #007F00">&quot;LBFGS&quot;</span><span style="color: #000000">,</span>
+                                  <span style="color: #000000">ftol</span> <span style="color: #000000">=</span> <span style="color: #000000">1e-10,</span>
+                                  <span style="color: #000000">min_steps</span> <span style="color: #000000">=</span> <span style="color: #000000">10)</span>
+
+<span style="color: #000000">Cminimiser</span> <span style="color: #000000">=</span> <span style="color: #000000">CarbonLatticeMinimiser(FFID=carbon_lattice_minimiser,</span>
+                                  <span style="color: #000000">structure</span> <span style="color: #000000">=</span> <span style="color: #000000">my_fullerene,</span>
+                                  <span style="color: #000000">min_type=</span> <span style="color: #007F00">&quot;LBFGS&quot;</span><span style="color: #000000">,</span>
+                                  <span style="color: #000000">ftol</span> <span style="color: #000000">=</span> <span style="color: #000000">1e-10,</span>
+                                  <span style="color: #000000">min_steps</span> <span style="color: #000000">=</span> <span style="color: #000000">10)</span>
+
+<span style="color: #000000">Searcher</span> <span style="color: #000000">=</span> <span style="color: #000000">MinimaSearch(Dminimiser,</span>
+                         <span style="color: #000000">carbon_lattice_minimiser=</span> <span style="color: #000000">Cminimiser,</span>
+                         <span style="color: #000000">basin_climb=basin_climb,</span>
+                         <span style="color: #000000">calc_rings=calc_rings)</span>
+
+<span style="color: #000000">Searcher.start_search(my_fullerene.dual_lattice,</span>
+                      <span style="color: #000000">N_fullerenes,</span>
+                      <span style="color: #000000">N_max_structures)</span>
+
+<span style="color: #000000">Searcher.continue_search(my_fullerene.dual_lattice,</span>
+                         <span style="color: #000000">N_fullerenes,</span>
+                         <span style="color: #000000">N_max_structures)</span>
+
+<span style="color: #000000">Searcher.structure_log.write_log(os.getcwd(),</span><span style="color: #007F00">&quot;myStructures.out&quot;</span><span style="color: #000000">)</span>
+
+<span style="color: #0000FF; font-weight: bold">for</span> <span style="color: #000000">i,structure</span> <span style="color: #000000">in</span> <span style="color: #000000">enumerate(Searcher.structure_log.structures):</span>
+    <span style="color: #000000">outfilename</span> <span style="color: #000000">=</span> <span style="color: #007F00">&quot;C{}_carbon_atoms_{}&quot;</span>
+    <span style="color: #000000">outfilename</span> <span style="color: #000000">=</span> <span style="color: #000000">outfilename.format(structure.carbon_lattice.npoints,i)</span>
+    <span style="color: #000000">write_points(outfilename,</span>
+                 <span style="color: #000000">structure.carbon_lattice,</span>
+                 <span style="color: #007F00">&quot;xyz&quot;</span><span style="color: #000000">)</span>
+</pre></div>
+
+ </p></div>
+
+
+
+
+
+<hr />
+<div class="navigation">
+<span>Previous: <a href="sect0019.html">Nanotube Construction</a></span>
+<span>Next: <a href="sect0021.html">Capped Nanotube Construction</a></span>
+<span>Up: <a href="Examples.html">Examples</a></span>
+</div>
+
+</body>
+
+</html>

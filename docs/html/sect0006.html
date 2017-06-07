@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<center><title>Nanotubes</title></center>
+<link href="cappednanotubes.html" title="Capped Nanotubes" rel="next" />
+<link href="sect0005.html" title="Fullerenes" rel="prev" />
+<link href="sect0004.html" title="Generating a Single Structure" rel="up" />
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/default_style.css" />
+
+</head>
+<body>
+
+<div class="navigation">
+<span>Previous: <a href="sect0005.html">Fullerenes</a></span>
+<span>Next: <a href="cappednanotubes.html">Capped Nanotubes</a></span>
+<span>Up: <a href="sect0004.html">Generating a Single Structure</a></span>
+</div>
+<hr />
+<div><h2 id="a0000000244">2.2 Nanotubes</h2>
+<p>To construct a nanotube the user has the option for either a finite-length nanotube or one that is periodic along the axial direction. </p><div id="nanotube_constructure_options" class="figure"><center><img src="images/img-0010.png" alt="\includegraphics[scale= 0.5]{../../screens/nanocap_nanotube_init_finite_win.png}" style="width:388px; height:248px" />
+ <img src="images/img-0011.png" alt="\includegraphics[scale= 0.5]{../../screens/nanocap_nanotube_init_periodic_win.png}" style="width:388px; height:249px" />
+ <div class="caption"><b>Figure 3</b>: <span>Nanotube construction options</span></div>  </center></div><h3 id="a0000000262">Finite tubes</h3>
+<p>Finite tubes are constructed as close to a user defined length as possible. This is done by constructing <i class="itshape">strips</i> of basis points along the chiral vector (<img src="images/img-0012.png" alt="$n,m$" style="vertical-align:-3px; 
+                                     width:31px; 
+                                     height:10px" class="math gen" />): </p><table id="a0000000263" class="equation" width="100%" cellspacing="0" cellpadding="7">
+<tr>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td><img src="images/img-0013.png" alt="\begin{equation*} \begin{array}{rl} \boldsymbol {\mathrm{P}}_ i &amp;  = n_ i\boldsymbol {\mathrm{a_1}} + m_ i\boldsymbol {\mathrm{a_2}}\\ \boldsymbol {\mathrm{a_1}} &amp; = \tfrac {\sqrt {3}a_ c}{2} (\sqrt {3}, 1)\\ \boldsymbol {\mathrm{a_2}} &amp; = \tfrac {\sqrt {3}a_ c}{2} (\sqrt {3}, -1)\\ \end{array}\end{equation*}" style="width:150px; 
+                            height:65px" class="math gen" /></td>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td class="eqnnum" style="width:20%">&nbsp;</td>
+</tr>
+</table><p>where <img src="images/img-0014.png" alt="$a_ c$" style="vertical-align:-2px; 
+                                     width:15px; 
+                                     height:9px" class="math gen" /> is the carbon bond length of 1.421 . The incremented values (<img src="images/img-0015.png" alt="$n_ i,m_ i$" style="vertical-align:-3px; 
+                                     width:42px; 
+                                     height:10px" class="math gen" />) range from (0,0) to (<img src="images/img-0012.png" alt="$n,m$" style="vertical-align:-3px; 
+                                     width:31px; 
+                                     height:10px" class="math gen" />) and depends on: </p><table id="a0000000264" class="equation" width="100%" cellspacing="0" cellpadding="7">
+<tr>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td><img src="images/img-0016.png" alt="\begin{equation*} \begin{array}{rl} n_ i\verb!++! &amp; \mbox{ if~ ~ $m_ i/( 2n_ i+m_ i)&gt;m/( 2n+m)$} \\ m_ i\verb!++! &amp; \mbox{ if~ ~ $m_ i/( 2n_ i+m_ i)\leq m/( 2n+m)$} \\ \end{array}\end{equation*}" style="width:307px; 
+                            height:38px" class="math gen" /></td>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td class="eqnnum" style="width:20%">&nbsp;</td>
+</tr>
+</table><p> After each new row of points, the origin is translated in the <img src="images/img-0017.png" alt="$z$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:7px" class="math gen" /> direction by <img src="images/img-0018.png" alt="$\sqrt {3}a_ c$" style="vertical-align:-2px; 
+                                     width:36px; 
+                                     height:17px" class="math gen" />. The current distance along the nanotube axis is then compared against the user defined length to determine if another strip should be added. The user defined length is inputted in the <b class="bfseries">Calculations–<img src="images/img-0002.png" alt="$&gt;$" style="vertical-align:0px; 
+                                     width:11px; 
+                                     height:10px" class="math gen" />Input</b> options. </p><p>At each basis point <img src="images/img-0019.png" alt="$\boldsymbol {\mathrm{P}}$" style="vertical-align:0px; 
+                                     width:12px; 
+                                     height:12px" class="math gen" /> at position <img src="images/img-0020.png" alt="$(p_ x,p_ z)$" style="vertical-align:-4px; 
+                                     width:50px; 
+                                     height:18px" class="math gen" />, the positions of the carbon atoms (<img src="images/img-0021.png" alt="$\boldsymbol {\mathrm{A}}$" style="vertical-align:0px; 
+                                     width:14px; 
+                                     height:12px" class="math gen" /> and <img src="images/img-0022.png" alt="$\boldsymbol {\mathrm{B}}$" style="vertical-align:0px; 
+                                     width:13px; 
+                                     height:12px" class="math gen" />) and dual lattice points (<img src="images/img-0023.png" alt="$\boldsymbol {\mathrm{D}}$" style="vertical-align:0px; 
+                                     width:14px; 
+                                     height:12px" class="math gen" />) are given by: </p><table id="a0000000265" class="equation" width="100%" cellspacing="0" cellpadding="7">
+<tr>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td><img src="images/img-0024.png" alt="\begin{equation*} \begin{split}  \boldsymbol {\mathrm{A}} &amp; = (p_ x , p_ z)\\ \boldsymbol {\mathrm{B}} &amp; = (p_ x +a_ c , p_ z)\\ \boldsymbol {\mathrm{D}} &amp; = (p_ x + 2a_ c , p_ z) \end{split}\end{equation*}" style="width:133px; 
+                            height:68px" class="math gen" /></td>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td class="eqnnum" style="width:20%">&nbsp;</td>
+</tr>
+</table><h3 id="a0000000266">Periodic tubes</h3>
+<p>Periodic tubes are constructed using a user defined number of unit cells in the <i class="itshape">z</i> direction. The <b class="bfseries">periodic length</b> <img src="images/img-0025.png" alt="$L$" style="vertical-align:0px; 
+                                     width:11px; 
+                                     height:11px" class="math gen" /> of a nanotube of chirality (<img src="images/img-0012.png" alt="$n,m$" style="vertical-align:-3px; 
+                                     width:31px; 
+                                     height:10px" class="math gen" />) with <img src="images/img-0026.png" alt="$u$" style="vertical-align:0px; 
+                                     width:9px; 
+                                     height:7px" class="math gen" /> unit cells is given by: </p><table id="a0000000267" class="equation" width="100%" cellspacing="0" cellpadding="7">
+<tr>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td><img src="images/img-0027.png" alt="\begin{equation*} \begin{split}  L &amp; = u*|\boldsymbol {\mathrm{T}}|\\ \boldsymbol {\mathrm{T}} &amp; = t_1\boldsymbol {\mathrm{a_1}} + t_2\boldsymbol {\mathrm{a_2}} \end{split}\end{equation*}" style="width:116px; 
+                            height:41px" class="math gen" /></td>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td class="eqnnum" style="width:20%">&nbsp;</td>
+</tr>
+</table><p> where the coefficients <img src="images/img-0028.png" alt="$t_1$" style="vertical-align:-2px; 
+                                     width:12px; 
+                                     height:12px" class="math gen" /> and <img src="images/img-0029.png" alt="$t_2$" style="vertical-align:-2px; 
+                                     width:12px; 
+                                     height:12px" class="math gen" /> have no common divisors except for unity and are given by: </p><table id="a0000000268" class="equation" width="100%" cellspacing="0" cellpadding="7">
+<tr>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td><img src="images/img-0030.png" alt="\begin{equation*} \begin{split}  t_1 &amp; = (2m + n)/ d_{R} \\ t_2 &amp; = -(2n + m)/ d_{R} \\ d_{R} &amp; = \texttt{gcd}(2n+m, 2m+n) \end{split}\end{equation*}" style="width:193px; 
+                            height:68px" class="math gen" /></td>
+    
+    <td style="width:40%">&nbsp;</td>
+    <td class="eqnnum" style="width:20%">&nbsp;</td>
+</tr>
+</table><p>During construction, the carbon atoms and dual lattice points are generated as for the finite tubes, the only difference being the replacement of the user-defined length with the periodic length. After construction, any points surpassing the periodic length are removed. </p><p>The number of unit cells for a periodic nanotube can be found in the <b class="bfseries">Calculations–<img src="images/img-0002.png" alt="$&gt;$" style="vertical-align:0px; 
+                                     width:11px; 
+                                     height:10px" class="math gen" />Input</b> options. </p><p>The resultant <b class="bfseries">periodic length</b> after construction can be found in the <b class="bfseries">Information</b> options tab. This will be required by simulation software if the nanotube is to be used in a periodic simulation. </p></div>
+
+
+
+
+
+<hr />
+<div class="navigation">
+<span>Previous: <a href="sect0005.html">Fullerenes</a></span>
+<span>Next: <a href="cappednanotubes.html">Capped Nanotubes</a></span>
+<span>Up: <a href="sect0004.html">Generating a Single Structure</a></span>
+</div>
+
+</body>
+
+</html>

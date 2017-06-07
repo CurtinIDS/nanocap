@@ -1,0 +1,6 @@
+include *.txt
+recursive-include nanocap/clib *
+recursive-include nanocap/ext/edip *
+recursive-include nanocap/help *
+recursive-include example_scripts *
+recursive-include docs *

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<center><title>The Local NanoCap Database</title></center>
+<link href="sect0012.html" title="The Online NanoCap Database" rel="next" />
+<link href="sect0010.html" title="Storing, Loading and Exporting" rel="prev" />
+<link href="sect0010.html" title="Storing, Loading and Exporting" rel="up" />
+<link rel="stylesheet" href="styles/style.css" />
+<link rel="stylesheet" href="styles/default_style.css" />
+
+</head>
+<body>
+
+<div class="navigation">
+<span>Previous: <a href="sect0010.html">Storing, Loading and Exporting</a></span>
+<span>Next: <a href="sect0012.html">The Online NanoCap Database</a></span>
+<span>Up: <a href="sect0010.html">Storing, Loading and Exporting</a></span>
+</div>
+<hr />
+<div><h2 id="a0000000249">6.1 The Local NanoCap Database</h2>
+<p>One of the main features of <tt class="ttfamily">NanoCap</tt> is the local database of structures which allows the user to efficiently store previously generated structures. By default the database is stored in the <tt class="ttfamily">NanoCap</tt> user directory (.nanocap). The database can be accessed in several ways; using the <tt class="ttfamily">NanoCap</tt> GUI, using the <tt class="ttfamily">NanoCap</tt> scripts or using an external SQLite client. Using the GUI, the <b class="bfseries">Database Viewer</b> window is located in the <b class="bfseries">View–<img src="images/img-0002.png" alt="$&gt;$" style="vertical-align:0px; 
+                                     width:11px; 
+                                     height:10px" class="math gen" />Local Database</b> menu. </p><div id="DBViewer" class="figure"><center><img src="images/img-0040.png" alt="\includegraphics[scale= 0.6]{../../screens/nanocap_db_menu.png}" style="width:349px; height:155px" />
+ <img src="images/img-0041.png" alt="\includegraphics[scale= 0.6]{../../screens/nanocap_db_viewer.png}" style="width:808px; height:523px" />
+ <div class="caption"><b>Figure 10</b>: <span><tt class="ttfamily">NanoCap</tt> database viewer</span></div>  </center></div><p>The database viewer provides an interactive interface to the <tt class="ttfamily">NanoCap</tt> database allowing real time searching and loading of stored structures (Fig. <a href="sect0011.html#DBViewer">10</a>). Additional search parameters can be added by pressing the <b class="bfseries">Select Properties</b> button which displays all possible database fields. When searching for a structure, logical expressions can be used for each file. For example, if ‘<tt class="ttfamily">&gt; 100</tt>’ is entered into the <tt class="ttfamily">Natoms</tt> fields then only structures with more than 100 atoms will be returned. The column labelled ‘<tt class="ttfamily">&gt;View</tt>’  provides buttons to load a structure into the main <tt class="ttfamily">NanoCap</tt> window. The loaded structures can then be modified, for example: re-optimised with a different force field. </p><p>To access the database via <tt class="ttfamily">Python</tt> scripts, the <tt class="ttfamily">NanoCap</tt> libraries can be used. For examples of these scripts see Section <a href="Examples.html">10</a>. </p><p>As the <tt class="ttfamily">NanoCap</tt> database is written using SQLite, a suitable database client can be used to view the database. An example using the <tt class="ttfamily">sqlite3</tt> client is shown below: </p>
+<div class="highlight" style="background: #ffffff"><pre style="color: #F2F2F2; border:1px solid #000000; background-color:#191919;; line-height: 125%">bash-3.2<span style="color: #F2F2F2">$ </span>sqlite3 ~/.nanocap/nanocap.db
+SQLite version 3.7.13 2012-06-11 02:05:22
+Enter <span style="color: #F2F2F2">&quot;.help&quot;</span> <span style="color: #F2F2F2">for </span>instructions
+Enter SQL statements terminated with a <span style="color: #F2F2F2">&quot;;&quot;</span>
+sqlite&gt; .headers on;
+sqlite&gt; .mode column
+sqlite&gt; <span style="color: #F2F2F2">select </span>id,type,Natoms,energy,ff_id from carbon_lattices
+   ...&gt; where <span style="color: #F2F2F2">type=&quot;Fullerene&quot;</span> and <span style="color: #F2F2F2">ff_id=&quot;EDIP&quot;</span>;
+id          <span style="color: #F2F2F2">type        </span>natoms      energy            ff_id               
+----------  ----------  --------  ----------------  --------------------
+11          Fullerene   220       -1550.4155355469  EDIP                   
+50          Fullerene   200       -1403.7245939477  EDIP                
+51          Fullerene   200       -1403.5958295534  EDIP                
+52          Fullerene   200       -1404.0657391286  EDIP                
+53          Fullerene   200       -1402.8514086776  EDIP                
+54          Fullerene   200       -1403.3230258698  EDIP                
+55          Fullerene   200       -1404.3263445713  EDIP                
+56          Fullerene   200       -1403.4800906205  EDIP                
+57          Fullerene   200       -1404.3965982273  EDIP                
+58          Fullerene   200       -1404.1298467551  EDIP                
+59          Fullerene   200       -1403.4657122674  EDIP                
+64          Fullerene   200       -1403.7245939160  EDIP
+</pre></div>
+
+</div>
+
+
+
+
+
+<hr />
+<div class="navigation">
+<span>Previous: <a href="sect0010.html">Storing, Loading and Exporting</a></span>
+<span>Next: <a href="sect0012.html">The Online NanoCap Database</a></span>
+<span>Up: <a href="sect0010.html">Storing, Loading and Exporting</a></span>
+</div>
+
+</body>
+
+</html>
